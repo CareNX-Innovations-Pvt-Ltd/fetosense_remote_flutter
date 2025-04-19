@@ -4,7 +4,6 @@ import 'package:appwrite/appwrite.dart';
 import 'package:fetosense_remote_flutter/core/model/doctor_model.dart';
 import 'package:fetosense_remote_flutter/core/model/organization_model.dart';
 import 'package:fetosense_remote_flutter/core/network/appwrite_config.dart';
-import 'package:fetosense_remote_flutter/core/services/authentication.dart';
 import 'package:fetosense_remote_flutter/core/utils/app_constants.dart';
 import 'package:fetosense_remote_flutter/locater.dart';
 import 'package:flutter/material.dart';
@@ -17,16 +16,9 @@ import 'live_tacking.dart';
 /// It displays the live tracking view and handles navigation and permissions.
 class TVHome extends StatefulWidget {
   final Doctor? doctor;
-  final BaseAuth? auth;
-  final VoidCallback? logoutCallback;
-  final VoidCallback? profileupdate1Callback;
-  // final VoidCallback? profileupdate2Callback;
   const TVHome(
-      {super.key, this.auth,
+      {super.key,
       this.doctor,
-      this.logoutCallback,
-      this.profileupdate1Callback,
-      // this.profileupdate2Callback
       });
 
   @override
@@ -51,10 +43,6 @@ class TVHomeState extends State<TVHome> {
         body: LiveTrackingView(
       doctor: widget.doctor,
       organization: organization,
-      logoutCallback: widget.logoutCallback,
-      auth: widget.auth,
-      profileupdate1Callback: widget.profileupdate1Callback,
-      // profileupdate2Callback: widget.profileupdate2Callback,
     ));
   }
 
@@ -99,7 +87,7 @@ class TVHomeState extends State<TVHome> {
       setState(() {
         organization = Organization.fromMap(
           document.data,
-          document.$id,
+          // document.$id,
         );
       });
     } catch (e) {

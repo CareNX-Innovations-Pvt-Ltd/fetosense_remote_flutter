@@ -593,92 +593,92 @@ class RecentTestListViewBabyBeatState
                       child: MaterialButton(
                         padding: const EdgeInsets.all(20),
                         onPressed: () async {
-                          if (_passkeyController.text.trim() == passKeys!['bsv']) {
-                            try {
-                              // Initialize associations
-                              Map<String, dynamic>? babyBeatAssociation =
-                                  widget.doctor!.babyBeatAssociation ?? {};
-
-                              Map<String?, dynamic> babyBeatAssociationOrg = {
-                                widget.doctor!.documentId: {
-                                  'documentId': widget.doctor!.documentId,
-                                  'name': widget.doctor!.name,
-                                  'type': "doctor"
-                                }
-                              };
-
-                              // Add or update hospital to doctor's association
-                              babyBeatAssociation['hospitalId'] = {
-                                'documentId': hospitalid,
-                                'name': hospitalName,
-                                'type': "organization"
-                              };
-
-                              // 1. Update doctor document
-                              await databases.updateDocument(
-                                databaseId: 'your_database_id',
-                                collectionId: 'users',
-                                documentId: widget.doctor!.documentId!,
-                                data: {
-                                  'babyBeatAssociation': babyBeatAssociation,
-                                },
-                              );
-
-                              // 2. Update hospital document with reverse link
-                              final hospitalDoc = await databases.getDocument(
-                                databaseId: 'your_database_id',
-                                collectionId: 'users',
-                                documentId: hospitalid!,
-                              );
-
-                              final existingHospitalAssociations =
-                              Map<String, dynamic>.from(hospitalDoc.data['babyBeatAssociation'] ?? {});
-                              existingHospitalAssociations[widget.doctor!.documentId!] =
-                              babyBeatAssociationOrg[widget.doctor!.documentId];
-
-                              await databases.updateDocument(
-                                databaseId: 'your_database_id',
-                                collectionId: 'users',
-                                documentId: hospitalid,
-                                data: {
-                                  'babyBeatAssociation': existingHospitalAssociations,
-                                },
-                              );
-
-                              // Update local state/UI
-                              setState(() {
-                                widget.doctor!.babyBeatAssociation  = babyBeatAssociation;
-                                String? key = widget.doctor?.babyBeatAssociation!.keys.first;
-                                dropDownValues.addAll(widget.doctor!.babyBeatAssociation!.values);
-                                dropDownValues.add({"documentId": "All", "name": "All"});
-                                selectedOrg =
-                                widget.doctor!.babyBeatAssociation![key]['documentId'];
-                                PrefService.setString('selectedOrg', selectedOrg);
-                              });
-
-                              debugPrint("Updated associations: ${widget.doctor!.babyBeatAssociation!.length}");
-                              Navigator.pop(context);
-                            } catch (error) {
-                              debugPrint("Appwrite error: $error");
-                              Navigator.pop(context);
-                              ScaffoldMessenger.of(_scaffoldKey.currentState!.context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Something went wrong!'),
-                                  behavior: SnackBarBehavior.floating,
-                                  duration: Duration(milliseconds: 3000),
-                                ),
-                              );
-                            }
-                          } else {
-                            ScaffoldMessenger.of(_scaffoldKey.currentState!.context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Invalid Pass Key!'),
-                                behavior: SnackBarBehavior.floating,
-                                duration: Duration(milliseconds: 3000),
-                              ),
-                            );
-                            Navigator.pop(context);
-                          }
+                          // if (_passkeyController.text.trim() == passKeys!['bsv']) {
+                          //   try {
+                          //     // Initialize associations
+                          //     Map<String, dynamic>? babyBeatAssociation =
+                          //         widget.doctor!.babyBeatAssociation ?? {};
+                          //
+                          //     Map<String?, dynamic> babyBeatAssociationOrg = {
+                          //       widget.doctor!.documentId: {
+                          //         'documentId': widget.doctor!.documentId,
+                          //         'name': widget.doctor!.name,
+                          //         'type': "doctor"
+                          //       }
+                          //     };
+                          //
+                          //     // Add or update hospital to doctor's association
+                          //     babyBeatAssociation?['hospitalId'] = {
+                          //       'documentId': hospitalid,
+                          //       'name': hospitalName,
+                          //       'type': "organization"
+                          //     };
+                          //
+                          //     // 1. Update doctor document
+                          //     await databases.updateDocument(
+                          //       databaseId: 'your_database_id',
+                          //       collectionId: 'users',
+                          //       documentId: widget.doctor!.documentId!,
+                          //       data: {
+                          //         'babyBeatAssociation': babyBeatAssociation,
+                          //       },
+                          //     );
+                          //
+                          //     // 2. Update hospital document with reverse link
+                          //     final hospitalDoc = await databases.getDocument(
+                          //       databaseId: 'your_database_id',
+                          //       collectionId: 'users',
+                          //       documentId: hospitalid!,
+                          //     );
+                          //
+                          //     final existingHospitalAssociations =
+                          //     Map<String, dynamic>.from(hospitalDoc.data['babyBeatAssociation'] ?? {});
+                          //     existingHospitalAssociations[widget.doctor!.documentId!] =
+                          //     babyBeatAssociationOrg[widget.doctor!.documentId];
+                          //
+                          //     await databases.updateDocument(
+                          //       databaseId: 'your_database_id',
+                          //       collectionId: 'users',
+                          //       documentId: hospitalid,
+                          //       data: {
+                          //         'babyBeatAssociation': existingHospitalAssociations,
+                          //       },
+                          //     );
+                          //
+                          //     // Update local state/UI
+                          //     setState(() {
+                          //       widget.doctor!.babyBeatAssociation  = babyBeatAssociation;
+                          //       String? key = widget.doctor?.babyBeatAssociation!.keys.first;
+                          //       dropDownValues.addAll(widget.doctor!.babyBeatAssociation!.values);
+                          //       dropDownValues.add({"documentId": "All", "name": "All"});
+                          //       selectedOrg =
+                          //       widget.doctor!.babyBeatAssociation![key]['documentId'];
+                          //       PrefService.setString('selectedOrg', selectedOrg);
+                          //     });
+                          //
+                          //     debugPrint("Updated associations: ${widget.doctor!.babyBeatAssociation!.length}");
+                          //     Navigator.pop(context);
+                          //   } catch (error) {
+                          //     debugPrint("Appwrite error: $error");
+                          //     Navigator.pop(context);
+                          //     ScaffoldMessenger.of(_scaffoldKey.currentState!.context).showSnackBar(
+                          //       const SnackBar(
+                          //         content: Text('Something went wrong!'),
+                          //         behavior: SnackBarBehavior.floating,
+                          //         duration: Duration(milliseconds: 3000),
+                          //       ),
+                          //     );
+                          //   }
+                          // } else {
+                          //   ScaffoldMessenger.of(_scaffoldKey.currentState!.context).showSnackBar(
+                          //     const SnackBar(
+                          //       content: Text('Invalid Pass Key!'),
+                          //       behavior: SnackBarBehavior.floating,
+                          //       duration: Duration(milliseconds: 3000),
+                          //     ),
+                          //   );
+                          //   Navigator.pop(context);
+                          // }
                         }
                         ,
                         color: greenColor,
@@ -789,7 +789,7 @@ class RecentTestListViewBabyBeatState
         setState(() {
           organization = Organization.fromMap(
             document.data,
-            document.$id,
+            // document.$id,
           );
           organization.deviceCode = id;
           isEditOrg = false;
@@ -833,7 +833,7 @@ class RecentTestListViewBabyBeatState
       );
 
       final devices = response.documents
-          .map((doc) => UserModel.fromMap(doc.data, doc.$id))
+          .map((doc) => UserModel.fromMap(doc.data, ))
           .toList();
 
       for (final device in devices) {

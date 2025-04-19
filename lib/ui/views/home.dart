@@ -6,6 +6,7 @@ import 'package:fetosense_remote_flutter/core/model/organization_model.dart';
 import 'package:fetosense_remote_flutter/core/network/appwrite_config.dart';
 import 'package:fetosense_remote_flutter/core/services/authentication.dart';
 import 'package:fetosense_remote_flutter/core/utils/app_constants.dart';
+import 'package:fetosense_remote_flutter/core/utils/preferences.dart';
 import 'package:fetosense_remote_flutter/ui/views/recent_test_list_view_baby_beat.dart';
 import 'package:fetosense_remote_flutter/ui/views/search_view.dart';
 import 'package:fetosense_remote_flutter/ui/views/profile_view.dart';
@@ -43,8 +44,7 @@ class HomeState extends State<Home> {
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   final databases = Databases(locator<AppwriteService>().client);
   BaseAuth auth = locator<BaseAuth>();
-  Doctor? doctor;
-  /// Android notification channel for heads up notifications.
+  Doctor doctor = Doctor();
   static const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'com.carenx.fetosense.channel', // id
     'Fetosense', // title
@@ -52,11 +52,7 @@ class HomeState extends State<Home> {
     enableVibration: true,
     playSound: true,
   );
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  final prefs = locator<PreferenceHelper>();
 
   @override
   Widget build(BuildContext context) {
@@ -91,16 +87,17 @@ class HomeState extends State<Home> {
       ),
       body: UpgradeAlert(
         child: Container(
-            margin: const EdgeInsets.only(bottom: 20),
-            child: PopScope(
-              canPop: false,
-              onPopInvokedWithResult: (didPop, result) {
-                if (!didPop) {
-                  onPop(context);
-                }
-              },
-              child: setUpBottomNavigation(_page),
-            )),
+          margin: const EdgeInsets.only(bottom: 20),
+          child: PopScope(
+            canPop: false,
+            onPopInvokedWithResult: (didPop, result) {
+              if (!didPop) {
+                onPop(context);
+              }
+            },
+            child: setUpBottomNavigation(_page),
+          ),
+        ),
       ),
     );
   }
@@ -109,8 +106,7 @@ class HomeState extends State<Home> {
   Widget setUpBottomNavigation(int currentIndex) {
     switch (currentIndex) {
       case 0:
-        return RecentTestListView(
-            doctor: doctor, organization: organization);
+        return RecentTestListView(doctor: doctor, organization: organization);
       case 1:
         return RecentTestListViewBabyBeat(
             doctor: doctor, organization: organizationBabyBeat);
@@ -118,32 +114,33 @@ class HomeState extends State<Home> {
         return SearchView(doctor: doctor, organization: organization);
       case 3:
         return ProfileView(
-          doctor: doctor!,
+          doctor: doctor,
           organization: organization,
           organizationBabyBeat: organizationBabyBeat,
-          orgCallbackBabyBeat: setOrganizationBabyBeat,
+          // orgCallbackBabyBeat: setOrganizationBabyBeat,
         );
       default:
-        return RecentTestListView(
-            doctor: doctor, organization: organization);
+        return RecentTestListView(doctor: doctor, organization: organization);
     }
   }
 
   @override
   void initState() {
-    doctor = widget.doctor;
-    if (doctor?.email?.isEmpty ?? true) {
-      context
-          .push(AppRoutes.initProfileUpdate, extra: {'doctor': widget.doctor});
-    } else if (doctor?.mobileNo?.isEmpty ?? true) {
-      context
-          .push(AppRoutes.initProfileUpdate2, extra: {'doctor': widget.doctor});
+    doctor = (widget.doctor)!;
+    if (doctor.organizationName?.isEmpty ?? true) {
+      debugPrint('doctor in home ---------> ${doctor.documentId}');
+      debugPrint('doctor in home ---------> ${doctor.email}');
+      if (mounted) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          context.push(AppRoutes.initProfileUpdate2, extra: doctor);
+        });
+      }
     }
     if (!kIsWeb) getPermission();
-    if (doctor?.organizationId?.isNotEmpty == true) {
+    if (doctor.organizationId?.isNotEmpty == true) {
       getOrganization();
     }
-    if (doctor?.organizationIdBabyBeat?.isNotEmpty == true) {
+    if (doctor.organizationNameBabyBeat?.isNotEmpty == true) {
       getOrganizationBabyBeat();
     }
     super.initState();
@@ -163,16 +160,17 @@ class HomeState extends State<Home> {
 
   /// Retrieves the organization details.
   void getOrganization() async {
+    debugPrint('inside org --> ${doctor.organizationId!}');
     try {
       final document = await databases.getDocument(
         databaseId: AppConstants.appwriteDatabaseId,
         collectionId: AppConstants.userCollectionId,
-        documentId: widget.doctor!.organizationId!,
+        documentId: doctor.documentId!,
       );
 
       debugPrint(document.$id);
       setState(() {
-        organization = Organization.fromMap(document.data, document.$id);
+        organization = Organization.fromMap(document.data, );
       });
     } catch (e) {
       debugPrint('Error fetching organization: $e');
@@ -185,13 +183,13 @@ class HomeState extends State<Home> {
       final document = await databases.getDocument(
         databaseId: AppConstants.appwriteDatabaseId,
         collectionId: AppConstants.userCollectionId,
-        documentId: widget.doctor!.organizationIdBabyBeat!,
+        documentId: doctor.organizationNameBabyBeat!,
       );
 
       debugPrint(document.$id);
       setState(() {
         organizationBabyBeat =
-            Organization.fromMap(document.data, document.$id);
+            Organization.fromMap(document.data, );
       });
     } catch (e) {
       debugPrint('Error fetching organizationBabyBeat: $e');

@@ -4,7 +4,9 @@ import 'package:fetosense_remote_flutter/core/model/doctor_model.dart';
 import 'package:fetosense_remote_flutter/core/model/organization_model.dart';
 import 'package:fetosense_remote_flutter/core/model/test_model.dart';
 import 'package:fetosense_remote_flutter/core/services/authentication.dart';
+import 'package:fetosense_remote_flutter/core/utils/preferences.dart';
 import 'package:fetosense_remote_flutter/core/view_models/test_crud_model.dart';
+import 'package:fetosense_remote_flutter/locater.dart';
 import 'package:fetosense_remote_flutter/ui/shared/constant.dart';
 import '../settings_view.dart';
 import 'live_tracking_card.dart';
@@ -17,32 +19,22 @@ import 'package:provider/provider.dart';
 class LiveTrackingView extends StatefulWidget {
   final Doctor? doctor;
   final Organization? organization;
-  final BaseAuth? auth;
-  final VoidCallback? logoutCallback;
-  final VoidCallback? profileupdate1Callback;
-  // final VoidCallback? profileupdate2Callback;
-
   const LiveTrackingView(
       {super.key,
       this.doctor,
       this.organization,
-      this.auth,
-      this.logoutCallback,
-      this.profileupdate1Callback,
-      // this.profileupdate2Callback
       });
 
   @override
-  _LiveTrackingViewState createState() => _LiveTrackingViewState();
+  LiveTrackingViewState createState() => LiveTrackingViewState();
 }
 
-class _LiveTrackingViewState extends State<LiveTrackingView> {
+class LiveTrackingViewState extends State<LiveTrackingView> {
   late AnimationController _animationController;
   late List<Test> tests;
-
+  BaseAuth auth = locator<BaseAuth>();
+  PreferenceHelper preferenceHelper = locator<PreferenceHelper>();
   int limit = 0;
-
-  _LiveTrackingViewState();
 
   @override
   void initState() {
@@ -68,7 +60,7 @@ class _LiveTrackingViewState extends State<LiveTrackingView> {
     return limit == 0
         ? Center(
             child: CircularProgressIndicator(
-            valueColor: new AlwaysStoppedAnimation<Color>(themeColor),
+            valueColor: AlwaysStoppedAnimation<Color>(themeColor),
           ))
         : SafeArea(
             child: Column(
@@ -79,7 +71,8 @@ class _LiveTrackingViewState extends State<LiveTrackingView> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          widget.logoutCallback!();
+                          auth.signOut();
+                          preferenceHelper.removeDoctor();
                         },
                         child: Text(
                           "Central Monitoring",
@@ -102,12 +95,6 @@ class _LiveTrackingViewState extends State<LiveTrackingView> {
                               builder: (context) => SettingsView(
                                 doctor: widget.doctor,
                                 organization: widget.organization,
-                                logoutCallback: widget.logoutCallback,
-                                auth: widget.auth,
-                                profileUpdate1Callback:
-                                    widget.profileupdate1Callback,
-                                // profileUpdate2Callback:
-                                //     widget.profileupdate2Callback,
                               ),
                             ),
                           );

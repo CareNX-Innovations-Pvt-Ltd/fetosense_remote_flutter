@@ -33,11 +33,8 @@ class RecentTestListView extends StatefulWidget {
   final Function(Organization?)? orgCallback;
   final Organization? organization;
 
-  //HomeView(@required this.doctor);
-
   /// [doctor] is the doctor model containing the details to be displayed.
   /// [organization] is the organization model.
-  /// [orgCallback] is the callback function to set the organization.
   const RecentTestListView(
       {super.key, this.doctor, this.organization, this.orgCallback});
 
@@ -54,7 +51,7 @@ class RecentTestListViewState extends State<RecentTestListView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String? code;
   final databases = Databases(locator<AppwriteService>().client);
-
+  Doctor  doctor = Doctor();
   Map<String, dynamic>? passKeys = {};
 
   final TextEditingController _passkeyController = TextEditingController();
@@ -63,6 +60,7 @@ class RecentTestListViewState extends State<RecentTestListView> {
   void initState() {
     super.initState();
     getPaasKeys();
+    doctor = widget.doctor ?? Doctor();
   }
 
   /// Fetches the pass keys from Firestore.
@@ -89,271 +87,281 @@ class RecentTestListViewState extends State<RecentTestListView> {
     return Scaffold(
       key: _scaffoldKey,
       body: SafeArea(
-          child: Column(children: <Widget>[
-        Container(
-          margin: const EdgeInsets.symmetric(vertical: 5),
-          decoration: const BoxDecoration(
-            border: Border(bottom: BorderSide(width: 0.5, color: Colors.grey)),
-          ),
-          child: ListTile(
-            subtitle: const Text(
-              "Recent Tests",
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 20,
-                  color: Colors.black87),
-            ),
-            title: const Text(
-              "Fetosense",
-              style: TextStyle(
-                  fontWeight: FontWeight.w300,
-                  fontSize: 14,
-                  color: Colors.black87),
-            ),
-            trailing: Image.asset('images/ic_logo_good.png'),
-          ),
-        ),
-        widget.doctor!.organizationId!.isNotEmpty
-            ? Expanded(
-                child: Container(
-                  padding: const EdgeInsets.fromLTRB(10, 0, 8, 8),
-                  child: StreamBuilder(
-                    stream: Provider.of<TestCRUDModel>(context)
-                        .fetchAllTestsAsStream(widget.doctor!.organizationId),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        tests = snapshot.data!;
-
-                        return tests.isEmpty
-                            ? const Center(
-                                child: Text(
-                                  'No test yet',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    color: Colors.grey,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              )
-                            : ListView.builder(
-                                itemCount: tests.length,
-                                shrinkWrap: true, // use this
-                                itemBuilder: (buildContext, index) =>
-                                    AllTestCard(
-                                  testDetails: tests[index],
-                                ),
-                              );
-                      } else {
-                        return const Center(
-                          child: CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.black),
-                          ),
-                        );
-                      }
-                    },
-                  ),
+        child: Column(
+          children: <Widget>[
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 5),
+              decoration: const BoxDecoration(
+                border:
+                    Border(bottom: BorderSide(width: 0.5, color: Colors.grey)),
+              ),
+              child: ListTile(
+                subtitle: const Text(
+                  "Recent Tests",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20,
+                      color: Colors.black87),
                 ),
-              )
-            : Expanded(
-                child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 16),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Welcome back,",
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
+                title: const Text(
+                  "Fetosense",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w300,
+                      fontSize: 14,
+                      color: Colors.black87),
+                ),
+                trailing: Image.asset('images/ic_logo_good.png'),
+              ),
+            ),
+            doctor.organizationId?.isNotEmpty == true
+                ? Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 8, 8),
+                      child: StreamBuilder(
+                        stream: Provider.of<TestCRUDModel>(context)
+                            .fetchAllTestsAsStream(
+                                doctor.organizationId),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            tests = snapshot.data!;
+
+                            return tests.isEmpty
+                                ? const Center(
+                                    child: Text(
+                                      'No test yet',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.grey,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  )
+                                : ListView.builder(
+                                    itemCount: tests.length,
+                                    shrinkWrap: true, // use this
+                                    itemBuilder: (buildContext, index) =>
+                                        AllTestCard(
+                                      testDetails: tests[index],
+                                    ),
+                                  );
+                          } else {
+                            return const Center(
+                              child: CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.black),
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 16),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Dr. ${widget.doctor!.name}",
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.teal,
-                          ),
+                  )
+                : Expanded(
+                    child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 20,
                         ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 16, right: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Align(
+                        const Padding(
+                          padding: EdgeInsets.only(left: 16),
+                          child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              "To get started, scan your \n FETOSENSE QR Code",
+                              "Welcome back,",
                               style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
                           ),
-                          !isEditOrg
-                              ? MaterialButton(
-                                  elevation: 2,
-                                  color: Colors.teal,
-                                  textColor: Colors.white,
-                                  highlightElevation: 2,
-                                  onPressed: () async {
-                                    setState(() {
-                                      isEditOrg = true;
-                                      // scanQR();
-                                    });
-                                    var result = await Navigator.push(
-                                      context,
-                                      CupertinoPageRoute(
-                                        builder: (context) => ScanWidget(),
-                                      ),
-                                    );
-
-                                    // debugPrint("Result : " + result.toString());
-
-                                    if (result != null && result != 'Unknown') {
-                                      scanQR(result);
-                                    } else {
-                                      setState(() {
-                                        isEditOrg = false;
-                                        // scanQR();
-                                      });
-                                    }
-                                  },
-                                  child: const Text(
-                                    'Scan QR',
-                                    style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                )
-                              : IconButton(
-                                  iconSize: 35,
-                                  icon: const CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.black),
-                                  ),
-                                  onPressed: () {},
-                                ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Container(
-                      margin: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(14),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey[400]!,
-                              blurRadius: 5.0,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Dr. ${doctor.name}",
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.teal,
+                              ),
                             ),
-                          ]),
-                      child: Column(
-                        children: [
-                          FeedsYoutube("QuiCSDtXoIc"),
-                          Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  flex: 4,
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      "Explore India’s Most Advanced Wireless Fetal Monitoring Machine. For Demo, Call: +91 9326775598 or WhatsApp",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        color: greyRegular,
-                                      ),
-                                    ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16, right: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "To get started, scan your \n FETOSENSE QR Code",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                const SizedBox(
-                                  width: 8,
+                              ),
+                              !isEditOrg
+                                  ? MaterialButton(
+                                      elevation: 2,
+                                      color: Colors.teal,
+                                      textColor: Colors.white,
+                                      highlightElevation: 2,
+                                      onPressed: () async {
+                                        setState(() {
+                                          isEditOrg = true;
+                                          // scanQR();
+                                        });
+                                        var result = await Navigator.push(
+                                          context,
+                                          CupertinoPageRoute(
+                                            builder: (context) => ScanWidget(),
+                                          ),
+                                        );
+
+                                        // debugPrint("Result : " + result.toString());
+
+                                        if (result != null &&
+                                            result != 'Unknown') {
+                                          scanQR(result);
+                                        } else {
+                                          setState(() {
+                                            isEditOrg = false;
+                                            // scanQR();
+                                          });
+                                        }
+                                      },
+                                      child: const Text(
+                                        'Scan QR',
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    )
+                                  : IconButton(
+                                      iconSize: 35,
+                                      icon: const CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                Colors.black),
+                                      ),
+                                      onPressed: () {},
+                                    ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Container(
+                          margin: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(14),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey[400]!,
+                                  blurRadius: 5.0,
                                 ),
-                                Expanded(
-                                  flex: 1,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      String text = "";
-                                      if (widget.doctor!.mobileNo != null) {
-                                        text =
-                                            "Hello\nI am ${widget.doctor!.name} and my mobile no is ${widget.doctor!.mobileNo}.\nI Need demo for fetosense.";
-                                      } else {
-                                        text =
-                                            "Hello\nI am ${widget.doctor!.name} and my mobile no is ${widget.doctor!.email}.\nI Need demo for fetosense.";
-                                      }
-
-                                      String phone = "919326775598";
-                                      //if(Platform.isIOS){
-                                      String url =
-                                          "whatsapp://send?phone=$phone&text=$text";
-                                      String urlOk =
-                                          url.split(' ').join('%20').toString();
-                                      urlOk = urlOk
-                                          .split('\n')
-                                          .join('%0A')
-                                          .toString();
-
-                                      debugPrint(urlOk);
-                                      launchUrl(
-                                        Uri.parse(urlOk),
-                                      );
-                                    },
-                                    child: Align(
-                                      alignment: Alignment.bottomCenter,
-                                      child: Container(
-                                        padding: const EdgeInsets.all(12),
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Colors.white,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey[400]!,
-                                                blurRadius: 5.0,
-                                              ),
-                                            ]),
-                                        child: const FaIcon(
-                                          FontAwesomeIcons.whatsapp,
-                                          color: Colors.teal,
-                                          size: 30,
+                              ]),
+                          child: Column(
+                            children: [
+                              FeedsYoutube("QuiCSDtXoIc"),
+                              Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      flex: 4,
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          "Explore India’s Most Advanced Wireless Fetal Monitoring Machine. For Demo, Call: +91 9326775598 or WhatsApp",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: greyRegular,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                )
-                              ],
-                            ),
+                                    const SizedBox(
+                                      width: 8,
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          String text = "";
+                                          if (doctor.mobileNo != null) {
+                                            text =
+                                                "Hello\nI am ${doctor.name} and my mobile no is ${doctor.mobileNo}.\nI Need demo for fetosense.";
+                                          } else {
+                                            text =
+                                                "Hello\nI am ${doctor.name} and my mobile no is ${doctor.email}.\nI Need demo for fetosense.";
+                                          }
+
+                                          String phone = "919326775598";
+                                          //if(Platform.isIOS){
+                                          String url =
+                                              "whatsapp://send?phone=$phone&text=$text";
+                                          String urlOk = url
+                                              .split(' ')
+                                              .join('%20')
+                                              .toString();
+                                          urlOk = urlOk
+                                              .split('\n')
+                                              .join('%0A')
+                                              .toString();
+
+                                          debugPrint(urlOk);
+                                          launchUrl(
+                                            Uri.parse(urlOk),
+                                          );
+                                        },
+                                        child: Align(
+                                          alignment: Alignment.bottomCenter,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(12),
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.white,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey[400]!,
+                                                    blurRadius: 5.0,
+                                                  ),
+                                                ]),
+                                            child: const FaIcon(
+                                              FontAwesomeIcons.whatsapp,
+                                              color: Colors.teal,
+                                              size: 30,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ))
-      ])),
+                  ))
+          ],
+        ),
+      ),
     );
   }
 
@@ -385,7 +393,7 @@ class RecentTestListViewState extends State<RecentTestListView> {
 
         debugPrint('decoded id is $decoded');
         updateOrg(decoded);
-            } on FormatException {
+      } on FormatException {
         ScaffoldMessenger.of(_scaffoldKey.currentState!.context)
             .showSnackBar(const SnackBar(
           content: Text('Invalid QR CODE'),
@@ -468,7 +476,6 @@ class RecentTestListViewState extends State<RecentTestListView> {
       );
     }
   }
-
 
   /// Displays a modal bottom sheet to enter the passkey.
   ///
@@ -600,19 +607,21 @@ class RecentTestListViewState extends State<RecentTestListView> {
                       child: MaterialButton(
                         padding: const EdgeInsets.all(20),
                         onPressed: () async {
-                          if (_passkeyController.text.trim() == passKeys!['fetosense']) {
+                          if (_passkeyController.text.trim() ==
+                              passKeys!['fetosense']) {
                             try {
                               await databases.updateDocument(
                                 databaseId: AppConstants.appwriteDatabaseId,
                                 collectionId: AppConstants.userCollectionId,
-                                documentId: widget.doctor!.documentId!,
+                                documentId: doctor.documentId!,
                                 data: {
                                   'organizationId': hospitalid,
                                   'organizationName': hospitalName,
                                 },
                               );
 
-                              debugPrint("Organization assigned to doctor successfully.");
+                              debugPrint(
+                                  "Organization assigned to doctor successfully.");
                               getOrganization("$hospitalid");
                               Navigator.pop(context);
                             } catch (error) {
@@ -627,7 +636,9 @@ class RecentTestListViewState extends State<RecentTestListView> {
                               );
                             }
                           } else {
-                            ScaffoldMessenger.of(_scaffoldKey.currentState!.context).showSnackBar(
+                            ScaffoldMessenger.of(
+                                    _scaffoldKey.currentState!.context)
+                                .showSnackBar(
                               const SnackBar(
                                 content: Text('Invalid Pass Key!'),
                                 behavior: SnackBarBehavior.floating,
@@ -670,7 +681,7 @@ class RecentTestListViewState extends State<RecentTestListView> {
         setState(() {
           organization = Organization.fromMap(
             document.data,
-            document.$id,
+            // document.$id,
           );
           organization!.deviceCode = id;
           isEditOrg = false;
@@ -714,7 +725,7 @@ class RecentTestListViewState extends State<RecentTestListView> {
       );
 
       final devices = response.documents
-          .map((doc) => UserModel.fromMap(doc.data, doc.$id))
+          .map((doc) => UserModel.fromMap(doc.data, ))
           .toList();
 
       for (final device in devices) {
@@ -722,19 +733,18 @@ class RecentTestListViewState extends State<RecentTestListView> {
 
         // Create doctor association map
         final Map<String, String?> doctorAssoc = {
-          "name": widget.doctor!.name,
+          "name": doctor.name,
           "type": "doctor",
-          "id": widget.doctor!.documentId,
+          "id": doctor.documentId,
         };
 
         // Ensure existing associations are preserved
         Map<String, dynamic> updatedAssociations = {};
         if (device.associations != null) {
-          updatedAssociations =
-          Map<String, dynamic>.from(device.associations!);
+          updatedAssociations = Map<String, dynamic>.from(device.associations!);
         }
 
-        updatedAssociations[widget.doctor!.documentId!] = doctorAssoc;
+        updatedAssociations[doctor.documentId!] = doctorAssoc;
 
         // Update the device user with merged associations
         await databases.updateDocument(
@@ -750,5 +760,4 @@ class RecentTestListViewState extends State<RecentTestListView> {
       debugPrint('Error in setDeviceAssociations: $e');
     }
   }
-
 }

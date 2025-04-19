@@ -76,13 +76,19 @@ class _LoginViewState extends State<LoginView> {
         });
 
         if (userId.isNotEmpty) {
-         var doctor = getDoctor();
-          debugPrint('Signed in loginCallback:  $userId');
+         var doctor = await getDoctor();
+          debugPrint('Signed in:  $doctor');
           auth.getCurrentUser().then((user) {
-            debugPrint('loginCallback');
-            prefs.saveUser(user);
+            debugPrint('doctor -> ${doctor.email}');
+            debugPrint('doctor -> ${doctor.documentId}');
             prefs.setAutoLogin(true);
-            context.pushReplacement(AppRoutes.home, extra: {'doctor':doctor});
+            prefs.saveDoctor(doctor);
+            if (mounted) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                context.pushReplacement(AppRoutes.home, extra: doctor);
+              });
+            }
+
           });
         }
       } catch (e, s) {
@@ -97,9 +103,11 @@ class _LoginViewState extends State<LoginView> {
         });
       }
     } else {
-      setState(() {
-        _isLoading = false;
-      });
+      if(mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -390,7 +398,8 @@ class _LoginViewState extends State<LoginView> {
       );
       // if (result.total > 0) {
         final doc = result.documents.map((docs) =>
-            Doctor.fromMap(docs.data, docs.$id));
+            Doctor.fromMap(docs.data,));
+      debugPrint('data is here ---> ${doc.first}');
         return doc.first;
       // }
     } on AppwriteException catch (e) {

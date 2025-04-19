@@ -2,10 +2,7 @@ import 'package:fetosense_remote_flutter/core/model/user_model.dart';
 
 /// A model class representing an organization, extending the [UserModel] class.
 class Organization extends UserModel {
-  int noOfMother = 0;
-  int noOfTests = 0;
   int noOfDevices = 0;
-  String deviceCode = "";
 
   /// Default constructor for the [Organization] class.
   Organization();
@@ -14,12 +11,9 @@ class Organization extends UserModel {
   ///
   /// [snapshot] is a map containing the organization data.
   /// [id] is the unique identifier of the organization.
-  Organization.fromMap(Map snapshot, String id)
-      : noOfMother = snapshot['noOfMother'] ?? 0,
-        noOfTests = snapshot['noOfTests'] ?? 0,
-        noOfDevices = snapshot['noOfTests'] ?? 0,
-        deviceCode = snapshot["deviceCode"] ?? '',
-        super.fromMap(snapshot, id);
+  Organization.fromMap(super.snapshot)
+        :noOfDevices = snapshot['noOfTests'] ?? 0,
+        super.fromMap();
 
 /*
   /// Converts the [Organization] instance to a JSON map.

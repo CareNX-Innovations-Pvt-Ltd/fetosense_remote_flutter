@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:appwrite/models.dart';
-import 'package:fetosense_remote_flutter/core/model/user_model.dart';
+import 'package:fetosense_remote_flutter/core/model/doctor_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceHelper {
@@ -20,6 +20,7 @@ class PreferenceHelper {
 
   static const String autoLogin = "IsAutoLogin";
   static const String users = "users";
+  static const String isTv = "isAndroidTv";
   static const String _APP_OPEN_AT = "AppOpenAt";
   static const String _IS_UPDATED = "IsUpdated";
   static const String _IS_FIRST_TIME = "FirstTime";
@@ -34,19 +35,19 @@ class PreferenceHelper {
   void setAutoLogin(bool isAutoLogin) => _prefsInstance.setBool(autoLogin, isAutoLogin);
   bool getAutoLogin() => _prefsInstance.getBool(autoLogin) ?? false;
 
-  void removeUser() => _prefsInstance.remove(users);
+  void removeDoctor() => _prefsInstance.remove(users);
 
-  Future<void> saveUser(User user) async {
+  Future<void> saveDoctor(Doctor user) async {
     String userJson = jsonEncode(user);
     await _prefsInstance.setString(users, userJson);
   }
 
-  User? getUser() {
+  Doctor? getDoctor() {
     String? userJson = _prefsInstance.getString(users);
     if (userJson == null) return null;
 
     Map<String, dynamic> userMap = jsonDecode(userJson);
-    return User.fromMap(userMap);
+    return Doctor.fromMap(userMap);
   }
 
   void setAppOpenAt(int time) => _prefsInstance.setInt(_APP_OPEN_AT, time);

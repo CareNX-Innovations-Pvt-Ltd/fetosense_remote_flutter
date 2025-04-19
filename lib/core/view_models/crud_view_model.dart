@@ -20,7 +20,7 @@ class CRUDModel with ChangeNotifier {
   Future<List<Mother>?> fetchProducts() async {
     var result = await _api.getDataCollection();
     mothers = result.map((doc) {
-      return Mother.fromMap(doc.data, doc.$id);
+      return Mother.fromJson(doc.data);
     }).toList();
     return mothers;
   }
@@ -28,7 +28,7 @@ class CRUDModel with ChangeNotifier {
   /// Stream mothers by organizationId
   Stream<List<Mother>> fetchMothersAsStream(String organizationId) {
     return _api.streamMotherData(organizationId).map((documents) {
-      return documents.map((doc) => Mother.fromMap(doc.data, doc.$id)).toList();
+      return documents.map((doc) => Mother.fromJson(doc.data)).toList();
     });
   }
 
@@ -36,14 +36,14 @@ class CRUDModel with ChangeNotifier {
   Stream<List<Mother>> fetchMothersAsStreamSearch(
       String organizationId, String start) {
     return _api.streamMotherDataSearch(organizationId, start).map((documents) {
-      return documents.map((doc) => Mother.fromMap(doc.data, doc.$id)).toList();
+      return documents.map((doc) => Mother.fromJson(doc.data)).toList();
     });
   }
 
   /// Stream active mothers
   Stream<List<Mother>> fetchActiveMothersAsStream(String organizationId) {
     return _api.streamActiveMotherData(organizationId).map((documents) {
-      return documents.map((doc) => Mother.fromMap(doc.data, doc.$id)).toList();
+      return documents.map((doc) => Mother.fromJson(doc.data)).toList();
     });
   }
 
@@ -51,34 +51,34 @@ class CRUDModel with ChangeNotifier {
   Stream<List<Mother>> fetchMothersAsStreamSearchMothers(
       String organizationId, String start) {
     return _api.streamMotherDataSearch(organizationId, start).map((documents) {
-      return documents.map((doc) => Mother.fromMap(doc.data, doc.$id)).toList();
+      return documents.map((doc) => Mother.fromJson(doc.data)).toList();
     });
   }
 
   /// Get doctor by document ID
   Future<Doctor> getDoctorById(String id) async {
     final doc = await _api.getDocumentById(id);
-    return Doctor.fromMap(doc.data, doc.$id);
+    return Doctor.fromMap(doc.data, );
   }
 
   /// Stream doctor by email
   Stream<List<Doctor>> fetchDoctorByEmailId(String id) {
     return _api.streamDocumentByEmailId(id).map((docs) {
-      return docs.map((doc) => Doctor.fromMap(doc.data, doc.$id)).toList();
+      return docs.map((doc) => Doctor.fromMap(doc.data, )).toList();
     });
   }
 
   /// Stream doctor by mobile number
   Stream<List<Doctor>> fetchDoctorByMobile(String id) {
     return _api.streamDocumentByMobile(id).map((docs) {
-      return docs.map((doc) => Doctor.fromMap(doc.data, doc.$id)).toList();
+      return docs.map((doc) => Doctor.fromMap(doc.data, )).toList();
     });
   }
 
   /// Get user by document ID
   Future<UserModel> getUserById(String id) async {
     final doc = await _api.getDocumentById(id);
-    return UserModel.fromMap(doc.data, doc.$id);
+    return UserModel.fromMap(doc.data, );
   }
 
   /// Delete document
