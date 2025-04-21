@@ -1,8 +1,10 @@
+import 'package:fetosense_remote_flutter/app_router.dart';
 import 'package:fetosense_remote_flutter/core/model/doctor_model.dart';
 import 'package:fetosense_remote_flutter/core/model/organization_model.dart';
 import 'package:fetosense_remote_flutter/core/services/authentication.dart';
 import 'package:fetosense_remote_flutter/locater.dart';
 import 'package:fetosense_remote_flutter/ui/views/settings_view.dart';
+import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:fetosense_remote_flutter/ui/views/notificationView.dart';
 import 'package:fetosense_remote_flutter/ui/views/doctor_details.dart';
@@ -17,7 +19,6 @@ class ProfileView extends StatefulWidget {
 
   final Organization? organization;
   final Organization? organizationBabyBeat;
-  final Function(Organization) orgCallbackBabyBeat;
 
   /// [doctor] is the doctor model containing the details to be displayed.
   /// [organization] is the organization model.
@@ -29,7 +30,6 @@ class ProfileView extends StatefulWidget {
     required this.doctor,
     required this.organization,
     required this.organizationBabyBeat,
-    required this.orgCallbackBabyBeat,
   });
 
   @override
@@ -90,9 +90,9 @@ class ProfileViewState extends State<ProfileView> {
                         doctor: widget.doctor,
                         org: widget.organization,
                         orgBabyBeat: widget.organizationBabyBeat,
-                        setOrg: setOrganization,
-                        setOrgBabyBeat: setOrganizationBabyBeat,
-                        isMobileVerified: isMobileVerified,
+                        // setOrg: setOrganization,
+                        // setOrgBabyBeat: setOrganizationBabyBeat,
+                        // isMobileVerified: isMobileVerified,
                       ),
                     ),
                   );
@@ -121,9 +121,9 @@ class ProfileViewState extends State<ProfileView> {
                         doctor: widget.doctor,
                         org: widget.organization,
                         orgBabyBeat: widget.organizationBabyBeat,
-                        setOrg: setOrganization,
-                        setOrgBabyBeat: setOrganizationBabyBeat,
-                        isMobileVerified: isMobileVerified,
+                        // setOrg: setOrganization,
+                        // setOrgBabyBeat: setOrganizationBabyBeat,
+                        // isMobileVerified: isMobileVerified,
                       ),
                     ),
                   );
@@ -190,7 +190,9 @@ class ProfileViewState extends State<ProfileView> {
                     color: Colors.black87,
                   ),
                 ),
-                onTap: () => auth.signOut(),
+                onTap: () {auth.signOut();
+                  context.pushReplacement(AppRoutes.login);
+                  },
               ),
             ),
             Container(
@@ -335,7 +337,7 @@ class ProfileViewState extends State<ProfileView> {
   /// Sets the BabyBeat organization using the provided callback.
   ///
   /// [org] is the BabyBeat organization to be set.
-  setOrganizationBabyBeat(Organization org) => widget.orgCallbackBabyBeat(org);
+  // setOrganizationBabyBeat(Organization org) => widget.orgCallbackBabyBeat(org);
 
   /// Launches the privacy policy URL.
   _launchPrivacy() async {

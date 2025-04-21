@@ -28,7 +28,7 @@ void setupLocator() {
   locator.registerLazySingleton(
     () => TestApi(
       databaseId: AppConstants.appwriteDatabaseId,
-      collectionId: AppConstants.userCollectionId,
+      collectionId: AppConstants.testsCollectionId,
       databaseInstance: locator<Databases>(),
     ),
   );

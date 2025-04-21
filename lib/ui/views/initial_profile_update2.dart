@@ -33,10 +33,14 @@ class InitialProfileUpdate2State extends State<InitialProfileUpdate2> {
   Organization? organization;
   final databases = Databases(locator<AppwriteService>().client);
   String? code;
+  Doctor doctor = Doctor();
 
   @override
   void initState() {
     super.initState();
+    debugPrint('doctor -> ${widget.doctor?.email}');
+    debugPrint('doctor -> ${widget.doctor?.documentId}');
+    doctor = widget.doctor!;
   }
 
   @override
@@ -271,8 +275,6 @@ class InitialProfileUpdate2State extends State<InitialProfileUpdate2> {
     }
 
     if (code.contains("CMFETO")) {
-      //cameraScanResult = cameraScanResult.replaceAll("FETOSENSE:", "");
-      //String result = utf8.decode(base64.decode(cameraScanResult));
       getDevice(code);
     } else {
       setState(() {
@@ -285,6 +287,7 @@ class InitialProfileUpdate2State extends State<InitialProfileUpdate2> {
 
   /// Retrieves the device details from the database using the scanned code.
   Future<void> getDevice(String key) async {
+    debugPrint('device code --> $key');
     try {
       // 1. Query devices where deviceCode == key
       final result = await databases.listDocuments(
@@ -310,7 +313,7 @@ class InitialProfileUpdate2State extends State<InitialProfileUpdate2> {
         await databases.updateDocument(
           databaseId: AppConstants.appwriteDatabaseId,
           collectionId: AppConstants.userCollectionId,
-          documentId: widget.doctor!.documentId!,
+          documentId: doctor.documentId!,
           data: updateData,
         );
 

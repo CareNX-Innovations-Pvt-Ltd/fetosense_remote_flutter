@@ -9,7 +9,6 @@ import 'package:fetosense_remote_flutter/ui/widgets/scanWidget.dart';
 import 'package:fetosense_remote_flutter/ui/widgets/updateOrgDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:appwrite/appwrite.dart';
 import 'package:preferences/preferences.dart';
@@ -25,29 +24,18 @@ class DoctorDetails extends StatefulWidget {
   /// The BabyBeat organization associated with the doctor.
   final Organization? orgBabyBeat;
 
-  /// Callback to set the organization.
-  final Function(Organization org)? setOrg;
-
-  /// Callback to set the BabyBeat organization.
-  final Function(Organization org)? setOrgBabyBeat;
-
-  /// Indicates whether the mobile number is verified.
-  final bool? isMobileVerified;
-
   const DoctorDetails(
       {super.key,
       required this.doctor,
       this.org,
-      this.setOrg,
-      this.isMobileVerified,
       this.orgBabyBeat,
-      this.setOrgBabyBeat});
+      });
 
   @override
-  State<StatefulWidget> createState() => _DoctorDetailsState(organization: org);
+  State<StatefulWidget> createState() => DoctorDetailsState();
 }
 
-class _DoctorDetailsState extends State<DoctorDetails> {
+class DoctorDetailsState extends State<DoctorDetails> {
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String? _email;
@@ -70,8 +58,6 @@ class _DoctorDetailsState extends State<DoctorDetails> {
 
   final TextEditingController _passkeyBabyBeatController =
       TextEditingController();
-
-  _DoctorDetailsState({required this.organization});
 
   final databases = Databases(locator<AppwriteService>().client);
   final users = Account(locator<AppwriteService>().client);
@@ -229,31 +215,31 @@ class _DoctorDetailsState extends State<DoctorDetails> {
                             focusNode: _nameFocus,
                             textCapitalization: TextCapitalization.words,
                           ),
-                          TextFormField(
-                            maxLines: 1,
-                            keyboardType: TextInputType.number,
-                            autofocus: false,
-                            maxLength: 10,
-                            initialValue: widget.doctor!.mobileNo,
-                            decoration: const InputDecoration(
-                              hintText: 'Mobile No',
-                              icon: Icon(
-                                Icons.phone,
-                                color: Colors.grey,
-                              ),
-                            ),
-                            validator: (value) => value!.isNotEmpty
-                                ? value.length != 10
-                                    ? 'Invalid Mobile number'
-                                    : null
-                                : null,
-                            onSaved: (value) => _mobile = value!.trim(),
-                            enabled:
-                                isEdit ? !widget.isMobileVerified! : isEdit,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                          ),
+                          // TextFormField(
+                          //   maxLines: 1,
+                          //   keyboardType: TextInputType.number,
+                          //   autofocus: false,
+                          //   maxLength: 10,
+                          //   initialValue: widget.doctor!.mobileNo.toString(),
+                          //   decoration: const InputDecoration(
+                          //     hintText: 'Mobile No',
+                          //     icon: Icon(
+                          //       Icons.phone,
+                          //       color: Colors.grey,
+                          //     ),
+                          //   ),
+                          //   validator: (value) => value!.isNotEmpty
+                          //       ? value.length != 10
+                          //           ? 'Invalid Mobile number'
+                          //           : null
+                          //       : null,
+                          //   onSaved: (value) => _mobile = value!.trim(),
+                          //   enabled:
+                          //       isEdit ? !widget.isMobileVerified! : isEdit,
+                          //   inputFormatters: <TextInputFormatter>[
+                          //     FilteringTextInputFormatter.digitsOnly
+                          //   ],
+                          // ),
                           TextFormField(
                             maxLines: 1,
                             keyboardType: TextInputType.emailAddress,
@@ -265,7 +251,7 @@ class _DoctorDetailsState extends State<DoctorDetails> {
                                   Icons.mail,
                                   color: Colors.grey,
                                 )),
-                            enabled: isEdit ? widget.isMobileVerified : isEdit,
+                            enabled: isEdit,
                             validator: (value) =>
                                 value!.isEmpty ? 'Email can\'t be empty' : null,
                             onSaved: (value) => _email = value!.trim(),
@@ -1141,11 +1127,11 @@ class _DoctorDetailsState extends State<DoctorDetails> {
 
       final data = doc.data;
       setState(() {
-        organization = Organization.fromMap(data, id);
+        organization = Organization.fromMap(data);
         organization!.deviceCode = id;
         isEditOrg = false;
       });
-      widget.setOrg!(organization!);
+      // setOrg!(organization!);
       setDeviceAssociations(id);
     } catch (e) {
       Fluttertoast.showToast(msg: 'No organization found');

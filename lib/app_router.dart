@@ -32,19 +32,20 @@ class AppRouter {
       GoRoute(
         name: AppRoutes.login,
         path: AppRoutes.login,
-        builder: (context, state) =>  LoginView(),
+        builder: (context, state) => LoginView(),
       ),
       GoRoute(
-        name: AppRoutes.home,
-        path: AppRoutes.home,
-        builder: (context, state) => Home(),
-      ),
+          name: AppRoutes.home,
+          path: AppRoutes.home,
+          builder: (context, state) {
+            var doctor = state.extra as Doctor?;
+            return Home(doctor: doctor);
+          }),
       GoRoute(
           name: AppRoutes.initProfileUpdate,
           path: AppRoutes.initProfileUpdate,
           builder: (context, state) {
-            final extra = state.extra as Map<String, dynamic>?;
-            var doctor = extra?['doctor'] as Doctor;
+            var doctor = state.extra as Doctor;
             return InitialProfileUpdate(
               doctor: doctor,
             );
@@ -53,8 +54,7 @@ class AppRouter {
           name: AppRoutes.initProfileUpdate2,
           path: AppRoutes.initProfileUpdate2,
           builder: (context, state) {
-            final extra = state.extra as Map<String, dynamic>?;
-            var doctor = extra?['doctor'] as Doctor;
+            var doctor = state.extra as Doctor;
             return InitialProfileUpdate2(
               doctor: doctor,
             );
