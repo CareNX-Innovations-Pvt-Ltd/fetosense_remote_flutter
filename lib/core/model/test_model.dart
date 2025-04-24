@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 
 /// A model class representing a test.
@@ -200,14 +202,14 @@ class Test {
         testById = snapshot['testById'],
         interpretationType = snapshot['interpretationType'],
         interpretationExtraComments = snapshot['interpretationExtraComments'],
-        associations = snapshot['association'] != null
-            ? snapshot['association']
-            : <String, dynamic>{},
-        autoInterpretations = snapshot['autoInterpretations'] != null
-            ? snapshot['autoInterpretations']
-            : <String, dynamic>{},
+        associations = snapshot['association'] is String
+            ? jsonDecode(snapshot['association'])
+            : snapshot['association'],
+        // autoInterpretations = snapshot['autoInterpretations'] is String?
+        //     ? jsonEncode(snapshot['autoInterpretations'] ?? '')
+        //     : snapshot['autoInterpretations'],
         delete = snapshot['delete'],
-        createdOn = snapshot['createdOn'].toDate(),
+        createdOn = DateTime.parse(snapshot['createdOn']),
         createdBy = snapshot['createdBy'];
 
   /// Default constructor for the [Test] class.
@@ -252,7 +254,7 @@ class Test {
   ///
   /// [documentId] is the new document ID to be set.
   void setDocumentId(String documentId) {
-    this.id = documentId;
+    id = documentId;
   }
 
   /// Gets the creation date.
@@ -306,9 +308,9 @@ class Test {
 
   /// Sets the live status.
   ///
-  /// [_live] is the new live status to be set.
-  void setLive(bool _live) {
-    this.live = _live;
+  /// [live] is the new live status to be set.
+  void setLive(bool live) {
+    this.live = live;
   }
 
   /// Gets the associations.
@@ -382,6 +384,7 @@ class Test {
       'createdBy': createdBy,
     };
   }
+
   void printDetails() {
     if (kDebugMode) {
       print('Test Details:');

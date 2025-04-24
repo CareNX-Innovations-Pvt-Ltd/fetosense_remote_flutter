@@ -2,7 +2,7 @@ import 'package:fetosense_remote_flutter/core/model/doctor_model.dart';
 import 'package:fetosense_remote_flutter/core/model/mother_model.dart';
 import 'package:fetosense_remote_flutter/core/model/organization_model.dart';
 import 'package:fetosense_remote_flutter/core/view_models/crud_view_model.dart';
-import 'package:fetosense_remote_flutter/ui/widgets/motherCard.dart';
+import 'package:fetosense_remote_flutter/ui/widgets/mother_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

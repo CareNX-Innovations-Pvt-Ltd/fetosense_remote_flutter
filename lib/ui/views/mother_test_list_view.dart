@@ -1,6 +1,6 @@
 import 'package:fetosense_remote_flutter/core/model/test_model.dart';
 import 'package:fetosense_remote_flutter/core/view_models/test_crud_model.dart';
-import 'package:fetosense_remote_flutter/ui/widgets/testCard.dart';
+import 'package:fetosense_remote_flutter/ui/widgets/test_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

@@ -1,5 +1,4 @@
 import 'package:fetosense_remote_flutter/core/model/doctor_model.dart';
-import 'package:fetosense_remote_flutter/core/services/authentication.dart';
 import 'package:fetosense_remote_flutter/ui/views/home.dart';
 import 'package:fetosense_remote_flutter/ui/views/initial_profile_update1.dart';
 import 'package:fetosense_remote_flutter/ui/views/initial_profile_update2.dart';

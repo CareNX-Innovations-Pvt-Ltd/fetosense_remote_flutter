@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:fetosense_remote_flutter/core/model/test_model.dart';
-import 'package:fetosense_remote_flutter/core/services/testapi.dart';
 import 'package:fetosense_remote_flutter/core/utils/app_constants.dart';
 import 'package:fetosense_remote_flutter/core/utils/intrepretations2.dart';
+import 'package:fetosense_remote_flutter/core/view_models/test_crud_model.dart';
 import 'package:fetosense_remote_flutter/locater.dart';
 import 'package:fetosense_remote_flutter/ui/shared/customRadioBtn.dart';
 import 'package:fetosense_remote_flutter/ui/views/settings_view.dart';
-import 'package:fetosense_remote_flutter/ui/widgets/graphPainter.dart';
-import 'package:fetosense_remote_flutter/ui/widgets/interpretationDialog.dart';
+import 'package:fetosense_remote_flutter/ui/widgets/graph_painter.dart';
+import 'package:fetosense_remote_flutter/ui/widgets/interpretation_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +22,7 @@ import 'package:preferences/preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:permission_handler/permission_handler.dart' as permission;
+import 'package:provider/provider.dart';
 import 'graph/fhr_pdf_view2.dart';
 import 'graph/pdf_base_page.dart';
 
@@ -64,9 +65,7 @@ class DetailsViewState extends State<DetailsView>
   bool isLoadingShare = false;
   bool isLoadingPrint = false;
 
-  late RealtimeSubscription? _realtimeSubscription;
   final _db = locator<Databases>();
-  final _realtime = Realtime(locator<Client>());
 
   late pdf.Document pdfDoc;
   Action? action;
@@ -95,14 +94,14 @@ class DetailsViewState extends State<DetailsView>
     test = widget.test;
     if (test!.lengthOfTest! > 180 && test!.lengthOfTest! < 3600) {
       interpretations =
-          Interpretations2.withData(test!.bpmEntries!, test!.gAge!);
+          Interpretations2.withData(test!.bpmEntries!, test!.gAge ?? 8);
     } else {
       interpretations = Interpretations2();
     }
     if ((test!.bpmEntries2?.length ?? 0) > 180 &&
         (test!.bpmEntries2?.length ?? 0) < 3600) {
       interpretations2 =
-          Interpretations2.withData(test!.bpmEntries2!, test!.gAge!);
+          Interpretations2.withData(test!.bpmEntries2!, test!.gAge ?? 8);
     } else {
       interpretations = Interpretations2();
     }
@@ -110,40 +109,27 @@ class DetailsViewState extends State<DetailsView>
     int movements =
         test!.movementEntries!.length + test!.autoFetalMovement!.length;
     this.movements = movements < 10 ? "0$movements" : '$movements';
-    print(test!.documentId! + " dcodocumentId");
-    print(test!.id! + " dcoId");
     if (test!.isLive()!) {
       int timDiff = DateTime.now().millisecondsSinceEpoch -
           test!.createdOn!.millisecondsSinceEpoch;
       timDiff = (timDiff / 1000).truncate();
       if (timDiff > (test!.lengthOfTest! + 60)) _updateLiveFlag();
-      _addListener();
+    }
+    if (test != null && test!.isLive() == true) {
+      context.read<TestCRUDModel>().startLiveUpdates(test!.documentId!);
     }
   }
 
   @override
   void dispose() {
     _animationController.dispose();
-    _realtimeSubscription?.close();
-    _animationController.dispose();
+    context.read<TestCRUDModel>().stopLiveUpdates();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /* appBar: AppBar(
-        title: Text(
-          '${widget.test.motherName}\n${DateFormat('dd MMM yyyy - hh:mm a').format(widget.test.createdOn)}',
-          maxLines: 2,
-          softWrap: true,
-          style: TextStyle(fontSize: 15),
-        ),
-        actions: <Widget>[
-
-        ],
-      ),*/
-
       body: SafeArea(
         child: Column(
           children: <Widget>[
@@ -175,13 +161,6 @@ class DetailsViewState extends State<DetailsView>
                       color: Colors.black87),
                 ),
                 trailing: CircleAvatar(
-                    /*padding: const EdgeInsets.all(3.0),
-                    width: 55,
-                    height: 55,
-                    decoration: BoxDecoration(
-                      color: Colors.teal,
-                      borderRadius: const BorderRadius.all(Radius.circular(30.0)),
-                    ),*/
                     radius: 44.w,
                     backgroundColor: Colors.teal,
                     child: Center(
@@ -233,35 +212,30 @@ class DetailsViewState extends State<DetailsView>
                       color: Colors.tealAccent,
                       padding: const EdgeInsets.all(10),
                       alignment: Alignment.center,
-                      child: Row(
-                        children: [
-                          FadeTransition(
-                            opacity: _animationController,
-                            child: const Icon(
-                              Icons.circle,
-                              size: 18,
-                              color: Colors.red,
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 7,
-                          ),
-                          const Text(
-                            "Live test. Updates every 30 seconds.",
-                            style: TextStyle(
+                      child: FittedBox(
+                        child: Row(
+                          children: [
+                            FadeTransition(
+                              opacity: _animationController,
+                              child: const Icon(
+                                Icons.circle,
+                                size: 18,
                                 color: Colors.red,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ],
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 7,
+                            ),
+                            const Text(
+                              "Live test. Updates every 30 seconds.",
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
                       ),
-                      //     Text(
-                      //   "Live test. Updates every 30 sec. ",
-                      //   style: TextStyle(
-                      //       color: Colors.red,
-                      //       fontSize: 18,
-                      //       fontWeight: FontWeight.w500),
-                      // ),
                     ),
             ),
             Expanded(
@@ -269,18 +243,20 @@ class DetailsViewState extends State<DetailsView>
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Expanded(
-                  child: GestureDetector(
-                      onHorizontalDragStart: (DragStartDetails start) =>
-                          _onDragStart(context, start),
-                      onHorizontalDragUpdate: (DragUpdateDetails update) =>
-                          _onDragUpdate(context, update),
-                      child: Container(
-                          color: Colors.white,
-                          width: MediaQuery.of(context).size.width,
-                          child: CustomPaint(
-                            painter: GraphPainter(
-                                test!, mOffset, gridPreMin, interpretations),
-                          ))),
+                  child: test?.isLive() == true
+                      ? StreamBuilder<Test>(
+                          stream: context.read<TestCRUDModel>().testStream,
+                          initialData: test,
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            }
+                            final liveTest = snapshot.data!;
+                            return buildGraph(liveTest);
+                          },
+                        )
+                      : buildGraph(test!),
                 ),
                 if (kIsWeb)
                   Container(
@@ -894,6 +870,25 @@ class DetailsViewState extends State<DetailsView>
     );
   }
 
+  Widget buildGraph(Test graphTest) {
+    return GestureDetector(
+      onHorizontalDragStart: (start) => _onDragStart(context, start),
+      onHorizontalDragUpdate: (update) => _onDragUpdate(context, update),
+      child: Container(
+        color: Colors.white,
+        width: MediaQuery.of(context).size.width,
+        child: CustomPaint(
+          painter: GraphPainter(
+            graphTest,
+            mOffset,
+            gridPreMin,
+            interpretations,
+          ),
+        ),
+      ),
+    );
+  }
+
   void showInterpretationDialog(String value) {
     showDialog(
       context: context,
@@ -1015,34 +1010,11 @@ class DetailsViewState extends State<DetailsView>
     }
   }
 
-  void _addListener() {
-    final subscription = _realtime.subscribe([
-      'databases.${AppConstants.appwriteDatabaseId}.collections.tests.documents.${test!.id}'
-    ]);
-
-    _realtimeSubscription = subscription;
-    _realtimeSubscription!.stream.listen((event) {
-      final data = event.payload;
-      setState(() {
-        test = Test.fromMap(data, data['\$id']);
-        interpretations = Interpretations2.withData(
-            test!.bpmEntries!, interpretations!.gestAge);
-        movements = (test!.movementEntries!.length +
-                    test!.autoFetalMovement!.length) <
-                10
-            ? "0\${(test!.movementEntries!.length + test!.autoFetalMovement!.length)}"
-            : '\${(test!.movementEntries!.length + test!.autoFetalMovement!.length)}';
-
-        debugPrint("updated");
-      });
-    });
-  }
-
   Future<void> _updateLiveFlag() async {
     Map<String, dynamic> data = {'live': false};
     await _db.updateDocument(
       databaseId: AppConstants.appwriteDatabaseId,
-      collectionId: 'tests',
+      collectionId: AppConstants.testsCollectionId,
       documentId: test!.id!,
       data: data,
     );
