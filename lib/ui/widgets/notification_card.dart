@@ -10,7 +10,7 @@ class NotificationCard extends StatelessWidget {
 
   /// The formatted date of the notification.
   late String date;
-  NotificationCard({required this.notification}) {
+  NotificationCard({super.key, required this.notification}) {
     DateTime now = notification.createdOn!;
     date = DateFormat('dd MMM yyyy - kk:mm a').format(now);
     now; //('${now.substring(4, 10)} ${now.substring(now.lastIndexOf(" "))} ${now.substring(11, 16)}');

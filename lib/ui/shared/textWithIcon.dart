@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -8,7 +7,7 @@ class TextWithIcon extends StatelessWidget {
   String text;
   double? size = 14;
 
-  TextWithIcon({required this.icon, required this.text, this.size});
+  TextWithIcon({super.key, required this.icon, required this.text, this.size});
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +17,10 @@ class TextWithIcon extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: EdgeInsets.fromLTRB(4, 0, 4, 0),
-              child: Icon(icon, size: this.size),
+              child: Icon(icon, size: size),
             ),
             Text(
-              this.text,
+              text,
                 style: TextStyle(
                     fontSize: 26.sp,
                     color: Colors.black87,

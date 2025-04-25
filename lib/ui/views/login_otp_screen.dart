@@ -1,12 +1,3 @@
-import 'dart:async';
-import 'package:appwrite/appwrite.dart';
-import 'package:fetosense_remote_flutter/core/network/appwrite_config.dart';
-import 'package:fetosense_remote_flutter/locater.dart';
-import 'package:fetosense_remote_flutter/ui/widgets/custom_otp_field.dart';
-import 'package:flutter/foundation.dart';
-import 'package:fetosense_remote_flutter/core/services/authentication.dart';
-import 'package:flutter/material.dart';
-import 'package:quiver/async.dart';
 
 /// A StatefulWidget that handles the otp view for the application.
 // class LoginOtpScreen extends StatefulWidget  {

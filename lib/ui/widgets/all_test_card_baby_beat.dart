@@ -20,7 +20,7 @@ class AllTestCardBabyBeat extends StatelessWidget {
   /// Number of movements in the test
   String? movements;
 
-  AllTestCardBabyBeat({required this.testDetails}) {
+  AllTestCardBabyBeat({super.key, required this.testDetails}) {
     //interpretation = Interpretation.fromList(testDetails.gAge, testDetails.bpmEntries);
 
     if(testDetails.autoInterpretations == null && testDetails.autoInterpretations!['basalHeartRate'] == null){
@@ -36,14 +36,15 @@ class AllTestCardBabyBeat extends StatelessWidget {
     }
 
 
-    int _movements = testDetails.movementEntries!.length + testDetails.autoFetalMovement!.length;
-    movements = _movements < 10 ? "0$_movements" : '$_movements';
+    int movements = testDetails.movementEntries!.length + testDetails.autoFetalMovement!.length;
+    this.movements = movements < 10 ? "0$movements" : '$movements';
 
-    int _time = (testDetails.lengthOfTest! / 60).truncate();
-    if (_time < 10)
-      time = "0$_time";
-    else
-      time = "$_time";
+    int time = (testDetails.lengthOfTest! / 60).truncate();
+    if (time < 10) {
+      this.time = "0$time";
+    } else {
+      this.time = "$time";
+    }
   }
 
   @override
@@ -94,7 +95,7 @@ class AllTestCardBabyBeat extends StatelessWidget {
             border: Border(bottom: BorderSide(width: 0.5, color: Colors.grey)),
           ),
           child: (testDetails.autoInterpretations != null && testDetails.autoInterpretations!['basalHeartRate'] != null) ? Text(
-            ' ${testDetails.autoInterpretations == null ? '--' : (testDetails.autoInterpretations!['basalHeartRate'] == null ? '--' : testDetails.autoInterpretations!['basalHeartRate'])} Basal HR | ${testDetails
+            ' ${testDetails.autoInterpretations == null ? '--' : (testDetails.autoInterpretations!['basalHeartRate'] ?? '--')} Basal HR | ${testDetails
                 .movementEntries != null &&
                 (testDetails.movementEntries!.length + testDetails.autoFetalMovement!.length) > 0 ? movements : '--'} Movements',
             style: TextStyle(color: Colors.grey),
@@ -135,7 +136,7 @@ class AllTestCardBabyBeat extends StatelessWidget {
                   borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                 ),
                 child: Center(child: Text(
-                  "${DateFormat('dd\nMMM').format(testDetails.createdOn!)}",
+                  DateFormat('dd\nMMM').format(testDetails.createdOn!),
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 12,
                       color: Colors.black87,
@@ -147,7 +148,7 @@ class AllTestCardBabyBeat extends StatelessWidget {
             MaterialPageRoute(
                 builder: (_) =>
                     DetailsViewBabyBeat(
-                      test: this.testDetails
+                      test: testDetails
                     )));
       },
     );

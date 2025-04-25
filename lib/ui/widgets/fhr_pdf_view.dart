@@ -3,7 +3,6 @@ import 'package:fetosense_remote_flutter/core/model/test_model.dart';
 import 'package:fetosense_remote_flutter/core/utils/intrepretations2.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:pdf/widgets.dart' as pdf;
 import 'dart:ui' as ui;
 import 'dart:io' as io;
 import 'package:intl/intl.dart';
@@ -78,18 +77,18 @@ class FhrPdfView {
 
   /// Generates the NST (Non-Stress Test) graph and returns a list of file paths to the generated images.
   /// [data] contains the test data.
-  /// [_interpretation] is the interpretation data.
+  /// [interpretation] is the interpretation data.
   /// Returns a [Future] that completes with a list of file paths to the generated images.
   Future<List<String>?> getNSTGraph(
-      Test? data, Interpretations2? _interpretation) async {
-    this.mData = data;
+      Test? data, Interpretations2? interpretation) async {
+    mData = data;
     if (mData!.lengthOfTest! > 3600) {
       auto = false;
       scale = 1;
       timeScaleFactor = 6;
     }
 
-    this.interpretation = _interpretation;
+    interpretation = interpretation;
 
     pointsPerPage = (10 * timeScaleFactor * XDIV);
     pointsPerDiv = timeScaleFactor * 10;
@@ -122,11 +121,11 @@ class FhrPdfView {
 
     if (interpretation != null && auto && highlight) {
       drawInterpretationAreas(
-          interpretation!.getAccelerationsList(), pages, graphSafeZone);
+          interpretation.getAccelerationsList(), pages, graphSafeZone);
       drawInterpretationAreas(
-          interpretation!.getDecelerationsList(), pages, graphUnSafeZone);
+          interpretation.getDecelerationsList(), pages, graphUnSafeZone);
       drawInterpretationAreas(
-          interpretation!.getNoiseAreaList(), pages, graphNoiseZone);
+          interpretation.getNoiseAreaList(), pages, graphNoiseZone);
     }
 
     for (int i = 0; i < pages; i++) {
@@ -147,7 +146,7 @@ class FhrPdfView {
     String path = directory.path;
     print(path);
     await io.Directory('$path/$directoryName').create(recursive: true);
-    var file = io.File('$path/$directoryName/temp${i}.png');
+    var file = io.File('$path/$directoryName/temp$i.png');
     file.writeAsBytesSync(pngBytes.buffer.asInt8List());
     print(file.path);
     return file.path;
@@ -156,14 +155,14 @@ class FhrPdfView {
   /// Initializes the graph settings based on the length of the test and user preferences.
   /// [lengthOfTest] is the duration of the test in seconds.
   void initialize(int lengthOfTest) {
-    this.scale = PrefService.getInt('scale') ?? 1;
-    this.comments = PrefService.getBool('comments') ?? false;
-    this.auto = PrefService.getBool('interpretations') ?? false;
-    this.highlight = PrefService.getBool('highlight') ?? false;
+    scale = PrefService.getInt('scale') ?? 1;
+    comments = PrefService.getBool('comments') ?? false;
+    auto = PrefService.getBool('interpretations') ?? false;
+    highlight = PrefService.getBool('highlight') ?? false;
     if (lengthOfTest < 180 || lengthOfTest > 3600) {
-      this.auto = false;
-      this.highlight = false;
-      this.scale = 1;
+      auto = false;
+      highlight = false;
+      scale = 1;
     }
 
     timeScaleFactor = scale == 3 ? 2 : 6;
@@ -175,36 +174,36 @@ class FhrPdfView {
     /*graphGridMainLines = new Paint()
       ..color = Colors.grey[400]
       ..strokeWidth = 1.5;*/
-    graphGridLines = new Paint()
+    graphGridLines = Paint()
       ..color = Colors.grey
       ..strokeWidth = 1.1;
-    graphGridSubLines = new Paint()
+    graphGridSubLines = Paint()
       ..color = Colors.blueGrey
       ..strokeWidth = 0.6;
-    graphOutlines = new Paint()
+    graphOutlines = Paint()
       ..color = Colors.black
       ..strokeWidth = 2.25;
-    graphMovement = new Paint()
+    graphMovement = Paint()
       ..color = Colors.black
       ..strokeWidth = 4;
-    graphSafeZone = new Paint()
+    graphSafeZone = Paint()
       ..color = Color.fromARGB(20, 100, 200, 0)
       ..strokeWidth = 1.0;
-    graphUnSafeZone = new Paint()
+    graphUnSafeZone = Paint()
       ..color = Color.fromARGB(40, 250, 30, 0)
       ..strokeWidth = 1.0;
-    graphNoiseZone = new Paint()
+    graphNoiseZone = Paint()
       ..color = Color.fromARGB(100, 169, 169, 169)
       ..strokeWidth = 1.0;
-    graphBpmLine = new Paint()
+    graphBpmLine = Paint()
       ..color = Colors.blue
       ..strokeWidth = 1.75;
 
-    graphAxisText = new Paint()
+    graphAxisText = Paint()
       ..color = Colors.blue
       ..strokeWidth = 1.75;
 
-    informationText = new Paint()
+    informationText = Paint()
       ..color = Colors.blue
       ..strokeWidth = 1.75;
 
@@ -290,21 +289,21 @@ class FhrPdfView {
     int numberOffset = XDIV * (pageNumber);
 
     canvas[pageNumber].drawLine(
-        new Offset(xOrigin! + xDivLength! / 2, paddingTop!),
-        new Offset(xOrigin! + xDivLength! / 2, yOrigin),
+        Offset(xOrigin! + xDivLength! / 2, paddingTop!),
+        Offset(xOrigin! + xDivLength! / 2, yOrigin),
         graphGridSubLines);
 
     for (int i = 1; i <= xDiv; i++) {
       canvas[pageNumber].drawLine(
-          new Offset(xOrigin! + (xDivLength! * i), paddingTop!),
-          new Offset(xOrigin! + (xDivLength! * i), yOrigin),
+          Offset(xOrigin! + (xDivLength! * i), paddingTop!),
+          Offset(xOrigin! + (xDivLength! * i), yOrigin),
           graphGridLines);
 
       //for (int j = 1; j < 2; j++) {
       canvas[pageNumber].drawLine(
-          new Offset(
+          Offset(
               xOrigin! + (xDivLength! * i) + xDivLength! / 2, paddingTop!),
-          new Offset(xOrigin! + (xDivLength! * i) + xDivLength! / 2, yOrigin),
+          Offset(xOrigin! + (xDivLength! * i) + xDivLength! / 2, yOrigin),
           graphGridSubLines);
       //}
 
@@ -322,11 +321,11 @@ class FhrPdfView {
   /// [pageNumber] is the index of the page to draw the Y-axis on.
   void drawYAxis(int pageNumber) {
     //y-axis outlines
-    canvas[pageNumber].drawLine(new Offset(xOrigin!, yOrigin),
-        new Offset(xOrigin! + xAxisLength, yOrigin), graphOutlines);
+    canvas[pageNumber].drawLine(Offset(xOrigin!, yOrigin),
+        Offset(xOrigin! + xAxisLength, yOrigin), graphOutlines);
     canvas[pageNumber].drawLine(
-        new Offset(xOrigin! - pixelsPerOneCM!, paddingTop!),
-        new Offset(xOrigin! + xAxisLength, paddingTop!),
+        Offset(xOrigin! - pixelsPerOneCM!, paddingTop!),
+        Offset(xOrigin! + xAxisLength, paddingTop!),
         graphOutlines);
 
     int interval = 10;
@@ -343,30 +342,30 @@ class FhrPdfView {
     for (int i = 1; i <= yDiv; i++) {
       if (i % 2 == 0) {
         canvas[pageNumber].drawLine(
-            new Offset(xOrigin!, yOrigin - (yDivLength * i)),
-            new Offset(xOrigin! + xAxisLength, yOrigin - (yDivLength * i)),
+            Offset(xOrigin!, yOrigin - (yDivLength * i)),
+            Offset(xOrigin! + xAxisLength, yOrigin - (yDivLength * i)),
             graphGridLines);
 
         /*canvas[pageNumber].drawText("" + (ymin + (interval * (i - 1))), pixelsPerOneMM,
                         yOrigin - (yDivLength * i) + axisFontSize / 2, graphAxisText);*/
         canvas[pageNumber].drawParagraph(
             getParagraph("${(ymin + (interval * (i - 1)))}"),
-            new Offset(xOrigin! - pixelsPerOneCM!,
+            Offset(xOrigin! - pixelsPerOneCM!,
                 yOrigin - (yDivLength * i + (pixelsPerOneMM! * 2))));
 
         canvas[pageNumber].drawLine(
-            new Offset(xOrigin!, yOrigin - (yDivLength * i) + yDivLength / 2),
-            new Offset(xOrigin! + xAxisLength,
+            Offset(xOrigin!, yOrigin - (yDivLength * i) + yDivLength / 2),
+            Offset(xOrigin! + xAxisLength,
                 yOrigin - (yDivLength * i) + yDivLength / 2),
             graphGridSubLines);
       } else {
         canvas[pageNumber].drawLine(
-            new Offset(xOrigin!, yOrigin - (yDivLength * i)),
-            new Offset(xOrigin! + xAxisLength, yOrigin - (yDivLength * i)),
+            Offset(xOrigin!, yOrigin - (yDivLength * i)),
+            Offset(xOrigin! + xAxisLength, yOrigin - (yDivLength * i)),
             graphGridSubLines);
         canvas[pageNumber].drawLine(
-            new Offset(xOrigin!, yOrigin - (yDivLength * i) + yDivLength / 2),
-            new Offset(xOrigin! + xAxisLength,
+            Offset(xOrigin!, yOrigin - (yDivLength * i) + yDivLength / 2),
+            Offset(xOrigin! + xAxisLength,
                 yOrigin - (yDivLength * i) + yDivLength / 2),
             graphGridSubLines);
       }
@@ -379,30 +378,31 @@ class FhrPdfView {
     int numberOffset = XDIV * (pageNumber);
     for (int j = 1; j < 2; j++) {
       canvas[pageNumber].drawLine(
-          new Offset(xOrigin! + ((xDivLength! / 2) * j), yTocoEnd),
-          new Offset(xOrigin! + ((xDivLength! / 2) * j), yTocoOrigin),
+          Offset(xOrigin! + ((xDivLength! / 2) * j), yTocoEnd),
+          Offset(xOrigin! + ((xDivLength! / 2) * j), yTocoOrigin),
           graphGridSubLines);
     }
 
     for (int i = 1; i <= xDiv; i++) {
       canvas[pageNumber].drawLine(
-          new Offset(xOrigin! + (xDivLength! * i), yTocoEnd),
-          new Offset(xOrigin! + (xDivLength! * i), yTocoOrigin),
+          Offset(xOrigin! + (xDivLength! * i), yTocoEnd),
+          Offset(xOrigin! + (xDivLength! * i), yTocoOrigin),
           graphGridLines);
 
       //for (int j = 1; j < 2; j++) {
       canvas[pageNumber].drawLine(
-          new Offset(xOrigin! + (xDivLength! * i) + xDivLength! / 2, yTocoEnd),
-          new Offset(
+          Offset(xOrigin! + (xDivLength! * i) + xDivLength! / 2, yTocoEnd),
+          Offset(
               xOrigin! + (xDivLength! * i) + xDivLength! / 2, yTocoOrigin),
           graphGridSubLines);
       //}
       int offSet = ((numberOffset + i) / scale!).truncate();
-      if ((numberOffset + i) % scale! == 0)
+      if ((numberOffset + i) % scale! == 0) {
         canvas[pageNumber].drawParagraph(
             getParagraph((offSet).toString()),
-            new Offset(xOrigin! + (xDivLength! * i) - (pixelsPerOneMM! * 7),
+            Offset(xOrigin! + (xDivLength! * i) - (pixelsPerOneMM! * 7),
                 yTocoOrigin + axisFontSize - (pixelsPerOneMM! * 4)));
+      }
     }
   }
 
@@ -410,20 +410,20 @@ class FhrPdfView {
   /// [pageNumber] is the index of the page to draw the TOCO Y-axis on.
   void drawTocoYAxis(int pageNumber) {
     //y-axis outlines
-    canvas[pageNumber].drawLine(new Offset(xOrigin!, yTocoOrigin),
-        new Offset(xOrigin! + xAxisLength, yTocoOrigin), graphOutlines);
-    canvas[pageNumber].drawLine(new Offset(xOrigin!, yTocoEnd),
-        new Offset(xOrigin! + xAxisLength, yTocoEnd), graphOutlines);
+    canvas[pageNumber].drawLine(Offset(xOrigin!, yTocoOrigin),
+        Offset(xOrigin! + xAxisLength, yTocoOrigin), graphOutlines);
+    canvas[pageNumber].drawLine(Offset(xOrigin!, yTocoEnd),
+        Offset(xOrigin! + xAxisLength, yTocoEnd), graphOutlines);
     canvas[pageNumber].drawLine(
-        new Offset(paddingLeft! - pixelsPerOneCM!,
+        Offset(paddingLeft! - pixelsPerOneCM!,
             yTocoOrigin + (pixelsPerOneCM! - pixelsPerOneMM!)),
-        new Offset(screenWidth - paddingRight!,
+        Offset(screenWidth - paddingRight!,
             yTocoOrigin + (pixelsPerOneCM! - pixelsPerOneMM!)),
         graphOutlines);
 
     canvas[pageNumber].drawLine(
-        new Offset(paddingLeft! - pixelsPerOneCM!, paddingTop!),
-        new Offset(paddingLeft! - pixelsPerOneCM!,
+        Offset(paddingLeft! - pixelsPerOneCM!, paddingTop!),
+        Offset(paddingLeft! - pixelsPerOneCM!,
             yTocoOrigin + (pixelsPerOneCM! - pixelsPerOneMM!)),
         graphOutlines);
 
@@ -433,30 +433,30 @@ class FhrPdfView {
     for (int i = 1; i <= yTocoDiv; i++) {
       if (i % 2 == 0) {
         canvas[pageNumber].drawLine(
-            new Offset(xOrigin!, yTocoOrigin - (yDivLength * i)),
-            new Offset(xOrigin! + xAxisLength, yTocoOrigin - (yDivLength * i)),
+            Offset(xOrigin!, yTocoOrigin - (yDivLength * i)),
+            Offset(xOrigin! + xAxisLength, yTocoOrigin - (yDivLength * i)),
             graphGridLines);
 
         canvas[pageNumber].drawParagraph(
             getParagraph("${(ymin + (interval * (i - 1)))}"),
-            new Offset(xOrigin! - pixelsPerOneCM!,
+            Offset(xOrigin! - pixelsPerOneCM!,
                 yTocoOrigin - (yDivLength * i + (pixelsPerOneMM! * 2))));
 
         canvas[pageNumber].drawLine(
-            new Offset(
+            Offset(
                 xOrigin!, yTocoOrigin - (yDivLength * i) + yDivLength / 2),
-            new Offset(xOrigin! + xAxisLength,
+            Offset(xOrigin! + xAxisLength,
                 yTocoOrigin - (yDivLength * i) + yDivLength / 2),
             graphGridSubLines);
       } else {
         canvas[pageNumber].drawLine(
-            new Offset(xOrigin!, yTocoOrigin - (yDivLength * i)),
-            new Offset(xOrigin! + xAxisLength, yTocoOrigin - (yDivLength * i)),
+            Offset(xOrigin!, yTocoOrigin - (yDivLength * i)),
+            Offset(xOrigin! + xAxisLength, yTocoOrigin - (yDivLength * i)),
             graphGridSubLines);
         canvas[pageNumber].drawLine(
-            new Offset(
+            Offset(
                 xOrigin!, yTocoOrigin - (yDivLength * i) + yDivLength / 2),
-            new Offset(xOrigin! + xAxisLength,
+            Offset(xOrigin! + xAxisLength,
                 yTocoOrigin - (yDivLength * i) + yDivLength / 2),
             graphGridSubLines);
       }
@@ -484,22 +484,22 @@ class FhrPdfView {
       s1 = mData!.getOrganizationName()!.substring(0, s1.lastIndexOf(" ") + 1);
       String s2 = mData!.organizationName!.replaceAll(s1, ""); //.replace(s1,"");
       canvas[pageNumber]
-          .drawParagraph(getParagraphInfo(s1 ?? ""), new Offset(0, rowPos));
+          .drawParagraph(getParagraphInfo(s1 ?? ""), Offset(0, rowPos));
       rowPos += rowHeight * 0.8;
       canvas[pageNumber].drawParagraph(
           getParagraphInfo(s2 ?? ""),
-          new Offset(
+          Offset(
             0,
             rowPos - pixelsPerOneMM!,
           ));
       rowPos += rowHeight;
     } else {
       canvas[pageNumber]
-          .drawParagraph(getParagraphInfo("Hospital :"), new Offset(0, rowPos));
+          .drawParagraph(getParagraphInfo("Hospital :"), Offset(0, rowPos));
       rowPos += rowHeight * 0.8;
       canvas[pageNumber].drawParagraph(
           getParagraphInfo(mData!.organizationName ?? ""),
-          new Offset(0, rowPos - pixelsPerOneMM!));
+          Offset(0, rowPos - pixelsPerOneMM!));
       rowPos += rowHeight;
     }
     //mData.setDoctorName("Dr Bharati Morey MD FICOG and so on");
@@ -509,17 +509,17 @@ class FhrPdfView {
       String s2 = mData!.doctorName ?? "";
 
       canvas[pageNumber]
-          .drawParagraph(getParagraphInfo(s1 ?? ""), new Offset(0, rowPos));
+          .drawParagraph(getParagraphInfo(s1 ?? ""), Offset(0, rowPos));
       rowPos += rowHeight * 0.8;
       canvas[pageNumber].drawParagraph(
-          getParagraphInfo(s2 ?? ""), new Offset(0, rowPos - pixelsPerOneMM!));
+          getParagraphInfo(s2 ?? ""), Offset(0, rowPos - pixelsPerOneMM!));
       rowPos += rowHeight;
     } else {
       canvas[pageNumber]
-          .drawParagraph(getParagraphInfo("Doctor :"), new Offset(0, rowPos));
+          .drawParagraph(getParagraphInfo("Doctor :"), Offset(0, rowPos));
       rowPos += rowHeight * 0.8;
       canvas[pageNumber].drawParagraph(getParagraphInfo(mData!.doctorName ?? ""),
-          new Offset(0, rowPos - pixelsPerOneMM!));
+          Offset(0, rowPos - pixelsPerOneMM!));
       rowPos += rowHeight;
     }
 
@@ -530,17 +530,17 @@ class FhrPdfView {
       String s2 = mData!.patientId!.replaceAll(s1, "");
 
       canvas[pageNumber]
-          .drawParagraph(getParagraphInfo(s1 ?? ""), new Offset(0, rowPos));
+          .drawParagraph(getParagraphInfo(s1 ?? ""), Offset(0, rowPos));
       rowPos += rowHeight * 0.8;
       canvas[pageNumber].drawParagraph(
-          getParagraphInfo(s2 ?? ""), new Offset(0, rowPos - pixelsPerOneMM!));
+          getParagraphInfo(s2 ?? ""), Offset(0, rowPos - pixelsPerOneMM!));
       rowPos += rowHeight;
     } else {
       canvas[pageNumber].drawParagraph(
-          getParagraphInfo("Patient Id :"), new Offset(0, rowPos));
+          getParagraphInfo("Patient Id :"), Offset(0, rowPos));
       rowPos += rowHeight * 0.8;
       canvas[pageNumber].drawParagraph(getParagraphInfo(mData!.patientId ?? ""),
-          new Offset(0, rowPos - pixelsPerOneMM!));
+          Offset(0, rowPos - pixelsPerOneMM!));
       rowPos += rowHeight;
     }
 
@@ -551,106 +551,107 @@ class FhrPdfView {
       String s2 = mData!.motherName!.replaceAll(s1, "");
 
       canvas[pageNumber]
-          .drawParagraph(getParagraphInfo(s1 ?? ""), new Offset(0, rowPos));
+          .drawParagraph(getParagraphInfo(s1 ?? ""), Offset(0, rowPos));
       rowPos += rowHeight * 0.8;
       canvas[pageNumber].drawParagraph(
-          getParagraphInfo(s2 ?? ""), new Offset(0, rowPos - pixelsPerOneMM!));
+          getParagraphInfo(s2 ?? ""), Offset(0, rowPos - pixelsPerOneMM!));
       rowPos += rowHeight;
     } else {
       canvas[pageNumber]
-          .drawParagraph(getParagraphInfo("Mother :"), new Offset(0, rowPos));
+          .drawParagraph(getParagraphInfo("Mother :"), Offset(0, rowPos));
       rowPos += rowHeight * 0.8;
       canvas[pageNumber].drawParagraph(getParagraphInfo(mData!.motherName ?? ""),
-          new Offset(0, rowPos - pixelsPerOneMM!));
+          Offset(0, rowPos - pixelsPerOneMM!));
       rowPos += rowHeight;
     }
 
     canvas[pageNumber].drawParagraph(
         getParagraphInfo(
             ("Duration :  ${(mData!.lengthOfTest! / 60).truncate()} min")),
-        new Offset(0, rowPos));
+        Offset(0, rowPos));
     rowPos += rowHeight;
 
     canvas[pageNumber]
-        .drawParagraph(getParagraphInfo("Time : $time"), new Offset(0, rowPos));
+        .drawParagraph(getParagraphInfo("Time : $time"), Offset(0, rowPos));
     rowPos += rowHeight;
     canvas[pageNumber]
-        .drawParagraph(getParagraphInfo("Date : $date"), new Offset(0, rowPos));
+        .drawParagraph(getParagraphInfo("Date : $date"), Offset(0, rowPos));
     rowPos += rowHeight;
 
     canvas[pageNumber].drawParagraph(
-        getParagraphInfo("Gest. Week : ${mData!.gAge}"), new Offset(0, rowPos));
+        getParagraphInfo("Gest. Week : ${mData!.gAge}"), Offset(0, rowPos));
     rowPos += rowHeight;
 
     canvas[pageNumber].drawParagraph(
         getParagraphInfo(
             "Basal HR : ${auto ? interpretation!.getBasalHeartRateStr() : ' _______'}"),
-        new Offset(0, rowPos));
+        Offset(0, rowPos));
     rowPos += rowHeight;
 
     canvas[pageNumber].drawParagraph(
         getParagraphInfo(
             "FM : ${mData!.movementEntries!.length.toString() ?? "--"} man/ ${mData!.autoFetalMovement!.length.toString() ?? "--"} auto "),
-        new Offset(0, rowPos));
+        Offset(0, rowPos));
 
     rowPos += rowHeight;
 
     canvas[pageNumber].drawParagraph(
         getParagraphInfo(
             "Accelerations : ${auto ? interpretation!.getnAccelerationsStr() : ' _______'}"), //+mData.getWeight(),
-        new Offset(0, rowPos));
+        Offset(0, rowPos));
     rowPos += rowHeight;
 
     canvas[pageNumber].drawParagraph(
         getParagraphInfo(
             "Decelerations : ${auto ? interpretation!.getnDecelerationsStr() : ' _______'}"),
-        new Offset(0, rowPos));
+        Offset(0, rowPos));
     rowPos += rowHeight;
     canvas[pageNumber].drawParagraph(
         getParagraphInfo(
             "STV : ${auto ? '${interpretation!.getShortTermVariationBpmStr() ?? "--"} bpm / ${interpretation!.getShortTermVariationMilliStr() ?? "--"} milli' : ' _______'}"),
-        new Offset(0, rowPos));
+        Offset(0, rowPos));
     rowPos += rowHeight;
     canvas[pageNumber].drawParagraph(
         getParagraphInfo(
             "LTV : ${auto ? '${interpretation!.getLongTermVariationStr() ?? "--"} bpm' : ' _______'}"),
-        new Offset(0, rowPos));
+        Offset(0, rowPos));
     rowPos += rowHeight;
 
     canvas[pageNumber]
-        .drawParagraph(getParagraphInfo("Conclusion :"), new Offset(0, rowPos));
+        .drawParagraph(getParagraphInfo("Conclusion :"), Offset(0, rowPos));
     rowPos += pixelsPerOneMM! * 3;
 
     canvas[pageNumber].drawParagraph(
         getParagraphInfo("(Reactive, Non-Reactive, Inconclusive)",
             fontsize: 20),
-        new Offset(0, rowPos));
+        Offset(0, rowPos));
 
     rowPos = yTocoOrigin + rowHeight;
     rowPos -= rowHeight * 0.5;
 
     canvas[pageNumber].drawParagraph(
         getParagraphInfo('X-Axis : ${timeScaleFactor * 10} SEC/DIV'),
-        new Offset(0, rowPos));
+        Offset(0, rowPos));
     rowPos += rowHeight * 0.6;
 
     canvas[pageNumber].drawParagraph(
-        getParagraphInfo("Y-Axis : 20 BPM/DIV"), new Offset(0, rowPos));
+        getParagraphInfo("Y-Axis : 20 BPM/DIV"), Offset(0, rowPos));
     rowPos += rowHeight * 1.5;
 
-    if (mData!.interpretationType != null && comments)
+    if (mData!.interpretationType != null && comments) {
       canvas[pageNumber].drawParagraph(
           getParagraphLong(
-              "Doctor\'s comments : ${mData!.interpretationType} - ${mData!.interpretationExtraComments ?? ''}",
+              "Doctor's comments : ${mData!.interpretationType} - ${mData!.interpretationExtraComments ?? ''}",
               2500),
-          new Offset(0, rowPos));
+          Offset(0, rowPos));
+    }
 
     //if(auto) {
-    String _disclaimer =
+    String disclaimer =
         "Disclaimer : NST auto interpretation does not provide medical advice it is intended for informational purposes only. It is not a substitute for professional medical advice, diagnosis or treatment.";
     canvas[pageNumber].drawParagraph(
-        getParagraphLong(_disclaimer, 2500, fontsize: 18),
-        new Offset(0, screenHeight - (pixelsPerOneMM! * 2)));
+        getParagraphLong(disclaimer, 2500, fontsize: 18),
+        Offset(0, screenHeight - (pixelsPerOneMM! * 2)));
   }
 
   /// Draws a line on the graph for the given list of BPM values and pages.
@@ -691,13 +692,13 @@ class FhrPdfView {
         // b. If the results of the two values before and after are different by more than 30, they are not connected.
 
         canvas[pageNumber].drawLine(
-            new Offset(startX, startY), new Offset(stopX, stopY), style!);
+            Offset(startX, startY), Offset(stopX, stopY), style!);
       }
 
       canvas[pageNumber].drawParagraph(
           getParagraphLong("page ${pageNumber + 1} of $pages", 200,
               align: TextAlign.right),
-          new Offset(screenWidth - paddingRight! - pixelsPerOneCM! * 2,
+          Offset(screenWidth - paddingRight! - pixelsPerOneCM! * 2,
               screenHeight - pixelsPerOneMM! * 5));
     }
   }
@@ -750,7 +751,7 @@ class FhrPdfView {
         // b. If the results of the two values before and after are different by more than 30, they are not connected.
 
         canvas[pageNumber].drawLine(
-            new Offset(startX, startY), new Offset(stopX, stopY), graphBpmLine!);
+            Offset(startX, startY), Offset(stopX, stopY), graphBpmLine!);
       }
     }
   }
@@ -760,22 +761,22 @@ class FhrPdfView {
   /// [pages] is the number of pages to draw the movements on.
   void drawMovements(List<int>? movementList, int pages) {
     for (int pageNumber = 0; pageNumber < pages; pageNumber++) {
-      if (movementList == null || movementList.length == 0) return;
+      if (movementList == null || movementList.isEmpty) return;
 
       double increment = (pixelsPerOneMM! / timeScaleFactor);
       for (int i = 0; i < movementList.length; i++) {
         int movement = movementList[i] - (pageNumber * pointsPerPage);
         if (movement > 0 && movement < pointsPerPage) {
           canvas[pageNumber].drawLine(
-              new Offset(xOrigin! + (increment * (movement)),
+              Offset(xOrigin! + (increment * (movement)),
                   yOrigin + pixelsPerOneMM! * 2),
-              new Offset(xOrigin! + (increment * (movement)),
+              Offset(xOrigin! + (increment * (movement)),
                   yOrigin + pixelsPerOneMM! * 2 + (pixelsPerOneMM! * 4)),
               graphMovement);
           canvas[pageNumber].drawLine(
-              new Offset(xOrigin! + (increment * (movement)),
+              Offset(xOrigin! + (increment * (movement)),
                   yOrigin + pixelsPerOneMM! * 2),
-              new Offset(xOrigin! + (increment * (movement)) + pixelsPerOneMM!,
+              Offset(xOrigin! + (increment * (movement)) + pixelsPerOneMM!,
                   yOrigin + pixelsPerOneMM! * 2 + (pixelsPerOneMM! * 2)),
               graphMovement);
         }
@@ -799,7 +800,7 @@ class FhrPdfView {
 
   void drawAutoMovements(List<int>? movementList, int pages) {
     for (int pageNumber = 0; pageNumber < pages; pageNumber++) {
-      if (movementList == null || movementList.length == 0) return;
+      if (movementList == null || movementList.isEmpty) return;
 
       double increment = (pixelsPerOneMM! / timeScaleFactor);
       for (int i = 0; i < movementList.length; i++) {
@@ -819,16 +820,16 @@ class FhrPdfView {
               graphMovement);*/
 
           canvas[pageNumber].drawLine(
-              new Offset(xOrigin! + (increment * (movement)), yOrigin - pixelsPerOneCM! + pixelsPerOneMM!),
-              new Offset(xOrigin! + (increment * (movement)) , yOrigin - pixelsPerOneMM! *3),
+              Offset(xOrigin! + (increment * (movement)), yOrigin - pixelsPerOneCM! + pixelsPerOneMM!),
+              Offset(xOrigin! + (increment * (movement)) , yOrigin - pixelsPerOneMM! *3),
               graphOutlines);
           canvas[pageNumber].drawLine(
-              new Offset(xOrigin! + (increment * (movement)), yOrigin - pixelsPerOneCM! + pixelsPerOneMM!),
-              new Offset(xOrigin! + (increment * (movement))+pixelsPerOneMM!+pixelsPerOneMM! , yOrigin - pixelsPerOneMM!*7),
+              Offset(xOrigin! + (increment * (movement)), yOrigin - pixelsPerOneCM! + pixelsPerOneMM!),
+              Offset(xOrigin! + (increment * (movement))+pixelsPerOneMM!+pixelsPerOneMM! , yOrigin - pixelsPerOneMM!*7),
               graphOutlines);
           canvas[pageNumber].drawLine(
-              new Offset(xOrigin! + (increment * (movement)), yOrigin - pixelsPerOneCM! + pixelsPerOneMM! * 7),
-              new Offset(xOrigin! + (increment * (movement))+pixelsPerOneMM! +pixelsPerOneMM! , yOrigin - pixelsPerOneMM!*5),
+              Offset(xOrigin! + (increment * (movement)), yOrigin - pixelsPerOneCM! + pixelsPerOneMM! * 7),
+              Offset(xOrigin! + (increment * (movement))+pixelsPerOneMM! +pixelsPerOneMM! , yOrigin - pixelsPerOneMM!*5),
               graphOutlines);
         }
       }
@@ -855,13 +856,13 @@ class FhrPdfView {
   void drawInterpretationAreas(
       List<MarkerIndices>? list, int pages, Paint? style) {
     for (int pageNumber = 0; pageNumber < pages; pageNumber++) {
-      if (list == null || list.length == 0) return;
+      if (list == null || list.isEmpty) return;
 
       double? startX, stopX = 0;
 
       for (int i = 0; i < list.length; i++) {
-        startX = getScreenX((list[i].getFrom()! - 3), pageNumber);
-        stopX = getScreenX(list[i].getTo()! + 3, pageNumber);
+        startX = getScreenX((list[i].getFrom() - 3), pageNumber);
+        stopX = getScreenX(list[i].getTo() + 3, pageNumber);
 
         if (startX < xOrigin!) startX = xOrigin;
         if (stopX < xOrigin!) stopX = xOrigin;
@@ -882,9 +883,9 @@ class FhrPdfView {
   double getYValueFromBPM(int bpm) {
     double adjustedBPM = (bpm - scaleOrigin).toDouble();
     adjustedBPM = adjustedBPM / 2; //scaled down version for mobile phone
-    double y_value = yOrigin - (adjustedBPM * pixelsPerOneMM!);
+    double yValue = yOrigin - (adjustedBPM * pixelsPerOneMM!);
     //Log.i("bpmvalue",bpm+" "+adjustedBPM+" "+y_value);
-    return y_value;
+    return yValue;
   }
 
   /// Returns the Y-coordinate on the screen for the given TOCO value.
@@ -902,13 +903,13 @@ class FhrPdfView {
   /// \[text\] is the text to create the paragraph for.
   /// Returns a \[ui.Paragraph\] object.
   ui.Paragraph getParagraph(String text) {
-    if (text.length == 1) text = "0${text}";
-    ui.ParagraphBuilder builder = new ui.ParagraphBuilder(
-        new ui.ParagraphStyle(fontSize: 30.0, textAlign: TextAlign.right))
-      ..pushStyle(new ui.TextStyle(color: Colors.black))
+    if (text.length == 1) text = "0$text";
+    ui.ParagraphBuilder builder = ui.ParagraphBuilder(
+        ui.ParagraphStyle(fontSize: 30.0, textAlign: TextAlign.right))
+      ..pushStyle(ui.TextStyle(color: Colors.black))
       ..addText(text);
     final ui.Paragraph paragraph = builder.build()
-      ..layout(new ui.ParagraphConstraints(width: 80));
+      ..layout(ui.ParagraphConstraints(width: 80));
     return paragraph;
   }
 
@@ -917,13 +918,13 @@ class FhrPdfView {
   /// \[fontsize\] is the font size to use for the paragraph.
   /// Returns a \[ui.Paragraph\] object.
   ui.Paragraph getParagraphInfo(String text, {double fontsize = 30}) {
-    if (text.length == 1) text = "0${text}";
-    ui.ParagraphBuilder builder = new ui.ParagraphBuilder(
-        new ui.ParagraphStyle(fontSize: fontsize, textAlign: TextAlign.left))
-      ..pushStyle(new ui.TextStyle(color: Colors.black))
+    if (text.length == 1) text = "0$text";
+    ui.ParagraphBuilder builder = ui.ParagraphBuilder(
+        ui.ParagraphStyle(fontSize: fontsize, textAlign: TextAlign.left))
+      ..pushStyle(ui.TextStyle(color: Colors.black))
       ..addText(text);
     final ui.Paragraph paragraph = builder.build()
-      ..layout(new ui.ParagraphConstraints(width: paddingLeft! * 9));
+      ..layout(ui.ParagraphConstraints(width: paddingLeft! * 9));
     return paragraph;
   }
 
@@ -935,13 +936,13 @@ class FhrPdfView {
   /// Returns a \[ui.Paragraph\] object.
   ui.Paragraph getParagraphLong(String text, double width,
       {double fontsize = 30, TextAlign align = TextAlign.left}) {
-    if (text.length == 1) text = "0${text}";
-    ui.ParagraphBuilder builder = new ui.ParagraphBuilder(
-        new ui.ParagraphStyle(fontSize: fontsize, textAlign: align))
-      ..pushStyle(new ui.TextStyle(color: Colors.black))
+    if (text.length == 1) text = "0$text";
+    ui.ParagraphBuilder builder = ui.ParagraphBuilder(
+        ui.ParagraphStyle(fontSize: fontsize, textAlign: align))
+      ..pushStyle(ui.TextStyle(color: Colors.black))
       ..addText(text);
     final ui.Paragraph paragraph = builder.build()
-      ..layout(new ui.ParagraphConstraints(width: width));
+      ..layout(ui.ParagraphConstraints(width: width));
     return paragraph;
   }
 }

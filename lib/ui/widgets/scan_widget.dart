@@ -10,6 +10,8 @@ import 'package:image_picker/image_picker.dart';
 
 /// A widget that provides a QR code scanning functionality.
 class ScanWidget extends StatefulWidget {
+  const ScanWidget({super.key});
+
   @override
   _ScanWidgetState createState() => _ScanWidgetState();
 }
@@ -57,7 +59,7 @@ class _ScanWidgetState extends State<ScanWidget> {
         },
         child: Column(
           children: [
-            Container(
+            SizedBox(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               child: Stack(

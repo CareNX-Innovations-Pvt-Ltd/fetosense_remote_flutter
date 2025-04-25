@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:fetosense_remote_flutter/core/model/doctor_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceHelper {

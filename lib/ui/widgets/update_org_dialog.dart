@@ -29,7 +29,7 @@ class UpdateOrgDialog extends StatelessWidget {
     return Wrap(
       children: <Widget>[
         Container(
-          decoration: new BoxDecoration(
+          decoration: BoxDecoration(
             color: Colors.white,
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.circular(8),
@@ -71,7 +71,7 @@ class UpdateOrgDialog extends StatelessWidget {
                     textCapitalization: TextCapitalization.characters,
                     autofocus: false,
                     onChanged: (value) => this.value = value.trim(),
-                    decoration: new InputDecoration(hintText: 'Code'),
+                    decoration: InputDecoration(hintText: 'Code'),
                   )),
               Container(
                 padding: EdgeInsets.all(8),
@@ -92,7 +92,7 @@ class UpdateOrgDialog extends StatelessWidget {
                                   TextStyle(color: Colors.black, fontSize: 20)),
                           //shape: OutlineInputBorder(),
                           onPressed: () {
-                            this.callback("");
+                            callback("");
                             Navigator.of(context).pop();
                           }),
                     ),
@@ -111,7 +111,7 @@ class UpdateOrgDialog extends StatelessWidget {
                                 TextStyle(color: Colors.black, fontSize: 20)),
                         //shape: OutlineInputBorder(),
                         onPressed: () {
-                          this.callback(this.value);
+                          callback(value);
                           Navigator.of(context).pop();
                         },
                       ),

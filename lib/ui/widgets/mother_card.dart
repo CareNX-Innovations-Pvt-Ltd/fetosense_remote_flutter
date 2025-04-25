@@ -9,7 +9,7 @@ class MotherCard extends StatelessWidget {
   /// The details of the mother.
   final dynamic motherDetails;
 
-  MotherCard({required this.motherDetails});
+  const MotherCard({super.key, required this.motherDetails});
 
 
   /// Calculates the gestational age in weeks.
@@ -17,7 +17,7 @@ class MotherCard extends StatelessWidget {
   int getGestAge() {
     if(motherDetails['edd'] != null){
       double age = (280 - (
-          (DateTime.parse(motherDetails['edd']).millisecondsSinceEpoch -new DateTime.now().millisecondsSinceEpoch)
+          (DateTime.parse(motherDetails['edd']).millisecondsSinceEpoch -DateTime.now().millisecondsSinceEpoch)
            /(1000*60*60*24)))/
           7;
       return age.floor();

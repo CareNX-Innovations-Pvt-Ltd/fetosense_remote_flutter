@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 /*import 'package:l8fe/models/marker_indices.dart';
 import 'package:l8fe/models/test_model.dart';
 import 'package:l8fe/utils/intrepretations2.dart';*/
-import 'package:path_provider/path_provider.dart';
 import 'dart:ui' as ui;
-import 'dart:io' as io;
 import 'package:intl/intl.dart';
 import 'package:preferences/preferences.dart';
 
@@ -751,7 +749,7 @@ class FhrPdfView2 {
   /// Draws the movements on the graph for the given pages.
   void drawMovements(List<int>? movementList, int pages) {
     for (int pageNumber = 0; pageNumber < pages; pageNumber++) {
-      if (movementList == null || movementList.length == 0) return;
+      if (movementList == null || movementList.isEmpty) return;
 
       double increment = (pixelsPerOneMM! / timeScaleFactor);
       for (int i = 0; i < movementList.length; i++) {
@@ -791,7 +789,7 @@ class FhrPdfView2 {
   /// Draws the automatic movements on the graph for the given pages.
   void drawAutoMovements(List<int>? movementList, int pages) {
     for (int pageNumber = 0; pageNumber < pages; pageNumber++) {
-      if (movementList == null || movementList.length == 0) return;
+      if (movementList == null || movementList.isEmpty) return;
 
       double increment = (pixelsPerOneMM! / timeScaleFactor);
       for (int i = 0; i < movementList.length; i++) {
@@ -845,13 +843,13 @@ class FhrPdfView2 {
   void drawInterpretationAreas(
       List<MarkerIndices>? list, int pages, Paint? style) {
     for (int pageNumber = 0; pageNumber < pages; pageNumber++) {
-      if (list == null || list.length == 0) return;
+      if (list == null || list.isEmpty) return;
 
       double? startX, stopX = 0;
 
       for (int i = 0; i < list.length; i++) {
-        startX = getScreenX((list[i].getFrom()! - 3), pageNumber);
-        stopX = getScreenX(list[i].getTo()! + 3, pageNumber);
+        startX = getScreenX((list[i].getFrom() - 3), pageNumber);
+        stopX = getScreenX(list[i].getTo() + 3, pageNumber);
 
         if (startX < xOrigin!) startX = xOrigin;
         if (stopX < xOrigin!) stopX = xOrigin;
@@ -886,7 +884,7 @@ class FhrPdfView2 {
 
   /// Returns a paragraph with the given text for the graph.
   ui.Paragraph getParagraph(String text) {
-    if (text.length == 1) text = "0${text}";
+    if (text.length == 1) text = "0$text";
     ui.ParagraphBuilder builder = ui.ParagraphBuilder(
         ui.ParagraphStyle(fontSize: 30.0, textAlign: TextAlign.right))
       ..pushStyle(ui.TextStyle(color: Colors.black))
@@ -898,7 +896,7 @@ class FhrPdfView2 {
 
   /// Returns a paragraph with the given text for the graph information.
   ui.Paragraph getParagraphInfo(String text, {double fontsize = 30}) {
-    if (text.length == 1) text = "0${text}";
+    if (text.length == 1) text = "0$text";
     ui.ParagraphBuilder builder = ui.ParagraphBuilder(
         ui.ParagraphStyle(fontSize: fontsize, textAlign: TextAlign.left))
       ..pushStyle(ui.TextStyle(color: Colors.black))
@@ -911,7 +909,7 @@ class FhrPdfView2 {
   /// Returns a paragraph with the given text for the graph with specified width.
   ui.Paragraph getParagraphLong(String text, double width,
       {double fontsize = 30, TextAlign align = TextAlign.left}) {
-    if (text.length == 1) text = "0${text}";
+    if (text.length == 1) text = "0$text";
     ui.ParagraphBuilder builder = ui.ParagraphBuilder(
         ui.ParagraphStyle(fontSize: fontsize, textAlign: align))
       ..pushStyle(ui.TextStyle(color: Colors.black))

@@ -4,7 +4,6 @@ import 'dart:async';
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart' as models;
 import 'package:fetosense_remote_flutter/core/model/test_model.dart';
-import 'package:flutter/cupertino.dart';
 
 class TestApi {
   final Databases _db;

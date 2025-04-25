@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../locater.dart';
 
 /// A stateless widget that represents the About view of the application.
 /// This view displays information about the app, including version, website,
