@@ -11,7 +11,6 @@ import 'package:go_router/go_router.dart';
 
 /// A StatefulWidget that handles the login view for the application.
 class LoginView extends StatefulWidget {
-
   const LoginView({super.key});
 
   @override
@@ -23,7 +22,6 @@ final FocusNode _passwordFocus = FocusNode();
 final FocusNode _confirmFocus = FocusNode();
 
 class _LoginViewState extends State<LoginView> {
-
   final _formKey = GlobalKey<FormState>();
 
   String _email = 'test@gmail.com';
@@ -35,7 +33,6 @@ class _LoginViewState extends State<LoginView> {
   late bool _isLoading;
   final prefs = locator<PreferenceHelper>();
   BaseAuth auth = locator<BaseAuth>();
-
 
   /// Validates the form and saves the input values.
   bool validateAndSave() {
@@ -62,6 +59,19 @@ class _LoginViewState extends State<LoginView> {
         if (_isLoginForm) {
           userId = await Auth().signIn(_email, _password);
           debugPrint('Signed in: $userId');
+          if (userId.isNotEmpty) {
+            var doctor = await getDoctor();
+            debugPrint('Signed in:  $doctor');
+              debugPrint('doctor -> ${doctor.email}');
+              debugPrint('doctor -> ${doctor.documentId}');
+              prefs.setAutoLogin(true);
+              prefs.saveDoctor(doctor);
+              if (mounted) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  context.pushReplacement(AppRoutes.home, extra: doctor);
+                });
+              }
+          }
         } else {
           userId = await auth.signUp(_email, _confirm);
           debugPrint('Signed up user: $userId');
@@ -70,27 +80,14 @@ class _LoginViewState extends State<LoginView> {
             password: _password,
             userId: userId,
           );
+          var doctor = await getDoctor();
+          if (mounted) {
+            context.pushReplacement(AppRoutes.initProfileUpdate, extra: doctor);
+          }
         }
         setState(() {
           _isLoading = false;
         });
-
-        if (userId.isNotEmpty) {
-         var doctor = await getDoctor();
-          debugPrint('Signed in:  $doctor');
-          auth.getCurrentUser().then((user) {
-            debugPrint('doctor -> ${doctor.email}');
-            debugPrint('doctor -> ${doctor.documentId}');
-            prefs.setAutoLogin(true);
-            prefs.saveDoctor(doctor);
-            if (mounted) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                context.pushReplacement(AppRoutes.home, extra: doctor);
-              });
-            }
-
-          });
-        }
       } catch (e, s) {
         debugPrint('Error: $s');
         setState(() {
@@ -103,7 +100,7 @@ class _LoginViewState extends State<LoginView> {
         });
       }
     } else {
-      if(mounted) {
+      if (mounted) {
         setState(() {
           _isLoading = false;
         });
@@ -251,7 +248,7 @@ class _LoginViewState extends State<LoginView> {
         obscureText: true,
         autofocus: false,
         textInputAction:
-        _isLoginForm ? TextInputAction.done : TextInputAction.next,
+            _isLoginForm ? TextInputAction.done : TextInputAction.next,
         focusNode: _passwordFocus,
         decoration: const InputDecoration(
             hintText: 'Password',
@@ -260,7 +257,7 @@ class _LoginViewState extends State<LoginView> {
               color: Colors.teal,
             )),
         validator: (value) =>
-        value!.isEmpty ? 'Password can\'t be empty' : null,
+            value!.isEmpty ? 'Password can\'t be empty' : null,
         onChanged: (value) => _password = value.trim(),
         onSaved: (value) => _password = value!.trim(),
         onFieldSubmitted: (term) {
@@ -290,12 +287,11 @@ class _LoginViewState extends State<LoginView> {
                 Icons.lock,
                 color: Colors.teal,
               )),
-          validator: (value) =>
-          value!.isEmpty
+          validator: (value) => value!.isEmpty
               ? 'Password can\'t be empty'
               : (value.compareTo(_password) != 0
-              ? 'Password should match'
-              : null),
+                  ? 'Password should match'
+                  : null),
           onSaved: (value) => _confirm = value!.trim(),
           onChanged: (value) => _confirm = value.trim(),
         ),
@@ -320,7 +316,7 @@ class _LoginViewState extends State<LoginView> {
           children: <TextSpan>[
             TextSpan(
               text:
-              _isLoginForm ? 'Don\'t have an account?' : 'Have an account?',
+                  _isLoginForm ? 'Don\'t have an account?' : 'Have an account?',
             ),
             TextSpan(
                 text: _isLoginForm ? ' Sign up' : ' Sign in',
@@ -342,7 +338,7 @@ class _LoginViewState extends State<LoginView> {
         child: MaterialButton(
           elevation: 5.0,
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
           color: Colors.teal,
           focusColor: Colors.red,
           onPressed: validateAndSubmit,
@@ -358,14 +354,12 @@ class _LoginViewState extends State<LoginView> {
     required String email,
     required String password,
     required String userId,
-    String name = "Doctor",
   }) async {
     try {
       debugPrint('email --> $email');
       debugPrint('password --> $password');
       final String documentId = ID.unique();
       final Map<String, dynamic> data = {
-        "name": name,
         "email": email,
         "type": "doctor",
         "uid": userId,
@@ -394,13 +388,13 @@ class _LoginViewState extends State<LoginView> {
           queries: [
             Query.equal('type', 'doctor'),
             Query.equal('email', _email)
-          ]
-      );
+          ]);
       // if (result.total > 0) {
-        final doc = result.documents.map((docs) =>
-            Doctor.fromMap(docs.data,));
+      final doc = result.documents.map((docs) => Doctor.fromMap(
+            docs.data,
+          ));
       debugPrint('data is here ---> ${doc.first}');
-        return doc.first;
+      return doc.first;
       // }
     } on AppwriteException catch (e) {
       debugPrint("Appwrite Error - getDoctor: ${e.message}");

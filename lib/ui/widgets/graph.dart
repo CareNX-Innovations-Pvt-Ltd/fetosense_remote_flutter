@@ -3,7 +3,7 @@ import 'package:fetosense_remote_flutter/core/utils/intrepretations2.dart';
 import 'package:fetosense_remote_flutter/ui/views/mothers_details.dart';
 import 'package:flutter/material.dart';
 
-import 'graphPainter.dart';
+import 'graph_painter.dart';
 
 /// A widget that displays an interactive NST (Non-Stress Test) graph with drag functionality.
 class Graph extends StatefulWidget {

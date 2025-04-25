@@ -151,39 +151,39 @@ class GraphPainter extends CustomPainter {
     drawingWidth = size.width * 0.93;
     drawingHeight = topOffsetEnd;
 
-    graphGridMainLines = new Paint()
+    graphGridMainLines = Paint()
       ..color = Colors.grey[400]!
       ..strokeWidth = pixelsPerOneMM! * 0.65;
-    graphGridLines = new Paint()
+    graphGridLines = Paint()
       ..color = Colors.grey[400]!
       ..strokeWidth = pixelsPerOneMM! * 0.40;
-    graphGridSubLines = new Paint()
+    graphGridSubLines = Paint()
       ..color = Colors.grey[400]!
       ..strokeWidth = pixelsPerOneMM! * 0.20;
-    graphOutlines = new Paint()
+    graphOutlines = Paint()
       ..color = Colors.black
       ..strokeWidth = pixelsPerOneMM! * .80;
-    graphSafeZone = new Paint()
-      ..color = Color.fromARGB(40, 100, 200, 0)
+    graphSafeZone = Paint()
+      ..color = const Color.fromARGB(40, 100, 200, 0)
       ..strokeWidth = pixelsPerOneMM! * .40;
-    graphUnSafeZone = new Paint()
-      ..color = Color.fromARGB(40, 250, 30, 0)
+    graphUnSafeZone = Paint()
+      ..color = const Color.fromARGB(40, 250, 30, 0)
       ..strokeWidth = pixelsPerOneMM! * .40;
-    graphNoiseZone = new Paint()
-      ..color = Color.fromARGB(100, 169, 169, 169)
+    graphNoiseZone = Paint()
+      ..color = const Color.fromARGB(100, 169, 169, 169)
       ..strokeWidth = pixelsPerOneMM! * .40;
-    graphBpmLine = new Paint()
+    graphBpmLine = Paint()
       ..color = Colors.blue
       ..strokeWidth = pixelsPerOneMM! * .40;
-    graphBpmLine2 = new Paint()
+    graphBpmLine2 = Paint()
       ..color = Colors.black54
       ..strokeWidth = pixelsPerOneMM! * .40;
-    graphBaseLine = new Paint()
+    graphBaseLine = Paint()
       ..color = Colors.blueGrey
       ..strokeWidth = pixelsPerOneMM! * .50;
 
     Color mhrColor = const Color.fromRGBO(197, 11, 95, 1.0);//Color(0xFFEA62AB);
-    graphMHRLine = new Paint()
+    graphMHRLine = Paint()
       ..color = mhrColor
       ..strokeWidth = pixelsPerOneMM! * .40;
 
@@ -198,8 +198,9 @@ class GraphPainter extends CustomPainter {
   bool shouldRepaint(GraphPainter oldDelegate) {
     if (oldDelegate.mOffset != mOffset) {
       return true;
-    } else
+    } else {
       return false;
+    }
   }
 
   void init(Size size) {
@@ -209,7 +210,7 @@ class GraphPainter extends CustomPainter {
     paddingBottom = pixelsPerOneMM;
     paddingRight = pixelsPerOneMM! * 2;
 
-    timeScaleFactor = this.gridPerMin == 1 ? 6 : 2;
+    timeScaleFactor = gridPerMin == 1 ? 6 : 2;
 
     xTocoOrigin = paddingLeft;
     yTocoOrigin = screenHeight - paddingBottom!;
@@ -249,7 +250,7 @@ class GraphPainter extends CustomPainter {
     drawTocoXAxis(canvas);
     drawTocoYAxis(canvas);
 
-    drawBPMLine(canvas, interpretations!.baselineBpmList, graphBaseLine);
+    // drawBPMLine(canvas, interpretations!.baselineBpmList, graphBaseLine);
     drawBPMLine(canvas, test!.bpmEntries, graphBpmLine);
     drawBPMLine(canvas, test!.bpmEntries2, graphBpmLine2);
     drawMHRLine(canvas, test!.mhrEntries, graphMHRLine);
@@ -258,12 +259,12 @@ class GraphPainter extends CustomPainter {
     drawAutoMovements(canvas);
     drawTocoLine(canvas);
 
-    drawInterpretationAreas(
-        canvas, interpretations!.getAccelerationsList(), graphSafeZone);
-    drawInterpretationAreas(
-        canvas, interpretations!.getDecelerationsList(), graphUnSafeZone);
-    drawInterpretationAreas(
-        canvas, interpretations!.getNoiseAreaList(), graphNoiseZone);
+    // drawInterpretationAreas(
+    //     canvas, interpretations!.getAccelerationsList(), graphSafeZone);
+    // drawInterpretationAreas(
+    //     canvas, interpretations!.getDecelerationsList(), graphUnSafeZone);
+    // drawInterpretationAreas(
+    //     canvas, interpretations!.getNoiseAreaList(), graphNoiseZone);
 
     // canvas.drawLine(
     //     new Offset(xOrigin + 20,
@@ -276,13 +277,13 @@ class GraphPainter extends CustomPainter {
 
   /// Returns a [ui.Paragraph] object for the given text.
   ui.Paragraph getParagraph(String text) {
-    if (text.length == 1) text = "0${text}";
-    ui.ParagraphBuilder builder = new ui.ParagraphBuilder(
-        new ui.ParagraphStyle(fontSize: 10.0, textAlign: TextAlign.right))
-      ..pushStyle(new ui.TextStyle(color: Colors.black))
+    if (text.length == 1) text = "0$text";
+    ui.ParagraphBuilder builder = ui.ParagraphBuilder(
+        ui.ParagraphStyle(fontSize: 10.0, textAlign: TextAlign.right))
+      ..pushStyle(ui.TextStyle(color: Colors.black))
       ..addText(text);
     final ui.Paragraph paragraph = builder.build()
-      ..layout(new ui.ParagraphConstraints(width: 20));
+      ..layout(const ui.ParagraphConstraints(width: 20));
     return paragraph;
   }
 
@@ -302,17 +303,17 @@ class GraphPainter extends CustomPainter {
     canvas.drawRect(safeZoneRect, graphSafeZone!);
     //safe zone end
 
-    canvas.drawLine(new Offset(xOrigin + xDivLength! / 2, paddingTop),
-        new Offset(xOrigin + xDivLength! / 2, yOrigin), graphGridSubLines);
+    canvas.drawLine(Offset(xOrigin + xDivLength! / 2, paddingTop),
+        Offset(xOrigin + xDivLength! / 2, yOrigin), graphGridSubLines);
 
     for (int i = 1; i <= xDiv; i++) {
-      canvas.drawLine(new Offset(xOrigin + (xDivLength! * i), paddingTop),
-          new Offset(xOrigin + (xDivLength! * i), yOrigin), graphGridLines);
+      canvas.drawLine(Offset(xOrigin + (xDivLength! * i), paddingTop),
+          Offset(xOrigin + (xDivLength! * i), yOrigin), graphGridLines);
 
       canvas.drawLine(
-          new Offset(
+          Offset(
               xOrigin + (xDivLength! * i) + xDivLength! / 2, paddingTop),
-          new Offset(xOrigin + (xDivLength! * i) + xDivLength! / 2, yOrigin),
+          Offset(xOrigin + (xDivLength! * i) + xDivLength! / 2, yOrigin),
           graphGridSubLines);
       int offset = (mOffset / pointsPerDiv).truncate();
       if ((i + offset) % gridPerMin! == 0) {
@@ -324,13 +325,13 @@ class GraphPainter extends CustomPainter {
         // } else if (gridPerMin == 3) {
         canvas.drawParagraph(
             getParagraph(((i + (offset)) / gridPerMin!).truncate().toString()),
-            new Offset(xOrigin + (xDivLength! * i) - pixelsPerOneMM! * 5,
+            Offset(xOrigin + (xDivLength! * i) - pixelsPerOneMM! * 5,
                 pixelsPerOneCM! * 0.2));
         // }
         // printMin = !printMin;
         canvas.drawLine(
-            new Offset(xOrigin + (xDivLength! * i), paddingTop),
-            new Offset(xOrigin + (xDivLength! * i), yOrigin),
+            Offset(xOrigin + (xDivLength! * i), paddingTop),
+            Offset(xOrigin + (xDivLength! * i), yOrigin),
             graphGridMainLines);
       }
     }
@@ -339,10 +340,10 @@ class GraphPainter extends CustomPainter {
   /// Draws the main y-axis with grid lines and BPM labels
   void drawYAxis(Canvas canvas) {
     //y-axis outlines
-    canvas.drawLine(new Offset(xOrigin, yOrigin),
-        new Offset(screenWidth - paddingRight, yOrigin), graphOutlines);
-    canvas.drawLine(new Offset(xOrigin, paddingTop),
-        new Offset(screenWidth - paddingRight, paddingTop), graphOutlines);
+    canvas.drawLine(Offset(xOrigin, yOrigin),
+        Offset(screenWidth - paddingRight, yOrigin), graphOutlines);
+    canvas.drawLine(Offset(xOrigin, paddingTop),
+        Offset(screenWidth - paddingRight, paddingTop), graphOutlines);
 
     int interval = 10;
     int ymin = 50;
@@ -350,29 +351,29 @@ class GraphPainter extends CustomPainter {
     for (int i = 1; i <= yDiv; i++) {
       if (i % 2 == 0) {
         canvas.drawLine(
-            new Offset(xOrigin, yOrigin - (yDivLength * i)),
-            new Offset(xOrigin + xAxisLength, yOrigin - (yDivLength * i)),
+            Offset(xOrigin, yOrigin - (yDivLength * i)),
+            Offset(xOrigin + xAxisLength, yOrigin - (yDivLength * i)),
             graphGridLines);
 
         canvas.drawParagraph(
             getParagraph((ymin + (interval * (i - 1))).truncate().toString()),
-            new Offset(pixelsPerOneMM! * 2,
+            Offset(pixelsPerOneMM! * 2,
                 yOrigin - (yDivLength * i + (pixelsPerOneMM! * 3))));
 
         canvas.drawLine(
-            new Offset(xOrigin, yOrigin - (yDivLength * i) + yDivLength / 2),
-            new Offset(xOrigin + xAxisLength,
+            Offset(xOrigin, yOrigin - (yDivLength * i) + yDivLength / 2),
+            Offset(xOrigin + xAxisLength,
                 yOrigin - (yDivLength * i) + yDivLength / 2),
             graphGridSubLines);
       } else {
         canvas.drawLine(
-            new Offset(xOrigin, yOrigin - (yDivLength * i)),
-            new Offset(xOrigin + xAxisLength, yOrigin - (yDivLength * i)),
+            Offset(xOrigin, yOrigin - (yDivLength * i)),
+            Offset(xOrigin + xAxisLength, yOrigin - (yDivLength * i)),
             graphGridSubLines);
 
         canvas.drawLine(
-            new Offset(xOrigin, yOrigin - (yDivLength * i) + yDivLength / 2),
-            new Offset(xOrigin + xAxisLength,
+            Offset(xOrigin, yOrigin - (yDivLength * i) + yDivLength / 2),
+            Offset(xOrigin + xAxisLength,
                 yOrigin - (yDivLength * i) + yDivLength / 2),
             graphGridSubLines);
       }
@@ -384,27 +385,27 @@ class GraphPainter extends CustomPainter {
     //int numberOffset = XDIV*(pageNumber);
     for (int j = 1; j < 2; j++) {
       canvas.drawLine(
-          new Offset(xOrigin + ((xDivLength! / 2) * j), yTocoEnd),
-          new Offset(xOrigin + ((xDivLength! / 2) * j), yTocoOrigin),
+          Offset(xOrigin + ((xDivLength! / 2) * j), yTocoEnd),
+          Offset(xOrigin + ((xDivLength! / 2) * j), yTocoOrigin),
           graphGridSubLines);
     }
 
     for (int i = 1; i <= xDiv; i++) {
-      canvas.drawLine(new Offset(xOrigin + (xDivLength! * i), yTocoEnd),
-          new Offset(xOrigin + (xDivLength! * i), yTocoOrigin), graphGridLines);
+      canvas.drawLine(Offset(xOrigin + (xDivLength! * i), yTocoEnd),
+          Offset(xOrigin + (xDivLength! * i), yTocoOrigin), graphGridLines);
 
       //for (int j = 1; j < 2; j++) `{
       canvas.drawLine(
-          new Offset(xOrigin + (xDivLength! * i) + xDivLength! / 2, yTocoEnd),
-          new Offset(
+          Offset(xOrigin + (xDivLength! * i) + xDivLength! / 2, yTocoEnd),
+          Offset(
               xOrigin + (xDivLength! * i) + xDivLength! / 2, yTocoOrigin),
           graphGridSubLines);
       //}
 
       if ((i + mOffset / 60) % gridPerMin! == 0) {
         canvas.drawLine(
-            new Offset(xOrigin + (xDivLength! * i), yTocoEnd),
-            new Offset(xOrigin + (xDivLength! * i), yTocoOrigin),
+            Offset(xOrigin + (xDivLength! * i), yTocoEnd),
+            Offset(xOrigin + (xDivLength! * i), yTocoOrigin),
             graphGridMainLines);
       }
     }
@@ -413,10 +414,10 @@ class GraphPainter extends CustomPainter {
   /// Draws the TOCO y-axis with grid lines and pressure labels
   void drawTocoYAxis(Canvas canvas) {
     //y-axis outlines
-    canvas.drawLine(new Offset(xOrigin, yTocoOrigin),
-        new Offset(screenWidth - paddingRight, yTocoOrigin), graphOutlines);
-    canvas.drawLine(new Offset(xOrigin, yTocoEnd),
-        new Offset(screenWidth - paddingRight, yTocoEnd), graphOutlines);
+    canvas.drawLine(Offset(xOrigin, yTocoOrigin),
+        Offset(screenWidth - paddingRight, yTocoOrigin), graphOutlines);
+    canvas.drawLine(Offset(xOrigin, yTocoEnd),
+        Offset(screenWidth - paddingRight, yTocoEnd), graphOutlines);
 
     int interval = 10;
     int ymin = 10;
@@ -424,30 +425,30 @@ class GraphPainter extends CustomPainter {
     for (int i = 1; i <= yTocoDiv; i++) {
       if (i % 2 == 0) {
         canvas.drawLine(
-            new Offset(xOrigin, yTocoOrigin - (yDivLength * i)),
-            new Offset(xOrigin + xAxisLength, yTocoOrigin - (yDivLength * i)),
+            Offset(xOrigin, yTocoOrigin - (yDivLength * i)),
+            Offset(xOrigin + xAxisLength, yTocoOrigin - (yDivLength * i)),
             graphGridLines);
 
         canvas.drawParagraph(
             getParagraph((ymin + (interval * (i - 1))).toString()),
-            new Offset(pixelsPerOneMM! * 2,
+            Offset(pixelsPerOneMM! * 2,
                 yTocoOrigin - (yDivLength * i + (pixelsPerOneMM! * 3))));
 
         canvas.drawLine(
-            new Offset(
+            Offset(
                 xOrigin, yTocoOrigin - (yDivLength * i) + yDivLength / 2),
-            new Offset(xOrigin + xAxisLength,
+            Offset(xOrigin + xAxisLength,
                 yTocoOrigin - (yDivLength * i) + yDivLength / 2),
             graphGridSubLines);
       } else {
         canvas.drawLine(
-            new Offset(xOrigin, yTocoOrigin - (yDivLength * i)),
-            new Offset(xOrigin + xAxisLength, yTocoOrigin - (yDivLength * i)),
+            Offset(xOrigin, yTocoOrigin - (yDivLength * i)),
+            Offset(xOrigin + xAxisLength, yTocoOrigin - (yDivLength * i)),
             graphGridSubLines);
         canvas.drawLine(
-            new Offset(
+            Offset(
                 xOrigin, yTocoOrigin - (yDivLength * i) + yDivLength / 2),
-            new Offset(xOrigin + xAxisLength,
+            Offset(xOrigin + xAxisLength,
                 yTocoOrigin - (yDivLength * i) + yDivLength / 2),
             graphGridSubLines);
       }
@@ -457,7 +458,7 @@ class GraphPainter extends CustomPainter {
 
   /// Draws data points and connecting lines for BPM measurements
   void drawBPMLine(Canvas canvas, List<int>? list, Paint? lineStyle) {
-    if (list == null || list.length <= 0) {
+    if (list == null || list.isEmpty) {
       return;
     }
 
@@ -488,13 +489,13 @@ class GraphPainter extends CustomPainter {
       // b. If the results of the two values before and after are different by more than 30, they are not connected.
 
       canvas.drawLine(
-          new Offset(startX, startY), new Offset(stopX, stopY), lineStyle!);
+          Offset(startX, startY), Offset(stopX, stopY), lineStyle!);
     }
   }
 
   /// Draws data points and connecting lines for MHR measurements
   void drawMHRLine(Canvas canvas, List<int>? list, Paint? lineStyle) {
-    if (list == null || list.length <= 0) {
+    if (list == null || list.isEmpty) {
       return;
     }
 
@@ -525,7 +526,7 @@ class GraphPainter extends CustomPainter {
       // b. If the results of the two values before and after are different by more than 30, they are not connected.
 
       canvas.drawLine(
-          new Offset(startX, startY), new Offset(stopX, stopY), lineStyle!);
+          Offset(startX, startY), Offset(stopX, stopY), lineStyle!);
     }
   }
 
@@ -533,7 +534,7 @@ class GraphPainter extends CustomPainter {
   void drawMovements(Canvas canvas) {
     //List<int> movementList = [2, 12, 24,60, 120, 240, 300, 420, 600,690,1000,1100,1140, 1220, 1240, 1300, 1420, 1600];
     List<int>? movementList = test!.movementEntries;
-    if (movementList == null || movementList.length <= 0) return;
+    if (movementList == null || movementList.isEmpty) return;
     /*if (movementList == null && movementList.size() > 0)
             return;*/
 
@@ -545,15 +546,15 @@ class GraphPainter extends CustomPainter {
           movement < (mOffset + pointsPerPage)) {
         movement -= mOffset;
         canvas.drawLine(
-            new Offset(xOrigin + (increment * (movement)),
+            Offset(xOrigin + (increment * (movement)),
                 yOrigin + pixelsPerOneMM! * 2),
-            new Offset(xOrigin + (increment * (movement)),
+            Offset(xOrigin + (increment * (movement)),
                 yOrigin + pixelsPerOneMM! * 2 + (pixelsPerOneMM! * 4)),
             graphOutlines);
         canvas.drawLine(
-            new Offset(xOrigin + (increment * (movement)),
+            Offset(xOrigin + (increment * (movement)),
                 yOrigin + pixelsPerOneMM! * 2),
-            new Offset(xOrigin + (increment * (movement)) + pixelsPerOneMM!,
+            Offset(xOrigin + (increment * (movement)) + pixelsPerOneMM!,
                 yOrigin + pixelsPerOneMM! * 2 + (pixelsPerOneMM! * 2)),
             graphOutlines);
       }
@@ -580,7 +581,7 @@ class GraphPainter extends CustomPainter {
   void drawAutoMovements(Canvas canvas) {
     //List<int> movementList = [2, 12, 24,60, 120, 240, 300, 420, 600,690,1000,1100,1140, 1220, 1240, 1300, 1420, 1600];
     List<int>? movementList = test!.autoFetalMovement;
-    if (movementList == null || movementList.length <= 0) return;
+    if (movementList == null || movementList.isEmpty) return;
     /*if (movementList == null && movementList.size() > 0)
             return;*/
 
@@ -592,15 +593,15 @@ class GraphPainter extends CustomPainter {
           movement < (mOffset + pointsPerPage)) {
         movement -= mOffset;
         canvas.drawLine(
-            new Offset(xOrigin + (increment * (movement)),
+            Offset(xOrigin + (increment * (movement)),
                 yOrigin - pixelsPerOneCM! + pixelsPerOneMM!),
-            new Offset(xOrigin + (increment * (movement)),
+            Offset(xOrigin + (increment * (movement)),
                 yOrigin - pixelsPerOneMM! * 3),
             graphOutlines);
         canvas.drawLine(
-            new Offset(xOrigin + (increment * (movement)),
+            Offset(xOrigin + (increment * (movement)),
                 yOrigin - pixelsPerOneCM! + pixelsPerOneMM!),
-            new Offset(
+            Offset(
                 xOrigin +
                     (increment * (movement)) +
                     pixelsPerOneMM! +
@@ -608,9 +609,9 @@ class GraphPainter extends CustomPainter {
                 yOrigin - pixelsPerOneMM! * 7),
             graphOutlines);
         canvas.drawLine(
-            new Offset(xOrigin + (increment * (movement)),
+            Offset(xOrigin + (increment * (movement)),
                 yOrigin - pixelsPerOneCM! + pixelsPerOneMM! * 7),
-            new Offset(
+            Offset(
                 xOrigin +
                     (increment * (movement)) +
                     pixelsPerOneMM! +
@@ -639,7 +640,7 @@ class GraphPainter extends CustomPainter {
   /// Draws data points and connecting lines for TOCO measurements
   /// [canvas] is the canvas to draw on.
   void drawTocoLine(Canvas canvas) {
-    if (test!.tocoEntries == null || test!.tocoEntries!.length <= 0) {
+    if (test!.tocoEntries == null || test!.tocoEntries!.isEmpty) {
       return;
     }
 
@@ -650,8 +651,8 @@ class GraphPainter extends CustomPainter {
     stopX = getScreenXToco(i);
     stopY = getYValueFromToco(test!.tocoEntries![i]);
     for (;
-        i < test!.tocoEntries!.length - 1 && i < (mOffset + pointsPerPage);
-        i++) {
+    i < test!.tocoEntries!.length - 1 && i < (mOffset + pointsPerPage);
+    i++) {
       startData = stopData;
       stopData = test!.tocoEntries![i];
 
@@ -670,7 +671,7 @@ class GraphPainter extends CustomPainter {
       // b. If the results of the two values before and after are different by more than 30, they are not connected.
 
       canvas.drawLine(
-          new Offset(startX, startY), new Offset(stopX, stopY), graphBpmLine!);
+          Offset(startX, startY), Offset(stopX, stopY), graphBpmLine!);
     }
   }
 
@@ -680,19 +681,19 @@ class GraphPainter extends CustomPainter {
   /// [zoneStyle] is the paint style for the zone.
   void drawInterpretationAreas(
       Canvas canvas, List<MarkerIndices>? list, Paint? zoneStyle) {
-    if (list == null || list.length <= 0) {
+    if (list == null || list.isEmpty) {
       return;
     }
 
     double startX, stopX = 0;
 
     for (int i = 0; i < list.length; i++) {
-      startX = getScreenX(list[i].getFrom()!);
-      stopX = getScreenX(list[i].getTo()!);
+      startX = getScreenX(list[i].getFrom());
+      stopX = getScreenX(list[i].getTo());
 
       //Marker
       Rect zoneRect =
-          new Rect.fromLTRB(startX, paddingTop, stopX, yTocoOrigin); //50
+      Rect.fromLTRB(startX, paddingTop, stopX, yTocoOrigin); //50
       canvas.drawRect(zoneRect, zoneStyle!);
     }
   }
@@ -791,11 +792,7 @@ class GraphPainter extends CustomPainter {
 
     if (pos != 0) pos = pos - (pos % pointsPerDiv);
 
-    print(pos.toString() +
-        "   " +
-        pointsPerPage.toString() +
-        "   " +
-        pointsPerDiv.toString());
+    debugPrint("$pos   $pointsPerPage   $pointsPerDiv");
 
     return pos;
   }

@@ -3,7 +3,8 @@ import 'dart:async';
 /// A class that provides methods to interact with the Firestore database for test data.
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart' as models;
-
+import 'package:fetosense_remote_flutter/core/model/test_model.dart';
+import 'package:flutter/cupertino.dart';
 
 class TestApi {
   final Databases _db;
@@ -40,7 +41,8 @@ class TestApi {
   }
 
   /// Stream BabyBeat tests for a mother
-  Stream<List<models.Document>> streamTestsByMotherBabyBeat(String? motherId) async* {
+  Stream<List<models.Document>> streamTestsByMotherBabyBeat(
+      String? motherId) async* {
     final response = await _db.listDocuments(
       databaseId: databaseId,
       collectionId: 'BabyBeat', // Replace with actual BabyBeat collection ID
@@ -67,10 +69,11 @@ class TestApi {
   }
 
   /// Stream BabyBeat tests for organization and doctor
-  Stream<List<models.Document>> streamTestsByOrganizationBabyBeat(String? orgId, String? docId) async* {
+  Stream<List<models.Document>> streamTestsByOrganizationBabyBeat(
+      String? orgId, String? docId) async* {
     final response = await _db.listDocuments(
       databaseId: databaseId,
-      collectionId: 'BabyBeat', // Replace with actual BabyBeat collection ID
+      collectionId: 'BabyBeat',
       queries: [
         Query.equal('association.babybeat_org.documentId', orgId),
         Query.equal('association.babybeat_doctor.documentId', docId),
@@ -82,7 +85,8 @@ class TestApi {
   }
 
   /// Stream all BabyBeat tests for a doctor
-  Stream<List<models.Document>> streamTestsByDoctorBabyBeatAll(String? docId) async* {
+  Stream<List<models.Document>> streamTestsByDoctorBabyBeatAll(
+      String? docId) async* {
     final response = await _db.listDocuments(
       databaseId: databaseId,
       collectionId: 'BabyBeat',
@@ -96,7 +100,8 @@ class TestApi {
   }
 
   /// Stream tests for a specific organization
-  Stream<List<models.Document>> streamTestsByOrganizationOnly(String orgId) async* {
+  Stream<List<models.Document>> streamTestsByOrganizationOnly(
+      String orgId) async* {
     final response = await _db.listDocuments(
       databaseId: databaseId,
       collectionId: collectionId,
@@ -109,8 +114,19 @@ class TestApi {
     yield response.documents;
   }
 
+  Stream<Test> streamTestByDocumentId(String docId) {
+    final realtime = Realtime(_db.client);
+    final subscription = realtime.subscribe([
+      'databases.$databaseId.collections.$collectionId.documents.$docId',
+    ]);
+    return subscription.stream.map((event) {
+      return Test.fromMap(event.payload, docId);
+    });
+  }
+
   /// Stream tests for TV view
-  Stream<List<models.Document>> streamTestsByOrganizationForTV(String? orgId, int limit) async* {
+  Stream<List<models.Document>> streamTestsByOrganizationForTV(
+      String? orgId, int limit) async* {
     final response = await _db.listDocuments(
       databaseId: databaseId,
       collectionId: collectionId,
@@ -124,7 +140,8 @@ class TestApi {
   }
 
   /// Stream tests for TV view (org-specific)
-  Stream<List<models.Document>> streamTestsByOrganizationOnlyForTV(String? orgId, int limit) async* {
+  Stream<List<models.Document>> streamTestsByOrganizationOnlyForTV(
+      String? orgId, int limit) async* {
     final response = await _db.listDocuments(
       databaseId: databaseId,
       collectionId: collectionId,
@@ -175,5 +192,3 @@ class TestApi {
     );
   }
 }
-
-

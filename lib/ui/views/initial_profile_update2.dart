@@ -317,7 +317,7 @@ class InitialProfileUpdate2State extends State<InitialProfileUpdate2> {
           data: updateData,
         );
 
-        context.pushReplacement(AppRoutes.home);
+        context.pushReplacement(AppRoutes.home, extra: widget.doctor!);
         setState(() {
           code = deviceData["deviceCode"];
         });

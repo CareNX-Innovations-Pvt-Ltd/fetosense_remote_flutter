@@ -13,6 +13,9 @@ class TestCRUDModel extends ChangeNotifier {
   /// Cached list of test records
   List<Test>? tests;
 
+  StreamController<Test>? _testStreamController;
+  StreamSubscription? _realtimeSub;
+
   /// Fetch all tests (optional caching)
   Future<List<Test>?> fetchTests() async {
     final result = await _api.getDataCollection();
@@ -57,6 +60,30 @@ class TestCRUDModel extends ChangeNotifier {
   Stream<List<Test>> fetchAllTestsAsStreamOrg(String orgId) {
     return _api.streamTestsByOrganizationOnly(orgId).map((docs) =>
         docs.map((doc) => Test.fromMap(doc.data, doc.$id)).toList());
+  }
+
+  Stream<Test> get testStream {
+    _testStreamController ??= StreamController<Test>.broadcast();
+    return _testStreamController!.stream;
+  }
+
+  Stream<Test> fetchTestById(String id) {
+    return _api.streamTestByDocumentId(id);
+  }
+
+  void startLiveUpdates(String docId) {
+    _testStreamController ??= StreamController<Test>.broadcast();
+
+    _realtimeSub = _api.streamTestByDocumentId(docId).listen((updatedTest) {
+      _testStreamController?.add(updatedTest);
+    });
+  }
+
+  void stopLiveUpdates() {
+    _realtimeSub?.cancel();
+    _realtimeSub = null;
+    _testStreamController?.close();
+    _testStreamController = null;
   }
 
   /// Stream limited org tests for TV

@@ -10,8 +10,8 @@ import 'package:fetosense_remote_flutter/core/utils/app_constants.dart';
 import 'package:fetosense_remote_flutter/core/view_models/test_crud_model.dart';
 import 'package:fetosense_remote_flutter/locater.dart';
 import 'package:fetosense_remote_flutter/ui/shared/constant.dart';
-import 'package:fetosense_remote_flutter/ui/widgets/allTestCardBabyBeat.dart';
-import 'package:fetosense_remote_flutter/ui/widgets/scanWidget.dart';
+import 'package:fetosense_remote_flutter/ui/widgets/all_test_card_baby_beat.dart';
+import 'package:fetosense_remote_flutter/ui/widgets/scan_widget.dart';
 import 'package:fetosense_remote_flutter/ui/widgets/youtube_player_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -269,12 +269,11 @@ class RecentTestListViewBabyBeatState
                                       // scanQR();
                                     });
                                     var result = await Navigator.push(
-                                        context,
-                                        CupertinoPageRoute(
-                                            builder: (context) =>
-                                                ScanWidget()));
-
-                                    // debugPrint("Result : " + result.toString());
+                                      context,
+                                      CupertinoPageRoute(
+                                        builder: (context) => ScanWidget(),
+                                      ),
+                                    );
 
                                     if (result != null && result != 'Unknown') {
                                       scanQR(result);
@@ -425,7 +424,8 @@ class RecentTestListViewBabyBeatState
           final dbPartner = document.data;
 
           if (dbPartner.isEmpty) {
-            ScaffoldMessenger.of(_scaffoldKey.currentState!.context).showSnackBar(
+            ScaffoldMessenger.of(_scaffoldKey.currentState!.context)
+                .showSnackBar(
               const SnackBar(content: Text('Invalid QR CODE!')),
             );
             return;
@@ -443,7 +443,8 @@ class RecentTestListViewBabyBeatState
               mapHospital['hospitalName'],
             );
           } else {
-            ScaffoldMessenger.of(_scaffoldKey.currentState!.context).showSnackBar(
+            ScaffoldMessenger.of(_scaffoldKey.currentState!.context)
+                .showSnackBar(
               const SnackBar(content: Text('Something went wrong!')),
             );
           }
@@ -679,8 +680,7 @@ class RecentTestListViewBabyBeatState
                           //   );
                           //   Navigator.pop(context);
                           // }
-                        }
-                        ,
+                        },
                         color: greenColor,
                         elevation: 0,
                         child: const Text(
@@ -833,7 +833,9 @@ class RecentTestListViewBabyBeatState
       );
 
       final devices = response.documents
-          .map((doc) => UserModel.fromMap(doc.data, ))
+          .map((doc) => UserModel.fromMap(
+                doc.data,
+              ))
           .toList();
 
       for (final device in devices) {
@@ -849,8 +851,7 @@ class RecentTestListViewBabyBeatState
         // Ensure existing associations are preserved
         Map<String, dynamic> updatedAssociations = {};
         if (device.associations != null) {
-          updatedAssociations =
-          Map<String, dynamic>.from(device.associations!);
+          updatedAssociations = Map<String, dynamic>.from(device.associations!);
         }
 
         updatedAssociations[widget.doctor!.documentId!] = doctorAssoc;

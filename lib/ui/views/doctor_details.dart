@@ -5,8 +5,8 @@ import 'package:fetosense_remote_flutter/core/network/appwrite_config.dart';
 import 'package:fetosense_remote_flutter/core/utils/app_constants.dart';
 import 'package:fetosense_remote_flutter/locater.dart';
 import 'package:fetosense_remote_flutter/ui/shared/constant.dart';
-import 'package:fetosense_remote_flutter/ui/widgets/scanWidget.dart';
-import 'package:fetosense_remote_flutter/ui/widgets/updateOrgDialog.dart';
+import 'package:fetosense_remote_flutter/ui/widgets/scan_widget.dart';
+import 'package:fetosense_remote_flutter/ui/widgets/update_org_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -1008,7 +1008,7 @@ class DoctorDetailsState extends State<DoctorDetails> {
                         ),
                       ),
                       Text(
-                        hospitalName!,
+                        hospitalName ?? '',
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(height: MediaQuery.of(context).size.width * 0.10),
@@ -1067,7 +1067,7 @@ class DoctorDetailsState extends State<DoctorDetails> {
                                     documentId: widget.doctor!.documentId!,
                                     data: {
                                       'organizationId': hospitalid,
-                                      'organizationName': hospitalName,
+                                      'name': hospitalName,
                                     },
                                   );
 

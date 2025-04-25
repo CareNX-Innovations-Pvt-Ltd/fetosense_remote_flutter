@@ -9,7 +9,7 @@ import 'package:fetosense_remote_flutter/core/utils/app_constants.dart';
 import 'package:fetosense_remote_flutter/core/utils/intrepretations2.dart';
 import 'package:fetosense_remote_flutter/locater.dart';
 import 'package:fetosense_remote_flutter/ui/shared/constant.dart';
-import 'package:fetosense_remote_flutter/ui/widgets/graphPainter.dart';
+import 'package:fetosense_remote_flutter/ui/widgets/graph_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:preferences/preferences.dart';

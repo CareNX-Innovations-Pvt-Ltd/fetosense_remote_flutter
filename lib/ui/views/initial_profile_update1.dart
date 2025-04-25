@@ -13,7 +13,8 @@ import '../../locater.dart';
 class InitialProfileUpdate extends StatefulWidget {
   /// [doctor] is the doctor model.
   final Doctor? doctor;
-  const InitialProfileUpdate({super.key,  this.doctor});
+
+  const InitialProfileUpdate({super.key, this.doctor});
 
   @override
   InitialProfileUpdateState createState() => InitialProfileUpdateState();
@@ -22,25 +23,10 @@ class InitialProfileUpdate extends StatefulWidget {
 class InitialProfileUpdateState extends State<InitialProfileUpdate> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  String? _name;
-  String? _email;
   bool isEmailThere = false;
   final databases = Databases(locator<AppwriteService>().client);
   BaseAuth auth = locator<BaseAuth>();
-
-  @override
-  void initState() {
-    super.initState();
-    debugPrint("DOCTOR: ${widget.doctor?.email}");
-    auth.getCurrentUser().then((user) {
-      debugPrint("USERS: $user");
-      if (widget.doctor?.email?.isNotEmpty == true) {
-        setState(() {
-          isEmailThere = true;
-        });
-      }
-    });
-  }
+  final nameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -73,10 +59,6 @@ class InitialProfileUpdateState extends State<InitialProfileUpdate> {
             const SizedBox(
               height: 16,
             ),
-            showEmailInput(),
-            const SizedBox(
-              height: 16,
-            ),
             showPrimaryButton(),
           ],
         ),
@@ -106,15 +88,13 @@ class InitialProfileUpdateState extends State<InitialProfileUpdate> {
       child: TextFormField(
         autofocus: false,
         maxLines: 1,
-        onSaved: (input) => setState(() {
-          _name = input;
-        }),
-        onChanged: (input) {
-          setState(() {
-            _name = input;
-          });
-        },
-
+       validator: (value){
+         if (value == null || value.trim().isEmpty) {
+           return 'Please enter a name';
+         }
+         return null;
+       },
+        controller: nameController,
         decoration: InputDecoration(
             counterStyle: const TextStyle(
               height: double.minPositive,
@@ -150,83 +130,6 @@ class InitialProfileUpdateState extends State<InitialProfileUpdate> {
     );
   }
 
-  /// Validates if the given string is a valid email.
-  bool isEmail(String? string) {
-    // Null or empty string is invalid
-    if (string == null || string.isEmpty) {
-      return false;
-    }
-
-    const pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
-    final regExp = RegExp(pattern);
-
-    if (!regExp.hasMatch(string)) {
-      return false;
-    }
-    return true;
-  }
-
-  /// Displays the email input field.
-  Widget showEmailInput() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-      child: Visibility(
-        visible: !isEmailThere,
-        child: TextFormField(
-          autofillHints: const [AutofillHints.email],
-          keyboardType: TextInputType.emailAddress,
-          autofocus: false,
-          maxLines: 1,
-          onSaved: (input) => setState(() {
-            _email = input;
-          }),
-
-          onChanged: (input) {
-            setState(() {
-              _email = input;
-            });
-          },
-
-          decoration: InputDecoration(
-              counterStyle: const TextStyle(
-                height: double.minPositive,
-              ),
-              counterText: "",
-              labelText: "Email",
-              floatingLabelBehavior: FloatingLabelBehavior.auto,
-              labelStyle: const TextStyle(color: Colors.teal),
-              hintText: "Enter Email",
-              fillColor: Colors.teal.withOpacity(0.2),
-              filled: true,
-              errorStyle: const TextStyle(
-                color: Colors.red,
-                fontSize: 0,
-              ),
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-              errorText: null,
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(color: Colors.teal),
-              ),
-              focusedErrorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(color: Colors.teal),
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(color: Colors.teal),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(color: Colors.teal),
-              )),
-          // style: Utils().smallBlack18M(),
-        ),
-      ),
-    );
-  }
-
   /// Displays the primary button for saving the profile.
   Widget showPrimaryButton() {
     return Padding(
@@ -245,23 +148,13 @@ class InitialProfileUpdateState extends State<InitialProfileUpdate> {
             ),
             onPressed: () async {
               Map<String, dynamic> data = {};
-
-              if (_name != null) {
-                data["name"] = _name!.trim();
+              data["name"] = nameController.text.trim();
+              data["email"] = widget.doctor!.email!.trim();
+              debugPrint('name -> ${nameController.text}');
+              debugPrint('name -> ${widget.doctor!.documentId!}');
+              if (nameController.text.isEmpty) {
+                showSnackbar("Please fill your name!");
               } else {
-                data["name"] = _name;
-              }
-              data["email"] = _email ?? widget.doctor!.email!.trim();
-
-              if (data["name"] == null ||
-                  data["name"].toString().isEmpty ||
-                  data["email"].toString().isEmpty) {
-                showSnackbar("Please fill all detailsss !");
-              } else {
-                if (!isEmail(data["email"])) {
-                  showSnackbar("Enter Valid Email !");
-                  return;
-                }
                 widget.doctor!.email = data["email"];
                 try {
                   await databases.updateDocument(
@@ -270,7 +163,8 @@ class InitialProfileUpdateState extends State<InitialProfileUpdate> {
                     documentId: widget.doctor!.documentId!,
                     data: data,
                   );
-                  context.pushReplacement(AppRoutes.initProfileUpdate2);
+
+                  context.pushReplacement(AppRoutes.initProfileUpdate2, extra: widget.doctor!);
                 } catch (e) {
                   debugPrint("Appwrite error: $e");
                   showSnackbar("Something went wrong while saving.");

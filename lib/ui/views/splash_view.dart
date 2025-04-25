@@ -25,7 +25,7 @@ class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 2)).then((onValue){
+    Future.delayed(Duration(seconds: 2)).then((onValue) {
       _initialize();
     });
   }
@@ -53,68 +53,18 @@ class _SplashViewState extends State<SplashView> {
 
   Future<void> _handleAutoLogin() async {
     try {
-      final user = await auth.getCurrentUser();
-      debugPrint("User: ${user.email}");
       Doctor? doctor = prefs.getDoctor();
       debugPrint("Splash: ${doctor?.documentId}");
-      if(mounted) {
-        context.goNamed(AppRoutes.home, extra:doctor);
+      if (mounted) {
+        context.goNamed(AppRoutes.home, extra: doctor);
       }
     } catch (e) {
-      if(mounted) {
+      if (mounted) {
         context.goNamed(AppRoutes.login);
       }
       debugPrint("Auto-login failed: $e");
     }
   }
-
-
-  // void _navigateToHome() {
-  //   if (_isAndroidTv) {
-  //     Navigator.pushReplacement(context, MaterialPageRoute(
-  //       builder: (_) => TVHome(
-  //         doctor: doctor,
-  //       ),
-  //     ));
-  //   } else {
-  //     Navigator.pushReplacement(context, MaterialPageRoute(
-  //       builder: (_) => Home(doctor: doctor),
-  //     ));
-  //   }
-  // }
-  //
-  // void _getDoctorByEmail() {
-  //   final userProvider = Provider.of<CRUDModel>(context, listen: false);
-  //   userProvider.fetchDoctorByEmailId(_emailId!).listen((doctors) {
-  //     if (doctors.isNotEmpty) {
-  //       setState(() {
-  //         doctor = doctors.first;
-  //         authStatus = AuthStatus.loggedIn;
-  //       });
-  //     } else {
-  //       debugPrint("No doctor found");
-  //       setState(() => authStatus = AuthStatus.notLoggedIn);
-  //     }
-  //   }, onError: (e) {
-  //     debugPrint("Fetch error: $e");
-  //     setState(() => authStatus = AuthStatus.notLoggedIn);
-  //   });
-  // }
-  //
-  // void _logoutCallback() {
-  //   debugPrint("Logout triggered");
-  //   setState(() {
-  //     _emailId = null;
-  //     doctor = null;
-  //     authStatus = AuthStatus.notLoggedIn;
-  //   });
-  //   auth.signOut();
-  // }
-  //
-  //
-  // void _profileUpdate1Callback() =>
-  //     setState(() => authStatus = AuthStatus.profileUpdate1);
-
 
   Widget _buildWaitingScreen() {
     return SafeArea(
@@ -128,7 +78,6 @@ class _SplashViewState extends State<SplashView> {
 
   @override
   Widget build(BuildContext context) {
-        return _buildWaitingScreen();
-    }
+    return _buildWaitingScreen();
   }
-
+}

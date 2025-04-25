@@ -10,8 +10,8 @@ import 'package:fetosense_remote_flutter/core/utils/app_constants.dart';
 import 'package:fetosense_remote_flutter/core/view_models/test_crud_model.dart';
 import 'package:fetosense_remote_flutter/locater.dart';
 import 'package:fetosense_remote_flutter/ui/shared/constant.dart';
-import 'package:fetosense_remote_flutter/ui/widgets/allTestCard.dart';
-import 'package:fetosense_remote_flutter/ui/widgets/scanWidget.dart';
+import 'package:fetosense_remote_flutter/ui/widgets/all_test_card.dart';
+import 'package:fetosense_remote_flutter/ui/widgets/scan_widget.dart';
 import 'package:fetosense_remote_flutter/ui/widgets/youtube_player_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +51,7 @@ class RecentTestListViewState extends State<RecentTestListView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String? code;
   final databases = Databases(locator<AppwriteService>().client);
-  Doctor  doctor = Doctor();
+  Doctor doctor = Doctor();
   Map<String, dynamic>? passKeys = {};
 
   final TextEditingController _passkeyController = TextEditingController();
@@ -84,282 +84,301 @@ class RecentTestListViewState extends State<RecentTestListView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 5),
-              decoration: const BoxDecoration(
-                border:
-                    Border(bottom: BorderSide(width: 0.5, color: Colors.grey)),
-              ),
-              child: ListTile(
-                subtitle: const Text(
-                  "Recent Tests",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 20,
-                      color: Colors.black87),
+    return SafeArea(
+      child: Scaffold(
+        key: _scaffoldKey,
+        body: SafeArea(
+          child: Column(
+            children: <Widget>[
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 5),
+                decoration: const BoxDecoration(
+                  border: Border(
+                      bottom: BorderSide(width: 0.5, color: Colors.grey)),
                 ),
-                title: const Text(
-                  "Fetosense",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w300,
-                      fontSize: 14,
-                      color: Colors.black87),
+                child: ListTile(
+                  subtitle: const Text(
+                    "Recent Tests",
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                        color: Colors.black87),
+                  ),
+                  title: const Text(
+                    "Fetosense",
+                    style: TextStyle(
+                        fontWeight: FontWeight.w300,
+                        fontSize: 14,
+                        color: Colors.black87),
+                  ),
+                  trailing: Image.asset('images/ic_logo_good.png'),
                 ),
-                trailing: Image.asset('images/ic_logo_good.png'),
               ),
-            ),
-            doctor.organizationId?.isNotEmpty == true
-                ? Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.fromLTRB(10, 0, 8, 8),
-                      child: StreamBuilder(
-                        stream: Provider.of<TestCRUDModel>(context)
-                            .fetchAllTestsAsStream(
-                                doctor.organizationId),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            tests = snapshot.data!;
+              doctor.organizationId?.isNotEmpty == true
+                  ? Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 0, 8, 8),
+                        child: StreamBuilder<List<Test>>(
+                          stream: context
+                              .read<TestCRUDModel>()
+                              .fetchAllTestsAsStream(doctor.organizationId!),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.black),
+                                ),
+                              );
+                            }
 
-                            return tests.isEmpty
-                                ? const Center(
-                                    child: Text(
-                                      'No test yet',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.grey,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  )
-                                : ListView.builder(
-                                    itemCount: tests.length,
-                                    shrinkWrap: true, // use this
-                                    itemBuilder: (buildContext, index) =>
-                                        AllTestCard(
-                                      testDetails: tests[index],
-                                    ),
-                                  );
-                          } else {
-                            return const Center(
-                              child: CircularProgressIndicator(
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.black),
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                  )
-                : Expanded(
-                    child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 16),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Welcome back,",
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Dr. ${doctor.name}",
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.teal,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16, right: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Align(
-                                alignment: Alignment.centerLeft,
+                            if (snapshot.hasError) {
+                              return Center(
                                 child: Text(
-                                  "To get started, scan your \n FETOSENSE QR Code",
+                                  'Something went wrong.\n${snapshot.error}',
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              );
+                            }
+
+                            final tests = snapshot.data ?? [];
+
+                            if (tests.isEmpty) {
+                              return const Center(
+                                child: Text(
+                                  'No test yet',
                                   style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FontWeight.w800,
+                                    color: Colors.grey,
+                                    fontSize: 20,
                                   ),
                                 ),
+                              );
+                            }
+
+                            return ListView.separated(
+                              itemCount: tests.length,
+                              shrinkWrap: true,
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(height: 12),
+                              itemBuilder: (context, index) => AllTestCard(
+                                testDetails: tests[index],
                               ),
-                              !isEditOrg
-                                  ? MaterialButton(
-                                      elevation: 2,
-                                      color: Colors.teal,
-                                      textColor: Colors.white,
-                                      highlightElevation: 2,
-                                      onPressed: () async {
-                                        setState(() {
-                                          isEditOrg = true;
-                                          // scanQR();
-                                        });
-                                        var result = await Navigator.push(
-                                          context,
-                                          CupertinoPageRoute(
-                                            builder: (context) => ScanWidget(),
-                                          ),
-                                        );
-
-                                        // debugPrint("Result : " + result.toString());
-
-                                        if (result != null &&
-                                            result != 'Unknown') {
-                                          scanQR(result);
-                                        } else {
+                            );
+                          },
+                        ),
+                      ),
+                    )
+                  : Expanded(
+                      child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(left: 16),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Welcome back,",
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 16),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Dr. ${doctor.name}",
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.teal,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 16, right: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    "To get started, scan your \n FETOSENSE QR Code",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                !isEditOrg
+                                    ? MaterialButton(
+                                        elevation: 2,
+                                        color: Colors.teal,
+                                        textColor: Colors.white,
+                                        highlightElevation: 2,
+                                        onPressed: () async {
                                           setState(() {
-                                            isEditOrg = false;
+                                            isEditOrg = true;
                                             // scanQR();
                                           });
-                                        }
-                                      },
-                                      child: const Text(
-                                        'Scan QR',
-                                        style: TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                    )
-                                  : IconButton(
-                                      iconSize: 35,
-                                      icon: const CircularProgressIndicator(
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                                Colors.black),
-                                      ),
-                                      onPressed: () {},
-                                    ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Container(
-                          margin: const EdgeInsets.all(14),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(14),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey[400]!,
-                                  blurRadius: 5.0,
-                                ),
-                              ]),
-                          child: Column(
-                            children: [
-                              FeedsYoutube("QuiCSDtXoIc"),
-                              Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      flex: 4,
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          "Explore India’s Most Advanced Wireless Fetal Monitoring Machine. For Demo, Call: +91 9326775598 or WhatsApp",
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
-                                            color: greyRegular,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 8,
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          String text = "";
-                                          if (doctor.mobileNo != null) {
-                                            text =
-                                                "Hello\nI am ${doctor.name} and my mobile no is ${doctor.mobileNo}.\nI Need demo for fetosense.";
-                                          } else {
-                                            text =
-                                                "Hello\nI am ${doctor.name} and my mobile no is ${doctor.email}.\nI Need demo for fetosense.";
-                                          }
-
-                                          String phone = "919326775598";
-                                          //if(Platform.isIOS){
-                                          String url =
-                                              "whatsapp://send?phone=$phone&text=$text";
-                                          String urlOk = url
-                                              .split(' ')
-                                              .join('%20')
-                                              .toString();
-                                          urlOk = urlOk
-                                              .split('\n')
-                                              .join('%0A')
-                                              .toString();
-
-                                          debugPrint(urlOk);
-                                          launchUrl(
-                                            Uri.parse(urlOk),
+                                          var result = await Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                              builder: (context) =>
+                                                  ScanWidget(),
+                                            ),
                                           );
+
+                                          // debugPrint("Result : " + result.toString());
+
+                                          if (result != null &&
+                                              result != 'Unknown') {
+                                            scanQR(result);
+                                          } else {
+                                            setState(() {
+                                              isEditOrg = false;
+                                              // scanQR();
+                                            });
+                                          }
                                         },
+                                        child: const Text(
+                                          'Scan QR',
+                                          style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                      )
+                                    : IconButton(
+                                        iconSize: 35,
+                                        icon: const CircularProgressIndicator(
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  Colors.black),
+                                        ),
+                                        onPressed: () {},
+                                      ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Container(
+                            margin: const EdgeInsets.all(14),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(14),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey[400]!,
+                                    blurRadius: 5.0,
+                                  ),
+                                ]),
+                            child: Column(
+                              children: [
+                                FeedsYoutube("QuiCSDtXoIc"),
+                                Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        flex: 4,
                                         child: Align(
-                                          alignment: Alignment.bottomCenter,
-                                          child: Container(
-                                            padding: const EdgeInsets.all(12),
-                                            decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: Colors.white,
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.grey[400]!,
-                                                    blurRadius: 5.0,
-                                                  ),
-                                                ]),
-                                            child: const FaIcon(
-                                              FontAwesomeIcons.whatsapp,
-                                              color: Colors.teal,
-                                              size: 30,
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            "Explore India’s Most Advanced Wireless Fetal Monitoring Machine. For Demo, Call: +91 9326775598 or WhatsApp",
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                              color: greyRegular,
                                             ),
                                           ),
                                         ),
                                       ),
-                                    )
-                                  ],
+                                      const SizedBox(
+                                        width: 8,
+                                      ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            String text = "";
+                                            if (doctor.mobileNo != null) {
+                                              text =
+                                                  "Hello\nI am ${doctor.name} and my mobile no is ${doctor.mobileNo}.\nI Need demo for fetosense.";
+                                            } else {
+                                              text =
+                                                  "Hello\nI am ${doctor.name} and my mobile no is ${doctor.email}.\nI Need demo for fetosense.";
+                                            }
+
+                                            String phone = "919326775598";
+                                            //if(Platform.isIOS){
+                                            String url =
+                                                "whatsapp://send?phone=$phone&text=$text";
+                                            String urlOk = url
+                                                .split(' ')
+                                                .join('%20')
+                                                .toString();
+                                            urlOk = urlOk
+                                                .split('\n')
+                                                .join('%0A')
+                                                .toString();
+
+                                            debugPrint(urlOk);
+                                            launchUrl(
+                                              Uri.parse(urlOk),
+                                            );
+                                          },
+                                          child: Align(
+                                            alignment: Alignment.bottomCenter,
+                                            child: Container(
+                                              padding: const EdgeInsets.all(12),
+                                              decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.white,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.grey[400]!,
+                                                      blurRadius: 5.0,
+                                                    ),
+                                                  ]),
+                                              child: const FaIcon(
+                                                FontAwesomeIcons.whatsapp,
+                                                color: Colors.teal,
+                                                size: 30,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ))
-          ],
+                        ],
+                      ),
+                    ))
+            ],
+          ),
         ),
       ),
     );
@@ -725,7 +744,9 @@ class RecentTestListViewState extends State<RecentTestListView> {
       );
 
       final devices = response.documents
-          .map((doc) => UserModel.fromMap(doc.data, ))
+          .map((doc) => UserModel.fromMap(
+                doc.data,
+              ))
           .toList();
 
       for (final device in devices) {
@@ -748,8 +769,8 @@ class RecentTestListViewState extends State<RecentTestListView> {
 
         // Update the device user with merged associations
         await databases.updateDocument(
-          databaseId: 'your_database_id',
-          collectionId: 'users',
+          databaseId: AppConstants.appwriteDatabaseId,
+          collectionId: AppConstants.userCollectionId,
           documentId: device.documentId!,
           data: {
             'associations': updatedAssociations,
