@@ -4,10 +4,8 @@ import 'package:fetosense_remote_flutter/core/model/doctor_model.dart';
 import 'package:fetosense_remote_flutter/core/view_models/notification_crud_model.dart';
 import 'package:fetosense_remote_flutter/ui/shared/constant.dart';
 import 'package:fetosense_remote_flutter/ui/widgets/in_app_web_view.dart';
-import 'package:fetosense_remote_flutter/ui/widgets/notification_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 /// A StatefulWidget that displays a list of notifications for a doctor.
 class NotificationListView extends StatefulWidget {

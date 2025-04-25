@@ -61,18 +61,18 @@ class Interpretations3 {
   bool isSkipped = false;
 
   Interpretations3() {
-    this.gestAge = 26;
-    this.basalHeartRate = 0;
-    this.nAccelerations = 0;
-    this.nDecelerations = 0;
+    gestAge = 26;
+    basalHeartRate = 0;
+    nAccelerations = 0;
+    nDecelerations = 0;
     //this.signalLossPercent = 0.0;
     //this.lengthOfHighFHREpisodes = 0;
     //this.lengthOfLowFHREpisodes = 0;
     //this.highFHRVariationBpm = 0;
     //this.lowFHRVariationBpm = 0;
-    this.shortTermVariationMilli = 0;
-    this.shortTermVariationBpm = 0;
-    this.longTermVariation = 0;
+    shortTermVariationMilli = 0;
+    shortTermVariationBpm = 0;
+    longTermVariation = 0;
     //this.isBradycardia = false;
     //this.isTachycardia = false;
     isSkipped = true;
@@ -80,22 +80,22 @@ class Interpretations3 {
   }
 
   Interpretations3.withData(List<int> bpm, int gAge) {
-    this.gestAge = gAge > 41 ? 41 : gAge;
-    this.bpmList = List.from(bpm); //[]..addAll(bpm);//bpm.clone();
+    gestAge = gAge > 41 ? 41 : gAge;
+    bpmList = List.from(bpm); //[]..addAll(bpm);//bpm.clone();
     bpmCorrectedIndices = getNoiseAreas(List.from(bpm));
     cleanBpmList();
-    this.beatsInMilliseconds = convertBpmToMilli(bpmList!);
-    this.millisecondsEpoch = convertMilliToEpoch(beatsInMilliseconds);
-    this.millisecondsEpochBpm = calculateEpochBpm();
+    beatsInMilliseconds = convertBpmToMilli(bpmList!);
+    millisecondsEpoch = convertMilliToEpoch(beatsInMilliseconds);
+    millisecondsEpochBpm = calculateEpochBpm();
 
-    this.bpmListSmooth =
+    bpmListSmooth =
         List.from(bpmList!); //[]..addAll(bpmList);//(List<int>) bpmList.clone();
     smoothBpm();
-    this.beatsInMillisecondsSmooth = convertBpmToMilli(bpmListSmooth!);
-    this.millisecondsEpochSmooth =
+    beatsInMillisecondsSmooth = convertBpmToMilli(bpmListSmooth!);
+    millisecondsEpochSmooth =
         convertMilliToEpoch(beatsInMillisecondsSmooth);
 
-    this.baselineEpoch = calculateBaseLine(millisecondsEpochSmooth);
+    baselineEpoch = calculateBaseLine(millisecondsEpochSmooth);
 
     baselineEpochBpm = convertBaselineArrayToBpmEpoch(baselineEpoch);
     baselineBpmList = convertBaselineArrayToBpmList(baselineEpoch);
@@ -103,9 +103,9 @@ class Interpretations3 {
     //re-correct bpm list noise to baseline
     if (correctionCount! > 0) {
       removeNoiseMinutes();
-      this.beatsInMilliseconds = convertBpmToMilli(bpmList!);
-      this.millisecondsEpoch = convertMilliToEpoch(beatsInMilliseconds);
-      this.millisecondsEpochBpm = calculateEpochBpm();
+      beatsInMilliseconds = convertBpmToMilli(bpmList!);
+      millisecondsEpoch = convertMilliToEpoch(beatsInMilliseconds);
+      millisecondsEpochBpm = calculateEpochBpm();
     }
 
     cleanMillisecondsEpoch = List.from(
@@ -192,12 +192,13 @@ class Interpretations3 {
   }
 
   String getBasalHeartRateStr() {
-    if(isSkipped)
+    if(isSkipped) {
       return "--";
-    else
-    return basalHeartRate == 0
+    } else {
+      return basalHeartRate == 0
         ? "--"
         : basalHeartRate.toString(); //basalHeartRate == 0?"--": basalHeartRate;
+    }
   }
 
   String getLongTermVariationStr() {
@@ -244,13 +245,14 @@ class Interpretations3 {
 
   List<int?> convertBpmToMilli(List<int> list) {
     int size = list.length;
-    List<int?> milliseconds = new List.filled(size, null, growable: false);
+    List<int?> milliseconds = List.filled(size, null, growable: false);
     for (int i = 0; i < size; i++) {
       milliseconds[i] = 0;
-      if (list[i] != 0)
+      if (list[i] != 0) {
         milliseconds[i] = (SIXTY_THOUSAND_MS / list[i]).truncate();
-      else
+      } else {
         milliseconds[i] = 0;
+      }
     }
     return milliseconds;
     //convertMilliToEpoch();
@@ -277,10 +279,11 @@ class Interpretations3 {
           stopData > 210 ||
           (startData - stopData).abs() > 35) {
         //correctionCount++;
-        if(stopData-startData>60)
+        if(stopData-startData>60) {
           bpmListSmooth![--i] =((startData+stopData)/2).truncate() ;
-        else
+        } else {
           bpmListSmooth![i] = getNextValidBpm(i, bpmListSmooth!);
+        }
         //bpmCorrectedIndices.add(i);
         //Log.i("Correction", i + "");
       }
@@ -334,8 +337,9 @@ class Interpretations3 {
         if(stopData-startData>50 && startData>60 && stopData>110) {
           list[--i]= ((startData + stopData) / 2).truncate();
           continue;
-        }else
-        list[i] = getNextValidBpm(i, list);
+        }else {
+          list[i] = getNextValidBpm(i, list);
+        }
         if (!bpmCorrected.contains(i)) bpmCorrected.add(i);
         //Log.i("Correction", i + "");
       }
@@ -380,10 +384,11 @@ class Interpretations3 {
     int startData = list[i - 1];
     while (value == 0 && i < list.length) {
       int stopData = list[i++];
-      if ((startData - stopData).abs() > 35)
+      if ((startData - stopData).abs() > 35) {
         value = 0;
-      else
+      } else {
         value = stopData;
+      }
     }
     return value;
   }
@@ -402,15 +407,16 @@ class Interpretations3 {
         divisor++;
       }
     }
-    if (divisor != 0)
+    if (divisor != 0) {
       return (value / divisor).truncate();
-    else
+    } else {
       return list[index];
+    }
   }
 
   List<int?> convertMilliToEpoch(List<int?> millisecondBeats) {
     int size = (millisecondBeats.length / FACTOR).truncate();
-    List<int?> epoch = new List.filled(size, null, growable: false);
+    List<int?> epoch = List.filled(size, null, growable: false);
     for (int i = 0; i < size; i++) {
       int milli = 0;
       for (int j = (i * FACTOR), k = 0;
@@ -426,32 +432,35 @@ class Interpretations3 {
   }
 
   List<int?> calculateEpochBpm() {
-    List<int?> _milisecondsEpochBpm = new List.filled(millisecondsEpoch.length, null, growable: false);
+    List<int?> milisecondsEpochBpm = List.filled(millisecondsEpoch.length, null, growable: false);
     for (int i = 0; i < millisecondsEpoch.length; i++) {
-      if (millisecondsEpoch[i] == 0)
-        _milisecondsEpochBpm[i] = 0;
-      else
-        _milisecondsEpochBpm[i] =
+      if (millisecondsEpoch[i] == 0) {
+        milisecondsEpochBpm[i] = 0;
+      } else {
+        milisecondsEpochBpm[i] =
             (SIXTY_THOUSAND_MS / millisecondsEpoch[i]!).truncate();
+      }
     }
-    return _milisecondsEpochBpm;
+    return milisecondsEpochBpm;
   }
 
-  List<int?> calculateBaseLine(List<int?> _millisecondsEpoch) {
-    int size = _millisecondsEpoch.length;
-    List<int?> _baselineArray = new List.filled(size, null, growable: false);
+  List<int?> calculateBaseLine(List<int?> millisecondsEpoch) {
+    int size = millisecondsEpoch.length;
+    List<int?> baselineArray = List.filled(size, null, growable: false);
 
     int buckets = 1001, modeIndex = 0;
-    List<int?> freq = new List.filled(buckets, null, growable: false);
+    List<int?> freq = List.filled(buckets, null, growable: false);
     int? modeValue = 0,
         sumOfValues = 0,
         selectedPeak = 0; // 60-220 bpm = 1000-272 ms
 
     /** calculate frequency distribution of intervals**/
-    for (int i = 0; i < buckets; i++) freq[i] = 0;
+    for (int i = 0; i < buckets; i++) {
+      freq[i] = 0;
+    }
 
-    for (int j = 0; j < _millisecondsEpoch.length; j++) {
-      int? epoch = _millisecondsEpoch[j];
+    for (int j = 0; j < millisecondsEpoch.length; j++) {
+      int? epoch = millisecondsEpoch[j];
       if (epoch == 0 || epoch! >= buckets) {
         freq[0] = freq[0]!+1;
         continue;
@@ -493,23 +502,23 @@ class Interpretations3 {
     /** apply band filter with the use of limiting value
    *  low-pass filter are then set to 60 milliseconds below and above the selected peak or mode
    * **/
-    _baselineArray[0] = _millisecondsEpoch[0];
+    baselineArray[0] = millisecondsEpoch[0];
     for (int i = 0; i < size - 1; i++) {     // change i from 1 to 0
-      if (_millisecondsEpoch[i] == 0) {
-        _baselineArray[i] =
-        _millisecondsEpoch[i]; //avgLastMin(baselineFHRDR, i - 1);;
+      if (millisecondsEpoch[i] == 0) {
+        baselineArray[i] =
+        millisecondsEpoch[i]; //avgLastMin(baselineFHRDR, i - 1);;
 
       } else {
-        if (_millisecondsEpoch[i]! >= (selectedPeak! + 100) ){
-          _baselineArray[i] = (selectedPeak + 100); // 60 is given in the literature
+        if (millisecondsEpoch[i]! >= (selectedPeak! + 100) ){
+          baselineArray[i] = (selectedPeak + 100); // 60 is given in the literature
         }
 
-        if(_millisecondsEpoch[i]! <= (selectedPeak - 100)){
-          _baselineArray[i] = (selectedPeak - 100);
+        if(millisecondsEpoch[i]! <= (selectedPeak - 100)){
+          baselineArray[i] = (selectedPeak - 100);
         }
 
         else {
-          _baselineArray[i] = _millisecondsEpoch[i];
+          baselineArray[i] = millisecondsEpoch[i];
         }
       }
       //if (Double.isNaN(_baselineArray[i]))
@@ -517,59 +526,61 @@ class Interpretations3 {
     }
     //_baselineArray[0] = _millisecondsEpoch[0];
     for (int i = 1; i < size - 1; i++) {
-      if (_baselineArray[i] == 0) {
-        _baselineArray[i] =
-        _baselineArray[i-1]; //avgLastMin(baselineFHRDR, i - 1);;
+      if (baselineArray[i] == 0) {
+        baselineArray[i] =
+        baselineArray[i-1]; //avgLastMin(baselineFHRDR, i - 1);;
 
       } else {
-        if (_baselineArray[i]! >= (selectedPeak! - 50) &&
-            _baselineArray[i]! <=
-                (selectedPeak + 50)) // 60 is given in the literature
-          _baselineArray[i] = _baselineArray[i];
-        else
-          _baselineArray[i] = _baselineArray[i -
+        if (baselineArray[i]! >= (selectedPeak! - 50) &&
+            baselineArray[i]! <=
+                (selectedPeak + 50)) {
+          // 60 is given in the literature
+          baselineArray[i] = baselineArray[i];
+        } else {
+          baselineArray[i] = baselineArray[i -
               1]; //avgLastMin(baselineFHRDR, i - 1); //interpolate over previous values
+        }
       }
       //if (Double.isNaN(_baselineArray[i]))
       //_baselineArray[i] = _baselineArray[i - 1];
     }
-    _baselineArray[size - 1] =
-        _baselineArray[size - 2]; //avgLastMin(baselineFHRDR, size - 2);
+    baselineArray[size - 1] =
+        baselineArray[size - 2]; //avgLastMin(baselineFHRDR, size - 2);
 
 
     double aTiny = 0.75;
-    for (int i = 0; i < _baselineArray.length - 1; i++) {
-      _baselineArray[i + 1] = (aTiny * _baselineArray[i + 1]! + (1.0 - aTiny) * selectedPeak!).toInt();
+    for (int i = 0; i < baselineArray.length - 1; i++) {
+      baselineArray[i + 1] = (aTiny * baselineArray[i + 1]! + (1.0 - aTiny) * selectedPeak!).toInt();
     }
 
     int window = 2;
-    for (int i = window; i < _baselineArray.length - window - 1; i++) {
-      _baselineArray[i] =
-          getBaselineWindowSmoothAverage(_baselineArray, i, window);
+    for (int i = window; i < baselineArray.length - window - 1; i++) {
+      baselineArray[i] =
+          getBaselineWindowSmoothAverage(baselineArray, i, window);
     }
 
     int avgHR;
 
-    avgHR = calculateAvgHeartRate(_baselineArray);
+    avgHR = calculateAvgHeartRate(baselineArray);
 
     // smoothing last min
     double tiny = 0.3;
-    int start = _baselineArray.length - window * 2;
-    for (int i = 0; i < _baselineArray.length - 1; i++) {
-      _baselineArray[i + 1] =
-          (tiny * avgHR + (1.0 - tiny) * _baselineArray[i + 1]!).truncate();
+    int start = baselineArray.length - window * 2;
+    for (int i = 0; i < baselineArray.length - 1; i++) {
+      baselineArray[i + 1] =
+          (tiny * avgHR + (1.0 - tiny) * baselineArray[i + 1]!).truncate();
     }
 
     start = 0;
     for (int i = start; i < (window * 2) - 1; i++) {
-      _baselineArray[i] =
-          (tiny * avgHR + (1.0 - tiny) * _baselineArray[i + 1]!).truncate();
+      baselineArray[i] =
+          (tiny * avgHR + (1.0 - tiny) * baselineArray[i + 1]!).truncate();
     }
 
     //int index = 1 * NO_OF_SAMPLES_PER_MINUTE;
     //window = index;
 
-    avgHR = calculateLowVariationAvg(_baselineArray, avgHR);
+    avgHR = calculateLowVariationAvg(baselineArray, avgHR);
 
     /*avgHR = calculateLowVariationAvg(_baselineArray,avgHR);
         Log.i("avgHR",avgHR+"");
@@ -578,12 +589,12 @@ class Interpretations3 {
         Log.i("avgHR",avgHR+"");*/
 
     tiny = 0.25;
-    for (int i = start; i < _baselineArray.length - 1; i++) {
-      _baselineArray[i] =
-          (tiny * avgHR + (1.0 - tiny) * _baselineArray[i + 1]!).truncate();
+    for (int i = start; i < baselineArray.length - 1; i++) {
+      baselineArray[i] =
+          (tiny * avgHR + (1.0 - tiny) * baselineArray[i + 1]!).truncate();
     }
 
-    return _baselineArray;
+    return baselineArray;
   }
 
   int? getBaselineWindowSmoothAverage(List<int?> list, int index, int window) {
@@ -593,15 +604,17 @@ class Interpretations3 {
     int divisor = window * 2 + 1;
     int value = 0;
     for (int i = start; i <= stop; i++) {
-      if (list[i] == 0 || (list[i]! - list[i + 1]!).abs() > 30)
+      if (list[i] == 0 || (list[i]! - list[i + 1]!).abs() > 30) {
         divisor--;
-      else
+      } else {
         value += list[i]!;
+      }
     }
-    if (divisor != 0)
+    if (divisor != 0) {
       return (value / divisor).truncate();
-    else
+    } else {
       return list[index];
+    }
   }
 
   int getBaselineWindowAverage(List<int> list, int index, int window) {
@@ -617,22 +630,24 @@ class Interpretations3 {
         value += list[i];
       }
     }
-    if (divisor != 0)
+    if (divisor != 0) {
       return (value / divisor).truncate();
-    else
+    } else {
       return list[index];
+    }
   }
 
   /*convert epoch to bpm*/
-  List<int> convertBaselineArrayToBpmList(List<int?> _baselineArray) {
-    List<int> _baselineBpmList = [];
-    for (int i = 0; i < _baselineArray.length - 1; i++) {
+  List<int> convertBaselineArrayToBpmList(List<int?> baselineArray) {
+    List<int> baselineBpmList = [];
+    for (int i = 0; i < baselineArray.length - 1; i++) {
       for (int j = (i * FACTOR); j < ((i + 1) * FACTOR); j++) {
-        if (_baselineArray[i] == 0)
-          _baselineBpmList.add(0);
-        else
-          _baselineBpmList
-              .add((SIXTY_THOUSAND_MS / _baselineArray[i]!).truncate());
+        if (baselineArray[i] == 0) {
+          baselineBpmList.add(0);
+        } else {
+          baselineBpmList
+              .add((SIXTY_THOUSAND_MS / baselineArray[i]!).truncate());
+        }
       }
     }
 
@@ -642,21 +657,22 @@ class Interpretations3 {
             _baselineBpmList.set(i, getWindowAvreage(_baselineBpmList, i, window));
         }*/
 
-    return _baselineBpmList;
+    return baselineBpmList;
   }
 
   /*convert epoch to bpm*/
-  List<int?> convertBaselineArrayToBpmEpoch(List<int?> _baselineArray) {
-    List<int?> _baselineBpmEpoch = new List.filled(_baselineArray.length, null, growable: false);
-    for (int i = 0; i < _baselineArray.length; i++) {
-      if (_baselineArray[i] == 0)
-        _baselineBpmEpoch[i] = 0;
-      else
-        _baselineBpmEpoch[i] =
-            ((SIXTY_THOUSAND_MS / _baselineArray[i]!).truncate());
+  List<int?> convertBaselineArrayToBpmEpoch(List<int?> baselineArray) {
+    List<int?> baselineBpmEpoch = List.filled(baselineArray.length, null, growable: false);
+    for (int i = 0; i < baselineArray.length; i++) {
+      if (baselineArray[i] == 0) {
+        baselineBpmEpoch[i] = 0;
+      } else {
+        baselineBpmEpoch[i] =
+            ((SIXTY_THOUSAND_MS / baselineArray[i]!).truncate());
+      }
     }
 
-    return _baselineBpmEpoch;
+    return baselineBpmEpoch;
   }
 
   void removeNoiseMinutes() {
@@ -666,7 +682,7 @@ class Interpretations3 {
     int start = 1;
     while (start < bpmCorrectedIndices.length) {
       int margin = 7;
-      MarkerIndices index = new MarkerIndices();
+      MarkerIndices index = MarkerIndices();
       index.setFrom(bpmCorrectedIndices[start - 1]);
       index.setTo(start);  // change from 0 to start varibale
       for (int i = start; i < bpmCorrectedIndices.length; i++) {
@@ -675,8 +691,9 @@ class Interpretations3 {
           index.setTo(bpmCorrectedIndices[i - 1]);
           start = i + 1;
           break;
-        } else
+        } else {
           start++;
+        }
       }
 
       // if (index.getTo() == 0)
@@ -688,12 +705,12 @@ class Interpretations3 {
       if (start == bpmCorrectedIndices.length - 1) break;
     }
 
-    if (groups.length == 0)
+    if (groups.isEmpty) {
       return;
-    else {
+    } else {
       for (int i = 0, j = 0; i < groups.length; i++) {
-        int from = groups[i].getFrom()!;
-        int to = groups[i].getTo()!;
+        int from = groups[i].getFrom();
+        int to = groups[i].getTo();
         if (to<from ||(to - from) < 30) {
           groups.removeAt(i);
           i--;
@@ -707,8 +724,8 @@ class Interpretations3 {
 
     //expanding the areas to minute
     for (int i = 0, j = 0; i < groups.length; i++) {
-      int from = groups[i].getFrom()!;
-      int to = groups[i].getTo()!;
+      int from = groups[i].getFrom();
+      int to = groups[i].getTo();
 
       from = from - (from % 60);
       to = to - (to % 60);
@@ -722,8 +739,9 @@ class Interpretations3 {
       to = ((to - 1) / 60).truncate();
 
       while (from <= to) {
-        if(from<minutes)
-        minuteRanges.add(from);
+        if(from<minutes) {
+          minuteRanges.add(from);
+        }
         from++;
       }
     }
@@ -746,11 +764,9 @@ class Interpretations3 {
     noiseList = groups;
   }
 
-  /**
-   * An acceleration is defined as an increase in FHR above the baseline
-   * that lasts for longer than 15 seconds and has a maximum excursion
-   * above the baseline of greater than 10 beats/min
-   */
+  /// An acceleration is defined as an increase in FHR above the baseline
+  /// that lasts for longer than 15 seconds and has a maximum excursion
+  /// above the baseline of greater than 10 beats/min
   int calculateAccelerations() {
     List<MarkerIndices> accelerations = [];
     int size = millisecondsEpoch.length;
@@ -759,7 +775,7 @@ class Interpretations3 {
     bool isAcceleration = false;
 
     for (int i = 0; i < size; i++) {
-      MarkerIndices acceleration = new MarkerIndices();
+      MarkerIndices acceleration = MarkerIndices();
       int difference = millisecondsEpochBpm[i]! - baselineEpochBpm[i]!;
 
       /*if (difference <= 0) {
@@ -790,7 +806,7 @@ class Interpretations3 {
                     }*/
         } else {
           if (counter1 >= 3 && maxExcursion >= 9) {  // change from counter1 > 3 to counter1 >= 3
-            acceleration = new MarkerIndices();
+            acceleration = MarkerIndices();
             acceleration.setFrom(((i - counter1) * FACTOR));
             acceleration.setTo(((i) * FACTOR));
             accelerations.add(acceleration);
@@ -817,7 +833,7 @@ class Interpretations3 {
           //Log.i("maxExcursion", counter2 + " - " + maxExcursion + " - " + ((i * 4) / 60));
 
           if (counter2 >= 4 && maxExcursion >= 14) {  // change counter2 > 4 to counter2 >= 4
-            acceleration = new MarkerIndices();
+            acceleration = MarkerIndices();
             acceleration.setFrom(((i - counter2) * FACTOR));
             acceleration.setTo(((i) * FACTOR));
             accelerations.add(acceleration);
@@ -834,11 +850,9 @@ class Interpretations3 {
     return n;
   }
 
-  /**
-   * A deceleration is defined as a decrease in FHR below the baseline that lasts for
-   * lasts for longer than 30 seconds and has a maximum excursion below the baseline of greater than 20 beats/min or
-   * lasts for longer than 60 seconds and has a maximum excursion below the baseline of greater than 10 beats/min
-   */
+  /// A deceleration is defined as a decrease in FHR below the baseline that lasts for
+  /// lasts for longer than 30 seconds and has a maximum excursion below the baseline of greater than 20 beats/min or
+  /// lasts for longer than 60 seconds and has a maximum excursion below the baseline of greater than 10 beats/min
   int calculateDecelerations() {
     List<MarkerIndices> decelerations = [];
     int size = millisecondsEpoch.length;
@@ -848,7 +862,7 @@ class Interpretations3 {
 
     /** first criteria **/
     for (int i = 0; i < size; i++) {
-      MarkerIndices deceleration = new MarkerIndices();
+      MarkerIndices deceleration = MarkerIndices();
       if (millisecondsEpochBpm[i] == 0) continue;
       int difference = baselineEpochBpm[i]! - millisecondsEpochBpm[i]!;
 
@@ -868,7 +882,7 @@ class Interpretations3 {
         //Log.i("maxExcursion dec 1", counter1 + " - " + maxExcursion + " - " + ((i * 4) / 60));
 
         if (counter1 >= 4 && maxExcursion >= 10) {   // change from couter1 >= 15 to couter >= 4
-          deceleration = new MarkerIndices();
+          deceleration = MarkerIndices();
           deceleration.setFrom(((i - counter1) * FACTOR));
           deceleration.setTo(((i) * FACTOR));
           decelerations.add(deceleration);
@@ -931,8 +945,8 @@ class Interpretations3 {
 
     //expanding the areas to minute
     for (int i = 0; i < decelerationsList!.length; i++) {
-      int from = (decelerationsList![i].getFrom()! / FACTOR).truncate();
-      int to = (decelerationsList![i].getTo()! / FACTOR).truncate();
+      int from = (decelerationsList![i].getFrom() / FACTOR).truncate();
+      int to = (decelerationsList![i].getTo() / FACTOR).truncate();
 
       from = from - (from % NO_OF_SAMPLES_PER_MINUTE);
       to = to - (to % NO_OF_SAMPLES_PER_MINUTE);
@@ -942,8 +956,9 @@ class Interpretations3 {
       to = ((to - 1) / NO_OF_SAMPLES_PER_MINUTE).truncate();
 
       while (from <= to) {
-        if(from<minutes)
-        minuteRanges.add(from);
+        if(from<minutes) {
+          minuteRanges.add(from);
+        }
         from++;
       }
     }
@@ -968,10 +983,10 @@ class Interpretations3 {
     //removing the minutes with decelerations
     int newLength = (minutes* NO_OF_SAMPLES_PER_MINUTE)-
         (finalMinutesToRemove.length * NO_OF_SAMPLES_PER_MINUTE);
-    cleanMillisecondsEpoch = new List.filled(newLength, null, growable: false);
-    cleanMillisecondsEpochBpm = new List.filled(newLength, null, growable: false);
-    cleanBaselineEpoch = new List.filled(newLength, null, growable: false);
-    cleanBaselineEpochBpm = new List.filled(newLength, null, growable: false);
+    cleanMillisecondsEpoch = List.filled(newLength, null, growable: false);
+    cleanMillisecondsEpochBpm = List.filled(newLength, null, growable: false);
+    cleanBaselineEpoch = List.filled(newLength, null, growable: false);
+    cleanBaselineEpochBpm = List.filled(newLength, null, growable: false);
 
     int c = 0;
     for (int interval = 0; interval < minutes; interval++) {
@@ -995,7 +1010,7 @@ class Interpretations3 {
     int minutes = (list.length / NO_OF_SAMPLES_PER_MINUTE).truncate();
     minutes *= 3;
     if (minutes == 0) return minutes;
-    List<int?> minuteRanges = new List.filled(minutes, null, growable: false);
+    List<int?> minuteRanges = List.filled(minutes, null, growable: false);
     for (int interval = 0; interval < minutes; interval++) {
       int max = 0;
       int min = 0;
@@ -1034,10 +1049,11 @@ class Interpretations3 {
         sum += value;
       }
     }
-    if(!sum.isNaN && !count.isNaN)
-    sum = (sum / count).isNaN?0:(sum/count).truncate();
-    else
+    if(!sum.isNaN && !count.isNaN) {
+      sum = (sum / count).isNaN?0:(sum/count).truncate();
+    } else {
       sum = 0;
+    }
 
     return sum;
   }
@@ -1046,7 +1062,7 @@ class Interpretations3 {
     // todo: consider low variations
 
     int sum = 0;
-    double _basalHeartRate;
+    double basalHeartRate;
     int errorCount = 0;
     for (int i = 0; i < list.length; i++) {
       if (list[i]! < 60) {
@@ -1056,17 +1072,17 @@ class Interpretations3 {
       sum += list[i]!;
       //Log.i("clean bpm",cleanBaselineEpochBpm[i]+"");
     }
-    _basalHeartRate = (sum / (list.length - errorCount));
+    basalHeartRate = (sum / (list.length - errorCount));
 
 
-    return _basalHeartRate.isNaN||_basalHeartRate.isInfinite?0:_basalHeartRate.truncate();
+    return basalHeartRate.isNaN||basalHeartRate.isInfinite?0:basalHeartRate.truncate();
   }
 
   int calculateBasalHeartRate(List<int?> list) {
     // todo: consider low variations
 
     int sum = 0;
-    int _basalHeartRate = 0;
+    int basalHeartRate = 0;
     int errorCount = 0;
     try {
       for (int i = 0; i < list.length; i++) {
@@ -1077,26 +1093,27 @@ class Interpretations3 {
         sum += list[i]!;
         //Log.i("clean bpm",cleanBaselineEpochBpm[i]+"");
       }
-      _basalHeartRate = (sum / (list.length - errorCount)).truncate();
+      basalHeartRate = (sum / (list.length - errorCount)).truncate();
 
       // rounding of to nearest multiple of 5
-      if (_basalHeartRate % 5 >= 3) {
-        _basalHeartRate = _basalHeartRate - (_basalHeartRate % 5);
-        _basalHeartRate += 5;
+      if (basalHeartRate % 5 >= 3) {
+        basalHeartRate = basalHeartRate - (basalHeartRate % 5);
+        basalHeartRate += 5;
       } else {
-        _basalHeartRate = _basalHeartRate - (_basalHeartRate % 5);
+        basalHeartRate = basalHeartRate - (basalHeartRate % 5);
       }
       // rounding off ends
 
-    } catch (ex, trace) {
+    } catch (ex) {
       print(ex.toString());
     }
-    return _basalHeartRate;
+    return basalHeartRate;
   }
 
   void calculateShortTermVariability() {
-    if(cleanMillisecondsEpoch==null || cleanMillisecondsEpoch!.length==0)
+    if(cleanMillisecondsEpoch==null || cleanMillisecondsEpoch!.isEmpty) {
       return;
+    }
     int avgMilli = 0;
     double avgBpm = 0;
 
@@ -1122,7 +1139,7 @@ class Interpretations3 {
       int minutes =
           (cleanBaselineEpoch.length / NO_OF_SAMPLES_PER_MINUTE).truncate();
       if (minutes == 0) return;
-      List<int?> minuteRanges = new List.filled(minutes, null, growable: false);
+      List<int?> minuteRanges = List.filled(minutes, null, growable: false);
       for (int interval = 0; interval < minutes; interval++) {
         int max = 0;
         int min = 0;

@@ -20,23 +20,25 @@ class TestCard extends StatelessWidget {
   /// The number of movements during the test.
   String? movements;
 
-  TestCard({required this.testDetails}) {
+  TestCard({super.key, required this.testDetails}) {
     //interpretation = Interpretation.fromList(testDetails.gAge, testDetails.bpmEntries);
-    if (testDetails.lengthOfTest! > 180 && testDetails.lengthOfTest! < 3600)
+    if (testDetails.lengthOfTest! > 180 && testDetails.lengthOfTest! < 3600) {
       interpretation =
           Interpretations2.withData(testDetails.bpmEntries!, testDetails.gAge!);
-    else
+    } else {
       interpretation = Interpretations2();
+    }
 
-    int _movements = testDetails.movementEntries!.length +
+    int movements = testDetails.movementEntries!.length +
         testDetails.autoFetalMovement!.length;
-    movements = _movements < 10 ? "0$_movements" : '$_movements';
+    this.movements = movements < 10 ? "0$movements" : '$movements';
 
-    int _time = (testDetails.lengthOfTest! / 60).truncate();
-    if (_time < 10)
-      time = "0$_time";
-    else
-      time = "$_time";
+    int time = (testDetails.lengthOfTest! / 60).truncate();
+    if (time < 10) {
+      this.time = "0$time";
+    } else {
+      this.time = "$time";
+    }
   }
 
   @override
@@ -75,7 +77,7 @@ class TestCard extends StatelessWidget {
                                 TextWithIcon(
                                     icon: Icons.favorite,
                                     text:
-                                        '${interpretation.getBasalHeartRateStr()}'),
+                                        interpretation.getBasalHeartRateStr()),
                                 Text(
                                   "Basal HR",
                                   style: TextStyle(
@@ -143,7 +145,7 @@ class TestCard extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
                                   Text(
-                                    "${interpretation.getnAccelerationsStr()}",
+                                    interpretation.getnAccelerationsStr(),
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 30.sp,
@@ -182,7 +184,7 @@ class TestCard extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
                                   Text(
-                                    "${interpretation.getnDecelerationsStr()}",
+                                    interpretation.getnDecelerationsStr(),
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 30.sp,
@@ -221,7 +223,7 @@ class TestCard extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
                                   Text(
-                                    "${interpretation.getShortTermVariationBpmStr()}",
+                                    interpretation.getShortTermVariationBpmStr(),
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 30.sp,
@@ -260,7 +262,7 @@ class TestCard extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
                                   Text(
-                                    "${interpretation.getLongTermVariationStr()}",
+                                    interpretation.getLongTermVariationStr(),
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 30.sp,
@@ -346,7 +348,7 @@ class TestCard extends StatelessWidget {
                                 ),
                                 child: Center(
                                   child: Text(
-                                    "${DateFormat('dd\nMMM').format(testDetails.createdOn!)}",
+                                    DateFormat('dd\nMMM').format(testDetails.createdOn!),
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 30.sp,
@@ -405,7 +407,7 @@ class TestCard extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (_) => DetailsView(
-                test: this.testDetails,
+                test: testDetails,
               ),
             ),
           );

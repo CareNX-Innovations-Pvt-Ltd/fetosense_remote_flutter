@@ -18,7 +18,7 @@ class MotherDetails extends StatelessWidget {
     if (mother['edd'] != null) {
       double age = (280 -
               ((DateTime.parse(mother['edd']).millisecondsSinceEpoch -
-                      new DateTime.now().millisecondsSinceEpoch) /
+                      DateTime.now().millisecondsSinceEpoch) /
                   (1000 * 60 * 60 * 24))) /
           7;
       return age.floor();
@@ -123,7 +123,7 @@ class MotherDetails extends StatelessWidget {
                     ))),
               ),
             ),
-            Expanded(child: new MotherTestListView(mother: mother))
+            Expanded(child: MotherTestListView(mother: mother))
           ],
         ),
       ),

@@ -9,12 +9,12 @@ class FeedsYoutube extends StatefulWidget {
   /// The ID of the YouTube video to be played.
   String? _videoId;
 
-  FeedsYoutube(String videoId) {
-    this._videoId = videoId;
+  FeedsYoutube(String videoId, {super.key}) {
+    _videoId = videoId;
   }
 
   @override
-  _FeedsYoutubeState createState() => _FeedsYoutubeState(this._videoId);
+  _FeedsYoutubeState createState() => _FeedsYoutubeState(_videoId);
 }
 
 class _FeedsYoutubeState extends State<FeedsYoutube> {
@@ -22,7 +22,7 @@ class _FeedsYoutubeState extends State<FeedsYoutube> {
   late YoutubePlayerController _controller;
 
   /// The ID of the YouTube video to be played.
-  String? _videoId;
+  final String? _videoId;
 
   /// The internet check utility.
   late InternetCheck _internetCheck;
