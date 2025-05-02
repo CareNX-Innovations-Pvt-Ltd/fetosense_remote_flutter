@@ -1,3 +1,4 @@
+import 'package:fetosense_remote_flutter/core/model/mother_model.dart';
 import 'package:fetosense_remote_flutter/core/model/test_model.dart';
 import 'package:fetosense_remote_flutter/core/view_models/test_crud_model.dart';
 import 'package:fetosense_remote_flutter/ui/widgets/test_card.dart';
@@ -6,7 +7,7 @@ import 'package:provider/provider.dart';
 
 /// A StatefulWidget that displays a list of tests associated with a mother.
 class MotherTestListView extends StatefulWidget {
-  final dynamic mother;
+  final Mother mother;
 
   const MotherTestListView({super.key, required this.mother});
 
@@ -19,11 +20,13 @@ class MotherTestListViewState extends State<MotherTestListView> {
 
   @override
   Widget build(BuildContext context) {
-    final testStream = widget.mother['type'] == "BabyBeat"
-        ? Provider.of<TestCRUDModel>(context)
-        .fetchTestsAsStreamBabyBeat(widget.mother['documentId'])
-        : Provider.of<TestCRUDModel>(context)
-        .fetchTestsAsStream(widget.mother['documentId']);
+    final testStream =
+    // widget.mother['type'] == "BabyBeat"
+    //     ? Provider.of<TestCRUDModel>(context)
+    //     .fetchTestsAsStreamBabyBeat(widget.mother['documentId'])
+    //     :
+    Provider.of<TestCRUDModel>(context)
+        .fetchTestsAsStream(widget.mother.documentId);
 
     return SizedBox(
       child: StreamBuilder<List<Test>>(
