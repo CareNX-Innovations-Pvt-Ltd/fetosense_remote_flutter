@@ -13,7 +13,7 @@ class Notification {
   String? createdBy;
 
   /// Default constructor for the [Notification] class.
-  Notification(){}
+  Notification();
 
   /// Constructs a [Notification] instance from a map.
   ///

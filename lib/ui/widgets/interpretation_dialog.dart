@@ -1,6 +1,5 @@
 import 'package:fetosense_remote_flutter/core/model/test_model.dart';
 import 'package:fetosense_remote_flutter/ui/shared/customRadioBtn.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// A dialog widget for updating interpretations.
@@ -14,7 +13,7 @@ class InterpretationDialog extends StatefulWidget {
   /// Callback function to handle the updated interpretation.
   Function(String, String, bool)? callback;
 
-  InterpretationDialog({required this.test, this.value, this.callback});
+  InterpretationDialog({super.key, required this.test, this.value, this.callback});
 
   @override
   State<StatefulWidget> createState() => _InterpretationDialog();
@@ -51,7 +50,7 @@ class _InterpretationDialog extends State<InterpretationDialog> {
   Widget dialogContent(context) {
     return Wrap(children: <Widget>[
       Container(
-        decoration: new BoxDecoration(
+        decoration: BoxDecoration(
           color: Colors.white,
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(8),
@@ -104,9 +103,9 @@ class _InterpretationDialog extends State<InterpretationDialog> {
                 maxLines: 4,
                 keyboardType: TextInputType.text,
                 autofocus: false,
-                initialValue: comments ?? '',
+                initialValue: comments,
                 onChanged: (value) => comments = value.trim(),
-                decoration: new InputDecoration(hintText: 'Extra Comments'),
+                decoration: InputDecoration(hintText: 'Extra Comments'),
               )),
           Container(
               padding: EdgeInsets.all(8),
@@ -223,9 +222,9 @@ class _InterpretationDialog extends State<InterpretationDialog> {
   /// [context] is the build context.
   /// Returns a [Widget] representing the dialog content.
   void _handleRadioClick(String value) {
-    if (radioValue == value)
+    if (radioValue == value) {
       return;
-    else {
+    } else {
       setState(() {
         radioValue = value;
       });

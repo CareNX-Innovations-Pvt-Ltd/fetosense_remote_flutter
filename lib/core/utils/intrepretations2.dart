@@ -682,15 +682,15 @@ class Interpretations2 {
   }
 
   /*convert epoch to bpm*/
-  List<int?> convertBaselineArrayToBpmEpoch(List<int?> _baselineArray) {
+  List<int?> convertBaselineArrayToBpmEpoch(List<int?> baselineArray) {
     List<int?> baselineBpmEpoch =
-    List.filled(_baselineArray.length, null, growable: false);
-    for (int i = 0; i < _baselineArray.length; i++) {
-      if (_baselineArray[i] == 0) {
+    List.filled(baselineArray.length, null, growable: false);
+    for (int i = 0; i < baselineArray.length; i++) {
+      if (baselineArray[i] == 0) {
         baselineBpmEpoch[i] = 0;
       } else {
         baselineBpmEpoch[i] =
-        ((SIXTY_THOUSAND_MS / _baselineArray[i]!).truncate());
+        ((SIXTY_THOUSAND_MS / baselineArray[i]!).truncate());
       }
     }
 
@@ -1200,14 +1200,14 @@ class Interpretations2 {
         basalHeartRate = basalHeartRate - (basalHeartRate % 5);
       }
       // rounding off ends
-    } catch (ex, trace) {
+    } catch (ex) {
       print(ex.toString());
     }
     return basalHeartRate;
   }
 
   void calculateShortTermVariability() {
-    if (cleanMillisecondsEpoch == null || cleanMillisecondsEpoch!.length == 0) {
+    if (cleanMillisecondsEpoch == null || cleanMillisecondsEpoch!.isEmpty) {
       return;
     }
     int avgMilli = 0;

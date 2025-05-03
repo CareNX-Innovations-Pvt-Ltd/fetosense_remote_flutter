@@ -231,8 +231,9 @@ class GraphPainter2 extends CustomPainter {
   bool shouldRepaint(GraphPainter2 oldDelegate) {
     if (oldDelegate.mOffset != mOffset) {
       return true;
-    } else
+    } else {
       return false;
+    }
   }
 
   /// Initializes graph parameters and dimensions.
@@ -331,7 +332,7 @@ class GraphPainter2 extends CustomPainter {
   /// [text] is the text to create the paragraph for.
   /// Returns a [ui.Paragraph] object.
   ui.Paragraph getParagraph(String text) {
-    if (text.length == 1) text = "0${text}";
+    if (text.length == 1) text = "0$text";
     ui.ParagraphBuilder builder = ui.ParagraphBuilder(
         ui.ParagraphStyle(fontSize: 12.sp, textAlign: TextAlign.right))
       ..pushStyle(ui.TextStyle(color: Colors.black))
@@ -514,7 +515,7 @@ class GraphPainter2 extends CustomPainter {
   /// [bpmOffset] is the optional offset for BPM values.
   void drawBPMLine(Canvas canvas, List<int> list, Paint lineStyle,
       {int bpmOffset = 0}) {
-    if (list.length <= 0) {
+    if (list.isEmpty) {
       return;
     }
 
@@ -553,7 +554,7 @@ class GraphPainter2 extends CustomPainter {
   void drawMovements(Canvas canvas) {
     //List<int> movementList = [2, 12, 24,60, 120, 240, 300, 420, 600,690,1000,1100,1140, 1220, 1240, 1300, 1420, 1600];
     List<int> movementList = test.movementEntries!;
-    if (movementList.length <= 0) return;
+    if (movementList.isEmpty) return;
     /*if (movementList == null && movementList.size() > 0)
             return;*/
 
@@ -599,7 +600,7 @@ class GraphPainter2 extends CustomPainter {
   void drawAutoMovements(Canvas canvas) {
     //List<int> movementList = [2, 12, 24,60, 120, 240, 300, 420, 600,690,1000,1100,1140, 1220, 1240, 1300, 1420, 1600];
     List<int> movementList = test.autoFetalMovement!;
-    if (movementList.length <= 0) return;
+    if (movementList.isEmpty) return;
     /*if (movementList == null && movementList.size() > 0)
             return;*/
 
@@ -707,8 +708,8 @@ class GraphPainter2 extends CustomPainter {
     double startX, stopX = 0;
 
     for (int i = 0; i < list.length; i++) {
-      startX = getScreenX(list[i].getFrom()!);
-      stopX = getScreenX(list[i].getTo()!);
+      startX = getScreenX(list[i].getFrom());
+      stopX = getScreenX(list[i].getTo());
       debugPrint("drawInterpretationAreas $startX, $stopX, $xOrigin");
       if (stopX < xOrigin) {
         continue;

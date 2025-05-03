@@ -1,8 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// [ProgressDialog] is a StatelessWidget that displays a circular progress indicator inside a dialog.
 class ProgressDialog extends StatelessWidget {
+  const ProgressDialog({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -20,7 +21,7 @@ class ProgressDialog extends StatelessWidget {
   /// [context] is the BuildContext in which the widget is built
   dialogContent(context) {
     return Wrap(children: <Widget>[
-      new Center(
+      Center(
           child: Container(
               width: 80,
               height: 80,
@@ -30,7 +31,7 @@ class ProgressDialog extends StatelessWidget {
                   radius: 20,
                   child: CircularProgressIndicator(
                       valueColor:
-                          new AlwaysStoppedAnimation<Color>(Colors.black)))))
+                          AlwaysStoppedAnimation<Color>(Colors.black)))))
     ]);
   }
 }
