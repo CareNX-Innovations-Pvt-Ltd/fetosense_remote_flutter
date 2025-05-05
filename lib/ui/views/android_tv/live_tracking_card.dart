@@ -58,28 +58,28 @@ class _LiveTrackingCardState extends State<LiveTrackingCard> {
       interpretation = Interpretations2();
     }
 
-    int _movements = testDetails!.movementEntries!.length +
+    int movements = testDetails!.movementEntries!.length +
         testDetails!.autoFetalMovement!.length;
-    movements = _movements < 10 ? "0$_movements" : '$_movements';
+    this.movements = movements < 10 ? "0$movements" : '$movements';
 
     date = DateFormat('dd').format(testDetails!.createdOn!).toString();
     month = DateFormat('MMM').format(testDetails!.createdOn!).toString();
 
-    int _time = (testDetails!.lengthOfTest! / 60).truncate();
-    if (_time < 10) {
-      time = "0$_time";
+    int time = (testDetails!.lengthOfTest! / 60).truncate();
+    if (time < 10) {
+      this.time = "0$time";
     } else {
-      time = "$_time";
+     this.time = "$time";
     }
 
     // TODO: implement initState
     super.initState();
 
     if (testDetails!.isLive()!) {
-      int _timDiff = DateTime.now().millisecondsSinceEpoch -
+      int timDiff = DateTime.now().millisecondsSinceEpoch -
           testDetails!.createdOn!.millisecondsSinceEpoch;
-      _timDiff = (_timDiff / 1000).truncate();
-      if (_timDiff > (testDetails!.lengthOfTest! + 60)) _updateLiveFlag();
+      timDiff = (timDiff / 1000).truncate();
+      if (timDiff > (testDetails!.lengthOfTest! + 60)) _updateLiveFlag();
       _addListener();
     }
   }
@@ -309,7 +309,7 @@ class _LiveTrackingCardState extends State<LiveTrackingCard> {
                                     ],
                                   )
                                 : Text(
-                                    '${time} Mins',
+                                    '$time Mins',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       color: greenColor,
@@ -482,8 +482,8 @@ class _LiveTrackingCardState extends State<LiveTrackingCard> {
 
           movements = movementCount < 10 ? "0$movementCount" : "$movementCount";
 
-          int _time = (testDetails!.lengthOfTest! / 60).truncate();
-          time = _time < 10 ? "0$_time" : "$_time";
+          int time = (testDetails!.lengthOfTest! / 60).truncate();
+          this.time = time < 10 ? "0$time" : "$time";
 
           print(time);
           print(" time updated");

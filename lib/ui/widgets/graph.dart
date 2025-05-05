@@ -1,6 +1,5 @@
 import 'package:fetosense_remote_flutter/core/model/test_model.dart';
 import 'package:fetosense_remote_flutter/core/utils/intrepretations2.dart';
-import 'package:fetosense_remote_flutter/ui/views/mothers_details.dart';
 import 'package:flutter/material.dart';
 
 import 'graph_painter.dart';
@@ -16,11 +15,11 @@ class Graph extends StatefulWidget {
   /// The interpretations of the test data.
   Interpretations2? interpretations;
 
-  Graph({required this.test, this.gridPerMin, this.interpretations});
+  Graph({super.key, required this.test, this.gridPerMin, this.interpretations});
 
   @override
   GraphState createState() {
-    return new GraphState();
+    return GraphState();
   }
 }
 
@@ -44,7 +43,7 @@ class GraphState extends State<Graph> {
             color: Colors.white,
             width: MediaQuery.of(context).size.width,
             child: CustomPaint(
-              painter: GraphPainter(widget.test, this.mOffset,
+              painter: GraphPainter(widget.test, mOffset,
                   widget.gridPerMin, widget.interpretations),
             )));
   }
@@ -70,18 +69,18 @@ class GraphState extends State<Graph> {
     var local = getBox.globalToLocal(update.globalPosition);
     double newChange = (mTouchStart - local.dx);
     setState(() {
-      this.mOffset = trap(this.mOffset + (newChange / 20).truncate());
+      mOffset = trap(mOffset + (newChange / 20).truncate());
     });
-    print(this.mOffset.toString());
+    print(mOffset.toString());
   }
 
   /// Constrains the graph offset within valid bounds.
   /// [pos] is the proposed offset value.
   /// Returns clamped offset between 0 and maximum data points.
   int trap(int pos) {
-    if (pos < 0)
+    if (pos < 0) {
       return 0;
-    else if (pos > widget.test.bpmEntries!.length)
+    } else if (pos > widget.test.bpmEntries!.length)
       pos = widget.test.bpmEntries!.length;
 
     return pos;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CustomRadioBtn extends StatefulWidget {
-  CustomRadioBtn(
-      {required this.buttonLables,
+  const CustomRadioBtn(
+      {super.key, required this.buttonLables,
       required this.buttonValues,
       this.radioButtonValue,
       required this.buttonColor,
@@ -15,9 +15,7 @@ class CustomRadioBtn extends StatefulWidget {
       this.elevation = 4,
       this.customShape,
       this.enableAll})
-      : assert(buttonLables.length == buttonValues.length),
-        assert(buttonColor != null),
-        assert(selectedColor != null);
+      : assert(buttonLables.length == buttonValues.length);
 
   /// Whether the radio buttons are arranged horizontally
   final bool horizontal;
@@ -59,6 +57,7 @@ class CustomRadioBtn extends StatefulWidget {
   final bool? enableAll;
 
 
+  @override
   _CustomRadioButtonState createState() => _CustomRadioButtonState();
 }
 
@@ -90,23 +89,19 @@ class _CustomRadioButtonState extends State<CustomRadioBtn> {
               : widget.buttonColor,
           elevation: widget.elevation,
           shape: widget.enableShape
-              ? widget.customShape == null
-                  ? RoundedRectangleBorder(
+              ? widget.customShape ?? RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(5)),
                     )
-                  : widget.customShape
               : null,
-          child: Container(
+          child: SizedBox(
             height: widget.hight,
             child: MaterialButton(
               shape: widget.enableShape
-                  ? widget.customShape == null
-                      ? OutlineInputBorder(
+                  ? widget.customShape ?? OutlineInputBorder(
                           borderSide: BorderSide(
                               color: Theme.of(context).primaryColor, width: 1),
                           borderRadius: BorderRadius.all(Radius.circular(2)),
                         )
-                      : widget.customShape
                   : OutlineInputBorder(
                       borderSide: BorderSide(
                           color: Theme.of(context).primaryColor, width: 1),
@@ -153,11 +148,9 @@ class _CustomRadioButtonState extends State<CustomRadioBtn> {
               : widget.buttonColor,
           elevation: widget.elevation,
           shape: widget.enableShape
-              ? widget.customShape == null
-                  ? RoundedRectangleBorder(
+              ? widget.customShape ?? RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(5)),
                     )
-                  : widget.customShape
               : null,
           child: Container(
             height: widget.hight,
@@ -165,13 +158,11 @@ class _CustomRadioButtonState extends State<CustomRadioBtn> {
             constraints: BoxConstraints(maxWidth: 200),
             child: MaterialButton(
               shape: widget.enableShape
-                  ? widget.customShape == null
-                      ? OutlineInputBorder(
+                  ? widget.customShape ?? OutlineInputBorder(
                           borderSide: BorderSide(
                               color: Theme.of(context).primaryColor, width: 1),
                           borderRadius: BorderRadius.all(Radius.circular(2)),
                         )
-                      : widget.customShape
                   : OutlineInputBorder(
                       borderSide: BorderSide(
                           color: Theme.of(context).primaryColor, width: 1),
@@ -207,7 +198,7 @@ class _CustomRadioButtonState extends State<CustomRadioBtn> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: widget.horizontal
           ? widget.hight * (widget.buttonLables.length + 0.5)
           : null,

@@ -56,7 +56,7 @@ class AppwriteApi {
   }
 
   Stream<List<models.Document>> streamMotherDataSearch(String organizationId, String filter) {
-    final nextChar = String.fromCharCode(filter.codeUnitAt(0) + 1);
+    // final nextChar = String.fromCharCode(filter.codeUnitAt(0) + 1);
     return database
         .listDocuments(
       databaseId: databaseId,
