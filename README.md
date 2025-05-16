@@ -1,7 +1,6 @@
 # FetosenseRemote Flutter App
 
 [![Flutter](https://img.shields.io/badge/Flutter-2.x-blue)](https://flutter.dev/)
-[![License](https://img.shields.io/badge/License-Proprietary-red.svg)](LICENSE)
 
 A Flutter application for remote fetal monitoring, developed by CareNX Innovations Pvt. Ltd.
 
