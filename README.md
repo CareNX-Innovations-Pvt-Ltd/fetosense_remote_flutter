@@ -1,7 +1,6 @@
 # FetosenseRemote Flutter App
 
 [![Flutter](https://img.shields.io/badge/Flutter-2.x-blue)](https://flutter.dev/)
-[![License](https://img.shields.io/badge/License-Proprietary-red.svg)](LICENSE)
 
 A Flutter application for remote fetal monitoring, developed by CareNX Innovations Pvt. Ltd.
 
@@ -93,9 +92,9 @@ lib/
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## License
+## Developer Documentation
 
-This project is proprietary software owned by CareNX Innovations Pvt. Ltd.
+You can find the complete developer documentation [here](https://carenx-innovations-pvt-ltd.github.io/fetosense_remote_flutter/).
 
 ## About CareNX Innovations
 

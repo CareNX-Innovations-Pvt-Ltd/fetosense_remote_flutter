@@ -71,7 +71,7 @@ class MotherListViewState extends State<MotherListView> {
                             return ListView.builder(
                               itemCount: mothers.length,
                               itemBuilder: (context, index) =>
-                                  MotherCard(motherDetails: mothers[index]),
+                                  MotherCard(mother: mothers[index],),
                             );
                           } else if (snapshot.hasError) {
                             return Center(

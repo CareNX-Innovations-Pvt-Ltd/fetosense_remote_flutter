@@ -103,7 +103,7 @@ class _InterpretationDialog extends State<InterpretationDialog> {
                 maxLines: 4,
                 keyboardType: TextInputType.text,
                 autofocus: false,
-                initialValue: comments ?? '',
+                initialValue: comments,
                 onChanged: (value) => comments = value.trim(),
                 decoration: InputDecoration(hintText: 'Extra Comments'),
               )),

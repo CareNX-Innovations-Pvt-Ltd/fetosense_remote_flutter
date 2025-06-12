@@ -15,6 +15,7 @@ class PreferenceDialog extends StatefulWidget {
       this.onlySaveOnSubmit = false,
       this.cancelText});
 
+  @override
   PreferenceDialogState createState() => PreferenceDialogState();
 }
 
@@ -52,8 +53,7 @@ class PreferenceDialogState extends State<PreferenceDialog> {
           );
         },
       ),
-      actions: <Widget>[]
-        ..addAll(widget.cancelText == null
+      actions: <Widget>[...widget.cancelText == null
             ? []
             : [
                 MaterialButton(
@@ -62,8 +62,7 @@ class PreferenceDialogState extends State<PreferenceDialog> {
                     Navigator.of(context).pop();
                   },
                 )
-              ])
-        ..addAll(widget.submitText == null
+              ], ...widget.submitText == null
             ? []
             : [
                 MaterialButton(
@@ -75,7 +74,9 @@ class PreferenceDialogState extends State<PreferenceDialog> {
                     Navigator.of(context).pop();
                   },
                 )
-              ]),
+              ]]
+        
+        ,
     );
   }
 }

@@ -1,69 +1,43 @@
+import 'package:fetosense_remote_flutter/core/model/mother_model.dart';
 import 'package:fetosense_remote_flutter/ui/views/mother_test_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// This widget shows the mother's name, LMP (Last Menstrual Period), and gestational age.
-/// It also includes a list of tests associated with the mother.
+
 class MotherDetails extends StatelessWidget {
   /// [mother] is the mother model containing the details to be displayed.
-  final dynamic mother;
+  final Mother mother;
 
   const MotherDetails({super.key, required this.mother});
 
-  /// Calculates the gestational age of the mother.
-  ///
-  /// Returns the gestational age in weeks.
+  /// Calculates the gestational age of the mother in weeks.
   int getGestAge() {
-    if (mother['edd'] != null) {
-      double age = (280 -
-              ((DateTime.parse(mother['edd']).millisecondsSinceEpoch -
-                      DateTime.now().millisecondsSinceEpoch) /
-                  (1000 * 60 * 60 * 24))) /
-          7;
-      return age.floor();
-    } else {
-      return 0;
+    if (mother.edd != null) {
+      final eddDate = mother.edd;
+      if (eddDate != null) {
+        final now = DateTime.now();
+        final remainingDays = eddDate.difference(now).inDays;
+        final gestAge = (280 - remainingDays) ~/ 7;
+        return gestAge.clamp(0, 42); // safe range
+      }
     }
+    return 0;
   }
 
   /// Returns the abbreviated month name for the given month number.
-  ///
-  /// [m] is the month number (1-12).
-  /// Returns the abbreviated month name as a string.
   String getMonthName(int m) {
-    switch (m) {
-      case 1:
-        return "JAN";
-      case 2:
-        return "FEB";
-      case 3:
-        return "MAR";
-      case 4:
-        return "APR";
-      case 5:
-        return "MAY";
-      case 6:
-        return "JUN";
-      case 7:
-        return "JUL";
-      case 8:
-        return "AUG";
-      case 9:
-        return "SEP";
-      case 10:
-        return "OCT";
-      case 11:
-        return "NOV";
-      case 12:
-        return "DEC";
-      default:
-        return "DEC";
-    }
+    const monthNames = [
+      "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+      "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"
+    ];
+    return (m >= 1 && m <= 12) ? monthNames[m - 1] : "DEC";
   }
 
   @override
   Widget build(BuildContext context) {
+    final edd = mother.edd;
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -71,59 +45,63 @@ class MotherDetails extends StatelessWidget {
             Container(
               margin: const EdgeInsets.symmetric(vertical: 5),
               decoration: const BoxDecoration(
-                border:
-                    Border(bottom: BorderSide(width: 0.5, color: Colors.teal)),
+                border: Border(
+                  bottom: BorderSide(width: 0.5, color: Colors.teal),
+                ),
               ),
               child: ListTile(
                 leading: IconButton(
                   iconSize: 35,
-                  icon: const Icon(Icons.arrow_back,
-                      size: 30, color: Colors.teal),
+                  icon: const Icon(Icons.arrow_back, size: 30, color: Colors.teal),
                   onPressed: () => Navigator.pop(context),
                 ),
                 title: Text(
-                  "${mother['fullName']}",
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w500, fontSize: 20),
+                  mother.name ?? "Unknown",
+                  style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
                 ),
                 subtitle: Text(
-                  "LMP - ${DateFormat('dd MMM yyyy').format(DateTime.parse(mother['edd']))}",
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w300, fontSize: 14),
+                  edd != null
+                      ? "EDD - ${DateFormat('dd MMM yyyy').format(edd)}"
+                      : "EDD not available",
+                  style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 14),
                 ),
                 trailing: Container(
-                    padding: const EdgeInsets.all(3.0),
-                    width: 55,
-                    height: 55,
-                    decoration: const BoxDecoration(
-                      color: Colors.teal,
-                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                  padding: const EdgeInsets.all(3.0),
+                  width: 55.sp,
+                  height: 55.sp,
+                  decoration: const BoxDecoration(
+                    color: Colors.teal,
+                    borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                  ),
+                  child: Center(
+                    child: FittedBox(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            getGestAge().toString(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                              fontSize: 20.sp,
+                            ),
+                          ),
+                          Text(
+                            "weeks",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white,
+                              fontSize: 12.sp,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    child: Center(
-                        child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          getGestAge().toString(),
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                            fontSize: 36.sp,
-                          ),
-                        ),
-                        Text(
-                          "weeks",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: Colors.white,
-                            fontSize: 22.sp,
-                          ),
-                        ),
-                      ],
-                    ))),
+                  ),
+                ),
               ),
             ),
-            Expanded(child: MotherTestListView(mother: mother))
+            Expanded(child: MotherTestListView(mother: mother)),
           ],
         ),
       ),

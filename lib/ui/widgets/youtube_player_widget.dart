@@ -172,14 +172,4 @@ class _FeedsYoutubeState extends State<FeedsYoutube> {
         );
   }
 
-  /// Handles the back button press.
-  /// [context] is the build context.
-  /// Returns a [Future] that resolves to a boolean indicating whether to pop the route.
-  Future<bool> _onWillPop(BuildContext context) async {
-    Orientation currentOrientation = MediaQuery.of(context).orientation;
-    if (currentOrientation == Orientation.portrait) {
-      _controller.toggleFullScreenMode();
-    }
-    return true;
-  }
 }

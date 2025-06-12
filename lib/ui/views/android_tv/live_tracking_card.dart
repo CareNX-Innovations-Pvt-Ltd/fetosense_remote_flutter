@@ -69,7 +69,7 @@ class _LiveTrackingCardState extends State<LiveTrackingCard> {
     if (time < 10) {
       this.time = "0$time";
     } else {
-      this.time = "$time";
+     this.time = "$time";
     }
 
     // TODO: implement initState

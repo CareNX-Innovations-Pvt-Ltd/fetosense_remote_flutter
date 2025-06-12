@@ -1,6 +1,5 @@
 import 'dart:core';
 import 'package:fetosense_remote_flutter/core/model/marker_indices.dart';
-import 'package:intl/intl.dart';
 
 class Interpretations3 {
   static final int SIXTY_THOUSAND_MS = 60000;

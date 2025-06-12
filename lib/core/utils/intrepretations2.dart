@@ -98,7 +98,7 @@ class Interpretations2 {
   }
 
   Interpretations2.withData(List<int> bpm, int gAge) {
-    print("Interpretations2 :: withData ${bpm.length} && age $gAge");
+    // print("Interpretations2 :: withData ${bpm.length} && age $gAge");
     gestAge = gAge > 41 ? 41 : gAge;
     bpmList = List.from(bpm); //[]..addAll(bpm);//bpm.clone();
     bpmCorrectedIndices = getNoiseAreas(List.from(bpm));
@@ -937,7 +937,8 @@ class Interpretations2 {
     maxExcursion = 0;
 
     */
-  /* second criteria *//*
+  /// second criteria
+  /*
 
     */
 /*for (int i = 0; i < size; i++) {
@@ -1004,7 +1005,7 @@ class Interpretations2 {
         }
       } else {
         if (maxExcursion >= 10) {
-          print("maxExcursion dec 1: $counter1 - $maxExcursion - ${(i * 4) / 60}");
+          // print("maxExcursion dec 1: $counter1 - $maxExcursion - ${(i * 4) / 60}");
 
           if (counter1 >= 14 && maxExcursion >= 10) {
             deceleration = MarkerIndices()
