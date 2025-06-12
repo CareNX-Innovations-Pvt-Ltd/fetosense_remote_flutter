@@ -6,8 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MotherCard extends StatelessWidget {
   final Mother mother;
-
   const MotherCard({super.key, required this.mother});
+
 
   int getGestAge(DateTime edd) {
     final now = DateTime.now();

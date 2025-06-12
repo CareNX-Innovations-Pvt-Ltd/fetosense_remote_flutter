@@ -786,7 +786,6 @@ class Interpretations2 {
   /// An acceleration is defined as an increase in FHR above the baseline
   /// that lasts for longer than 15 seconds and has a maximum excursion
   /// above the baseline of greater than 10 beats/min
-  ///
   int calculateAccelerations() {
     List<MarkerIndices> accelerations = [];
     int size = millisecondsEpoch.length;
