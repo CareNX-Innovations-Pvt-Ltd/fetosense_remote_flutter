@@ -96,6 +96,9 @@ lib/
 
 You can find the complete developer documentation [here](https://carenx-innovations-pvt-ltd.github.io/fetosense_remote_flutter/).
 
+## System Architecture Diagram
+![img.png](assets/diagram.jpeg)
+
 ## About CareNX Innovations
 
 CareNX Innovations is a healthcare technology company focused on developing innovative solutions for maternal and fetal healthcare. The Fetosense device and companion applications are designed to improve access to quality healthcare for expectant mothers, especially in remote and underserved areas.
