@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the calculateShortTermVariability method from the Interpretation class, for the Dart programming language.">
+  <title>calculateShortTermVariability method - Interpretation class - interpretations library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">fetosense_remote_flutter</a></li>
+    <li><a href="../../core_utils_interpretations/core_utils_interpretations-library.html">core&#47;utils&#47;interpretations.dart</a></li>
+    <li><a href="../../core_utils_interpretations/Interpretation-class.html">Interpretation</a></li>
+    <li class="self-crumb">calculateShortTermVariability method</li>
+  </ol>
+  <div class="self-name">calculateShortTermVariability</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="core_utils_interpretations&#47;Interpretation-class-sidebar.html"
+    data-below-sidebar="">
+    <div>
+<h1><span class="kind-method">calculateShortTermVariability</span> method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+<span class="returntype">void</span>
+<span class="name ">calculateShortTermVariability</span>(<wbr>)
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Short-term variability (STV) (calculated in ms and bpm)</p>
+<ol>
+<li>discard all deaccelerations + more than 50% signal loss</li>
+<li>1 minute mean of difference between FHR of consecutive samples</li>
+<li>take mean of 1 minute means</li>
+</ol>
+<p>
+TODO: How to consider parallel scanning of signal for deaccelerations and processing? Are we loosing some part of signal here?</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">void calculateShortTermVariability() {
+  try {
+    List&lt;int?&gt; epoch = cleanMillisecondsEpoch(millisecondsEpoch);
+    int size = epoch.length;
+    int minMeanLength = (size &#47; NO_OF_SAMPLES_PER_MINUTE).truncate();
+    List&lt;double?&gt; meanIatPerMinute =
+        List.filled((size &#47; NO_OF_SAMPLES_PER_MINUTE).truncate(), null, growable: false);
+    List&lt;double?&gt; meanEpochPerMinute =
+        List.filled((size &#47; NO_OF_SAMPLES_PER_MINUTE).truncate(), null, growable: false);
+    List&lt;double?&gt; iatBeats = List.filled(size - 1, null, growable: false);
+    List&lt;int?&gt; epochBeats = List.filled(size - 1, null, growable: false);
+    double shortTermVariation = 0;
+    double shortTermEpochVariation = 0;
+    int counter = 0, meanIatCounter = 0;
+
+    &#47;** first calculate iat of beats **&#47;
+    for (int i = 0; i &lt; size - 1; i++) {
+      iatBeats[i] = (epoch[i + 1]! - epoch[i]!).toDouble().abs();
+      epochBeats[i] = (((SIXTY_THOUSAND_MS &#47; epoch[i + 1]!) -
+                  (SIXTY_THOUSAND_MS &#47; epoch[i]!))
+              .truncate())
+          .abs();
+    }
+
+    for (int i = 0; i &lt; minMeanLength; i++) {
+      meanIatPerMinute[i] = 0;
+      meanEpochPerMinute[i] = 0;
+    }
+
+    &#47;** processing only parts of signal which contain no deacceleration **&#47;
+    for (int i = 0; i &lt; minMeanLength - 1; i++) {
+      for (int j = 0; j &lt; NO_OF_SAMPLES_PER_MINUTE; j++) {
+        meanIatPerMinute[i] = meanIatPerMinute[i]! + iatBeats[i * NO_OF_SAMPLES_PER_MINUTE + j]!;
+        meanEpochPerMinute[i] = meanEpochPerMinute[i]! + epochBeats[i * NO_OF_SAMPLES_PER_MINUTE + j]!;
+
+        &#47;** first criteria **&#47; &#47;*
+              if (millisecondsEpoch[i * NO_OF_SAMPLES_PER_MINUTE + j] - baselineFHRDR[i * NO_OF_SAMPLES_PER_MINUTE + j] &lt;= 6000) {
+                  counter++;
+                  if (counter &gt;= 16) { &#47;&#47; 60 seconds = 16 samples
+                      &#47;&#47; deacceleration is occuring here
+                  }
+              } else {
+                  counter = 0;
+                  meanIatPerMinute[i] += iatBeats[i * NO_OF_SAMPLES_PER_MINUTE + j];
+                  meanIatCounter++;
+              }
+
+              *&#47; &#47;** second criteria **&#47; &#47;*
+              if (millisecondsEpoch[i * NO_OF_SAMPLES_PER_MINUTE + j] - baselineFHRDR[i * NO_OF_SAMPLES_PER_MINUTE + j] &lt;= 3000) {
+                  counter++;
+                  if (counter &gt;= 8 &amp;&amp; counter &lt; 16) { &#47;&#47; 30 seconds = 8 samples
+                      &#47;&#47; deacceleration is occuring here
+                  }
+              } else {
+                  counter = 0;
+                  meanIatPerMinute[i] += iatBeats[i * NO_OF_SAMPLES_PER_MINUTE + j];
+                  meanIatCounter++;
+              }*&#47;
+      }
+      meanIatPerMinute[i] = meanIatPerMinute[i]!&#47; NO_OF_SAMPLES_PER_MINUTE;
+      meanEpochPerMinute[i] = meanEpochPerMinute[i]!&#47; NO_OF_SAMPLES_PER_MINUTE;
+
+      &#47;*if (meanIatCounter != 0)
+              meanIatPerMinute[i] = meanIatPerMinute[i] &#47; meanIatCounter;*&#47;
+    }
+
+    for (int i = 0; i &lt; minMeanLength; i++) {
+      shortTermVariation += meanIatPerMinute[i]!;
+      shortTermEpochVariation += meanEpochPerMinute[i]!;
+    }
+    shortTermVariabilityMs = shortTermVariation &#47; (minMeanLength - 1);
+    shortTermVariabilityBpm = shortTermEpochVariation &#47; (minMeanLength - 1);
+
+    &#47;&#47;shortTermVariabilityMs = shortTermVariation * NO_OF_SAMPLES_PER_MINUTE &#47; size;
+
+    &#47;&#47;if (shortTermVariabilityMs != 0)
+    &#47;&#47;    shortTermVariabilityBpm = SIXTY_THOUSAND_MS &#47; shortTermVariation;
+
+    print(&quot;STV   $shortTermVariabilityMs  $shortTermVariabilityBpm&quot;);
+    &#47;&#47;return shortTermVariabilityBpm;
+  } catch (exception) {
+    print(exception);
+  }
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">fetosense_remote_flutter</a></li>
+    <li><a href="../../core_utils_interpretations/core_utils_interpretations-library.html">interpretations</a></li>
+    <li><a href="../../core_utils_interpretations/Interpretation-class.html">Interpretation</a></li>
+    <li class="self-crumb">calculateShortTermVariability method</li>
+</ol>
+
+    <h5>Interpretation class</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-->
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    fetosense_remote_flutter
+      1.0.0+1
+  </span>
+  
+</footer>
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

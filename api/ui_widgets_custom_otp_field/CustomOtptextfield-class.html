@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the CustomOtptextfield class from the custom_otp_field library, for the Dart programming language.">
+  <title>CustomOtptextfield class - custom_otp_field library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">fetosense_remote_flutter</a></li>
+    <li><a href="../ui_widgets_custom_otp_field/ui_widgets_custom_otp_field-library.html">ui&#47;widgets&#47;custom_otp_field.dart</a></li>
+    <li class="self-crumb">CustomOtptextfield class</li>
+  </ol>
+  <div class="self-name">CustomOtptextfield</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="ui_widgets_custom_otp_field&#47;ui_widgets_custom_otp_field-library-sidebar.html"
+    data-below-sidebar="ui_widgets_custom_otp_field&#47;CustomOtptextfield-class-sidebar.html">
+    <div>
+<h1><span class="kind-class">CustomOtptextfield</span> class 
+ 
+</h1></div>
+
+    
+
+
+    <section>
+      <dl class="dl-horizontal">
+        
+  <dt>Inheritance</dt>
+  <dd>
+    <ul class="gt-separated dark clazz-relationships">
+      <li><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></li>
+        <li><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree-class.html">DiagnosticableTree</a></li>
+        <li><a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a></li>
+        <li><a href="https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html">StatefulWidget</a></li>
+      <li>CustomOtptextfield</li>
+    </ul>
+  </dd>
+
+        
+        
+
+
+        
+        
+
+
+      </dl>
+    </section>
+
+    
+  <section class="summary offset-anchor" id="constructors">
+    <h2>Constructors</h2>
+    <dl class="constructor-summary-list">
+        <dt id="CustomOtptextfield" class="callable">
+          <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/CustomOtptextfield.html">CustomOtptextfield</a></span><span class="signature">({<span class="parameter" id="-param-key"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/foundation/Key-class.html">Key</a>?</span> <span class="parameter-name">key</span>, </span><span class="parameter" id="-param-isCupertino"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">isCupertino</span> = <span class="default-value">false</span>, </span><span class="parameter" id="-param-maxLength"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">maxLength</span> = <span class="default-value">4</span>, </span><span class="parameter" id="-param-controller"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/TextEditingController-class.html">TextEditingController</a>?</span> <span class="parameter-name">controller</span>, </span><span class="parameter" id="-param-hideCharacter"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">hideCharacter</span> = <span class="default-value">false</span>, </span><span class="parameter" id="-param-highlight"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">highlight</span> = <span class="default-value">false</span>, </span><span class="parameter" id="-param-highlightAnimation"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">highlightAnimation</span> = <span class="default-value">false</span>, </span><span class="parameter" id="-param-highlightAnimationBeginColor"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/Color-class.html">Color</a></span> <span class="parameter-name">highlightAnimationBeginColor</span> = <span class="default-value">Colors.white</span>, </span><span class="parameter" id="-param-highlightAnimationEndColor"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/Color-class.html">Color</a></span> <span class="parameter-name">highlightAnimationEndColor</span> = <span class="default-value">Colors.black</span>, </span><span class="parameter" id="-param-highlightAnimationDuration"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a>?</span> <span class="parameter-name">highlightAnimationDuration</span>, </span><span class="parameter" id="-param-highlightColor"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/Color-class.html">Color</a></span> <span class="parameter-name">highlightColor</span> = <span class="default-value">Colors.black</span>, </span><span class="parameter" id="-param-pinBoxDecoration"><span class="type-annotation"><a href="../ui_widgets_custom_otp_field/PinBoxDecoration.html">PinBoxDecoration</a>?</span> <span class="parameter-name">pinBoxDecoration</span>, </span><span class="parameter" id="-param-maskCharacter"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">maskCharacter</span> = <span class="default-value">&quot; &quot;</span>, </span><span class="parameter" id="-param-pinBoxWidth"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span> <span class="parameter-name">pinBoxWidth</span> = <span class="default-value">70.0</span>, </span><span class="parameter" id="-param-pinBoxHeight"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span> <span class="parameter-name">pinBoxHeight</span> = <span class="default-value">70.0</span>, </span><span class="parameter" id="-param-pinTextStyle"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/TextStyle-class.html">TextStyle</a>?</span> <span class="parameter-name">pinTextStyle</span>, </span><span class="parameter" id="-param-onDone"><span class="type-annotation"><a href="../ui_widgets_custom_otp_field/OnDone.html">OnDone</a>?</span> <span class="parameter-name">onDone</span>, </span><span class="parameter" id="-param-defaultBorderColor"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/Color-class.html">Color</a></span> <span class="parameter-name">defaultBorderColor</span> = <span class="default-value">Colors.black</span>, </span><span class="parameter" id="-param-hasTextBorderColor"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/Color-class.html">Color</a></span> <span class="parameter-name">hasTextBorderColor</span> = <span class="default-value">Colors.black</span>, </span><span class="parameter" id="-param-pinTextAnimatedSwitcherTransition"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/AnimatedSwitcherTransitionBuilder.html">AnimatedSwitcherTransitionBuilder</a>?</span> <span class="parameter-name">pinTextAnimatedSwitcherTransition</span>, </span><span class="parameter" id="-param-pinTextAnimatedSwitcherDuration"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a></span> <span class="parameter-name">pinTextAnimatedSwitcherDuration</span> = <span class="default-value">const Duration()</span>, </span><span class="parameter" id="-param-hasError"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">hasError</span> = <span class="default-value">false</span>, </span><span class="parameter" id="-param-errorBorderColor"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/Color-class.html">Color</a></span> <span class="parameter-name">errorBorderColor</span> = <span class="default-value">Colors.red</span>, </span><span class="parameter" id="-param-onTextChanged"><span class="type-annotation">dynamic</span> <span class="parameter-name">onTextChanged</span>(<span class="parameter" id="param-"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span></span>)?, </span><span class="parameter" id="-param-autofocus"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">autofocus</span> = <span class="default-value">false</span>, </span><span class="parameter" id="-param-focusNode"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/FocusNode-class.html">FocusNode</a>?</span> <span class="parameter-name">focusNode</span>, </span><span class="parameter" id="-param-wrapAlignment"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/rendering/WrapAlignment.html">WrapAlignment</a></span> <span class="parameter-name">wrapAlignment</span> = <span class="default-value">WrapAlignment.start</span>, </span><span class="parameter" id="-param-textDirection"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/TextDirection.html">TextDirection</a></span> <span class="parameter-name">textDirection</span> = <span class="default-value">TextDirection.ltr</span>, </span><span class="parameter" id="-param-keyboardType"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/services/TextInputType-class.html">TextInputType</a></span> <span class="parameter-name">keyboardType</span> = <span class="default-value">TextInputType.number</span>, </span><span class="parameter" id="-param-pinBoxOuterPadding"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/EdgeInsets-class.html">EdgeInsets</a></span> <span class="parameter-name">pinBoxOuterPadding</span> = <span class="default-value">const EdgeInsets.symmetric(horizontal: 4.0)</span>, </span><span class="parameter" id="-param-pinBoxColor"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/Color-class.html">Color</a>?</span> <span class="parameter-name">pinBoxColor</span>, </span><span class="parameter" id="-param-highlightPinBoxColor"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/Color-class.html">Color</a>?</span> <span class="parameter-name">highlightPinBoxColor</span>, </span><span class="parameter" id="-param-pinBoxBorderWidth"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span> <span class="parameter-name">pinBoxBorderWidth</span> = <span class="default-value">2.0</span>, </span><span class="parameter" id="-param-pinBoxRadius"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span> <span class="parameter-name">pinBoxRadius</span> = <span class="default-value">0</span>, </span><span class="parameter" id="-param-hideDefaultKeyboard"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">hideDefaultKeyboard</span> = <span class="default-value">false</span>, </span><span class="parameter" id="-param-hasUnderline"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">hasUnderline</span> = <span class="default-value">false</span></span>})</span>
+        </dt>
+        <dd>
+          
+            <div class="constructor-modifier features">const</div>
+        </dd>
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor"
+      id="instance-properties">
+    <h2>Properties</h2>
+    <dl class="properties">
+        <dt id="autofocus" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/autofocus.html">autofocus</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="controller" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/controller.html">controller</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/widgets/TextEditingController-class.html">TextEditingController</a>?</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="defaultBorderColor" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/defaultBorderColor.html">defaultBorderColor</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/painting/Color-class.html">Color</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="errorBorderColor" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/errorBorderColor.html">errorBorderColor</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/painting/Color-class.html">Color</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="focusNode" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/focusNode.html">focusNode</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/widgets/FocusNode-class.html">FocusNode</a>?</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="hasError" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/hasError.html">hasError</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="hashCode" class="property inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/widgets/Widget/hashCode.html">hashCode</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  The hash code for this object.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="hasTextBorderColor" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/hasTextBorderColor.html">hasTextBorderColor</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/painting/Color-class.html">Color</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="hasUnderline" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/hasUnderline.html">hasUnderline</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="hideCharacter" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/hideCharacter.html">hideCharacter</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="hideDefaultKeyboard" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/hideDefaultKeyboard.html">hideDefaultKeyboard</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="highlight" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/highlight.html">highlight</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="highlightAnimation" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/highlightAnimation.html">highlightAnimation</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="highlightAnimationBeginColor" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/highlightAnimationBeginColor.html">highlightAnimationBeginColor</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/painting/Color-class.html">Color</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="highlightAnimationDuration" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/highlightAnimationDuration.html">highlightAnimationDuration</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a>?</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="highlightAnimationEndColor" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/highlightAnimationEndColor.html">highlightAnimationEndColor</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/painting/Color-class.html">Color</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="highlightColor" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/highlightColor.html">highlightColor</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/painting/Color-class.html">Color</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="highlightPinBoxColor" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/highlightPinBoxColor.html">highlightPinBoxColor</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/painting/Color-class.html">Color</a>?</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="isCupertino" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/isCupertino.html">isCupertino</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="key" class="property inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/widgets/Widget/key.html">key</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/foundation/Key-class.html">Key</a>?</span>
+  
+
+</dt>
+<dd class="inherited">
+  Controls how one widget replaces another widget in the tree.
+  <div class="features"><span class="feature">final</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="keyboardType" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/keyboardType.html">keyboardType</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/services/TextInputType-class.html">TextInputType</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="maskCharacter" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/maskCharacter.html">maskCharacter</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="maxLength" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/maxLength.html">maxLength</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="onDone" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/onDone.html">onDone</a></span>
+  <span class="signature">&#8594; <a href="../ui_widgets_custom_otp_field/OnDone.html">OnDone</a>?</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="onTextChanged" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/onTextChanged.html">onTextChanged</a></span>
+  <span class="signature">&#8594; dynamic Function<span class="signature">(<span class="parameter" id="param-"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span></span>)</span>?</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="pinBoxBorderWidth" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/pinBoxBorderWidth.html">pinBoxBorderWidth</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="pinBoxColor" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/pinBoxColor.html">pinBoxColor</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/painting/Color-class.html">Color</a>?</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="pinBoxDecoration" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/pinBoxDecoration.html">pinBoxDecoration</a></span>
+  <span class="signature">&#8594; <a href="../ui_widgets_custom_otp_field/PinBoxDecoration.html">PinBoxDecoration</a>?</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="pinBoxHeight" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/pinBoxHeight.html">pinBoxHeight</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="pinBoxOuterPadding" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/pinBoxOuterPadding.html">pinBoxOuterPadding</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/painting/EdgeInsets-class.html">EdgeInsets</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="pinBoxRadius" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/pinBoxRadius.html">pinBoxRadius</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="pinBoxWidth" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/pinBoxWidth.html">pinBoxWidth</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="pinTextAnimatedSwitcherDuration" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/pinTextAnimatedSwitcherDuration.html">pinTextAnimatedSwitcherDuration</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="pinTextAnimatedSwitcherTransition" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/pinTextAnimatedSwitcherTransition.html">pinTextAnimatedSwitcherTransition</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/widgets/AnimatedSwitcherTransitionBuilder.html">AnimatedSwitcherTransitionBuilder</a>?</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="pinTextStyle" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/pinTextStyle.html">pinTextStyle</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/painting/TextStyle-class.html">TextStyle</a>?</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="runtimeType" class="property inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Type-class.html">Type</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  A representation of the runtime type of the object.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="textDirection" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/textDirection.html">textDirection</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-ui/TextDirection.html">TextDirection</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="wrapAlignment" class="property">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/wrapAlignment.html">wrapAlignment</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/rendering/WrapAlignment.html">WrapAlignment</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor"
+      id="instance-methods">
+    <h2>Methods</h2>
+    <dl class="callables">
+        <dt id="createElement" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/widgets/StatefulWidget/createElement.html">createElement</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/widgets/StatefulElement-class.html">StatefulElement</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Creates a <a href="https://api.flutter.dev/flutter/widgets/StatefulElement-class.html">StatefulElement</a> to manage this widget's location in the tree.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="createState" class="callable">
+  <span class="name"><a href="../ui_widgets_custom_otp_field/CustomOtptextfield/createState.html">createState</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/widgets/State-class.html">State</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html">StatefulWidget</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Creates the mutable state for this widget at a given location in the tree.
+  <div class="features"><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="debugDescribeChildren" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/debugDescribeChildren.html">debugDescribeChildren</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticsNode-class.html">DiagnosticsNode</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns a list of <a href="https://api.flutter.dev/flutter/foundation/DiagnosticsNode-class.html">DiagnosticsNode</a> objects describing this node's
+children.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="debugFillProperties" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/widgets/Widget/debugFillProperties.html">debugFillProperties</a></span><span class="signature">(<wbr><span class="parameter" id="debugFillProperties-param-properties"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticPropertiesBuilder-class.html">DiagnosticPropertiesBuilder</a></span> <span class="parameter-name">properties</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Add additional properties associated with the node.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="noSuchMethod" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Invocation-class.html">Invocation</a></span> <span class="parameter-name">invocation</span></span>)
+    <span class="returntype parameter">&#8594; dynamic</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Invoked when a nonexistent method or property is accessed.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="toDiagnosticsNode" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/toDiagnosticsNode.html">toDiagnosticsNode</a></span><span class="signature">(<wbr>{<span class="parameter" id="toDiagnosticsNode-param-name"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">name</span>, </span><span class="parameter" id="toDiagnosticsNode-param-style"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticsTreeStyle.html">DiagnosticsTreeStyle</a>?</span> <span class="parameter-name">style</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/foundation/DiagnosticsNode-class.html">DiagnosticsNode</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns a debug representation of the object that is used by debugging
+tools and by <a href="https://api.flutter.dev/flutter/foundation/DiagnosticsNode/toStringDeep.html">DiagnosticsNode.toStringDeep</a>.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="toString" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/foundation/Diagnosticable/toString.html">toString</a></span><span class="signature">(<wbr>{<span class="parameter" id="toString-param-minLevel"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticLevel.html">DiagnosticLevel</a></span> <span class="parameter-name">minLevel</span> = <span class="default-value">DiagnosticLevel.info</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  A string representation of this object.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="toStringDeep" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/toStringDeep.html">toStringDeep</a></span><span class="signature">(<wbr>{<span class="parameter" id="toStringDeep-param-prefixLineOne"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">prefixLineOne</span> = <span class="default-value">&#39;&#39;</span>, </span><span class="parameter" id="toStringDeep-param-prefixOtherLines"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">prefixOtherLines</span>, </span><span class="parameter" id="toStringDeep-param-minLevel"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticLevel.html">DiagnosticLevel</a></span> <span class="parameter-name">minLevel</span> = <span class="default-value">DiagnosticLevel.debug</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns a string representation of this node and its descendants.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="toStringShallow" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/toStringShallow.html">toStringShallow</a></span><span class="signature">(<wbr>{<span class="parameter" id="toStringShallow-param-joiner"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">joiner</span> = <span class="default-value">&#39;, &#39;</span>, </span><span class="parameter" id="toStringShallow-param-minLevel"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticLevel.html">DiagnosticLevel</a></span> <span class="parameter-name">minLevel</span> = <span class="default-value">DiagnosticLevel.debug</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns a one-line detailed description of the object.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="toStringShort" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/widgets/Widget/toStringShort.html">toStringShort</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  A short, textual description of this widget.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor inherited"
+      id="operators">
+    <h2>Operators</h2>
+    <dl class="callables">
+        <dt id="operator ==" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/widgets/Widget/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-other"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  The equality operator.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+    
+    
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../index.html">fetosense_remote_flutter</a></li>
+    <li><a href="../ui_widgets_custom_otp_field/ui_widgets_custom_otp_field-library.html">custom_otp_field</a></li>
+    <li class="self-crumb">CustomOtptextfield class</li>
+</ol>
+
+    <h5>custom_otp_field library</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div>
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    fetosense_remote_flutter
+      1.0.0+1
+  </span>
+  
+</footer>
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

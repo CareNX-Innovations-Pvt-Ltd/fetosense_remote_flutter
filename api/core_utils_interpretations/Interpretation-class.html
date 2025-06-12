@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the Interpretation class from the interpretations library, for the Dart programming language.">
+  <title>Interpretation class - interpretations library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">fetosense_remote_flutter</a></li>
+    <li><a href="../core_utils_interpretations/core_utils_interpretations-library.html">core&#47;utils&#47;interpretations.dart</a></li>
+    <li class="self-crumb">Interpretation class</li>
+  </ol>
+  <div class="self-name">Interpretation</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="core_utils_interpretations&#47;core_utils_interpretations-library-sidebar.html"
+    data-below-sidebar="core_utils_interpretations&#47;Interpretation-class-sidebar.html">
+    <div>
+<h1><span class="kind-class">Interpretation</span> class 
+ 
+</h1></div>
+
+    
+<section class="desc markdown">
+  <p>A class that provides methods to interpret fetal heart rate (FHR) data.</p>
+</section>
+
+
+
+    
+  <section class="summary offset-anchor" id="constructors">
+    <h2>Constructors</h2>
+    <dl class="constructor-summary-list">
+        <dt id="Interpretation" class="callable">
+          <span class="name"><a href="../core_utils_interpretations/Interpretation/Interpretation.html">Interpretation</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          Default constructor
+        </dd>
+        <dt id="Interpretation.fromList" class="callable">
+          <span class="name"><a href="../core_utils_interpretations/Interpretation/Interpretation.fromList.html">Interpretation.fromList</a></span><span class="signature">(<span class="parameter" id="fromList-param-gAge"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">gAge</span>, </span><span class="parameter" id="fromList-param-beats"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>&gt;</span></span> <span class="parameter-name">beats</span></span>)</span>
+        </dt>
+        <dd>
+          
+        </dd>
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor"
+      id="instance-properties">
+    <h2>Properties</h2>
+    <dl class="properties">
+        <dt id="basalHeartRate" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/basalHeartRate.html">basalHeartRate</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span>
+  
+
+</dt>
+<dd>
+  basal heart rate = average FHR over low variation episodes
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="baselineB2bVariability" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/baselineB2bVariability.html">baselineB2bVariability</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span>
+  
+
+</dt>
+<dd>
+  array of mean heartbeat inter-arrival intervals (60 minutes maximum)
+one sample each 3.75 seconds = 16 samples per minute
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="baselineFHR" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/baselineFHR.html">baselineFHR</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a>?</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="baseLineFHRArrayList" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/baseLineFHRArrayList.html">baseLineFHRArrayList</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>&gt;</span>?</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="baselineFHRDR" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/baselineFHRDR.html">baselineFHRDR</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span>&gt;</span>?</span>
+  
+
+</dt>
+<dd>
+  baseline FHR calculated with Dawos-Redman criteria
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="beatsArray" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/beatsArray.html">beatsArray</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>&gt;</span>?</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="beatsInMilliseconds" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/beatsInMilliseconds.html">beatsInMilliseconds</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span>&gt;</span></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="factor" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/factor.html">factor</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="gestAge" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/gestAge.html">gestAge</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  
+
+</dt>
+<dd>
+  Gestetional age in weeks
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="hashCode" class="property inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  The hash code for this object.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="highFHRVariationBpm" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/highFHRVariationBpm.html">highFHRVariationBpm</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="isBradycardia" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/isBradycardia.html">isBradycardia</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span>
+  
+
+</dt>
+<dd>
+  bradycardia basal heart rate &lt; 110 bpm | tachycardia basal heart rate &gt; 160 bpm
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="isTachycardia" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/isTachycardia.html">isTachycardia</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span>
+  
+
+</dt>
+<dd>
+  bradycardia basal heart rate &lt; 110 bpm | tachycardia basal heart rate &gt; 160 bpm
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="lengthOfHighFHREpisodes" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/lengthOfHighFHREpisodes.html">lengthOfHighFHREpisodes</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a>?</span>
+  
+
+</dt>
+<dd>
+  Episodes of low and high FHR variation (calculated in minutes and bpm
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="lengthOfLowFHREpisodes" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/lengthOfLowFHREpisodes.html">lengthOfLowFHREpisodes</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a>?</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="lowFHRVariationBpm" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/lowFHRVariationBpm.html">lowFHRVariationBpm</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="millisecondsEpoch" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/millisecondsEpoch.html">millisecondsEpoch</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span>&gt;</span></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="nAccelerations" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/nAccelerations.html">nAccelerations</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="nAccelerationsList" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/nAccelerationsList.html">nAccelerationsList</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../core_model_marker_indices/MarkerIndices-class.html">MarkerIndices</a></span>&gt;</span>?</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="nDeaccelerations" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/nDeaccelerations.html">nDeaccelerations</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="nDecelerationList" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/nDecelerationList.html">nDecelerationList</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../core_model_marker_indices/MarkerIndices-class.html">MarkerIndices</a></span>&gt;</span>?</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="runtimeType" class="property inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Type-class.html">Type</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  A representation of the runtime type of the object.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="shortTermVariabilityBpm" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/shortTermVariabilityBpm.html">shortTermVariabilityBpm</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a>?</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="shortTermVariabilityMs" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/shortTermVariabilityMs.html">shortTermVariabilityMs</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a>?</span>
+  
+
+</dt>
+<dd>
+  Short-term variability (STV) (calculated in ms and bpm)
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="signalLossPercent" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/signalLossPercent.html">signalLossPercent</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a>?</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor"
+      id="instance-methods">
+    <h2>Methods</h2>
+    <dl class="callables">
+        <dt id="calculateBasalHeartRate" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/calculateBasalHeartRate.html">calculateBasalHeartRate</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  basalHeartRate = average FHR over low variation episodes
+  
+
+</dd>
+
+        <dt id="calculateBaselineB2bVariability" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/calculateBaselineB2bVariability.html">calculateBaselineB2bVariability</a></span><span class="signature">(<wbr><span class="parameter" id="calculateBaselineB2bVariability-param-beats"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span>&gt;</span></span> <span class="parameter-name">beats</span>, </span><span class="parameter" id="calculateBaselineB2bVariability-param-size"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">size</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  baseline b2b variability criteria
+  
+
+</dd>
+
+        <dt id="calculateBaselineFHR" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/calculateBaselineFHR.html">calculateBaselineFHR</a></span><span class="signature">(<wbr><span class="parameter" id="calculateBaselineFHR-param-beats"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>&gt;</span></span> <span class="parameter-name">beats</span>, </span><span class="parameter" id="calculateBaselineFHR-param-size"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">size</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Calculates the baseline fetal heart rate (FHR).
+  
+
+</dd>
+
+        <dt id="calculateBaselineFHRDR" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/calculateBaselineFHRDR.html">calculateBaselineFHRDR</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Calculates the baseline fetal heart rate (FHR) using Dawes-Redman criteria.
+  
+
+</dd>
+
+        <dt id="calculateLengthOfFHREpisodes" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/calculateLengthOfFHREpisodes.html">calculateLengthOfFHREpisodes</a></span><span class="signature">(<wbr><span class="parameter" id="calculateLengthOfFHREpisodes-param-beats"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span>&gt;</span></span> <span class="parameter-name">beats</span>, </span><span class="parameter" id="calculateLengthOfFHREpisodes-param-baselineFHRDR"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span>&gt;</span>?</span> <span class="parameter-name">baselineFHRDR</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Episodes of low and high FHR variation (calculated in minutes and bpm)
+  
+
+</dd>
+
+        <dt id="calculateNAccelerations" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/calculateNAccelerations.html">calculateNAccelerations</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Calculates the number of accelerations.
+  
+
+</dd>
+
+        <dt id="calculateNDecelerations" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/calculateNDecelerations.html">calculateNDecelerations</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Calculates the number of decelerations.
+  
+
+</dd>
+
+        <dt id="calculateShortTermVariability" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/calculateShortTermVariability.html">calculateShortTermVariability</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Short-term variability (STV) (calculated in ms and bpm)
+  
+
+</dd>
+
+        <dt id="calculateSignalLossPercent" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/calculateSignalLossPercent.html">calculateSignalLossPercent</a></span><span class="signature">(<wbr><span class="parameter" id="calculateSignalLossPercent-param-beats"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>&gt;</span></span> <span class="parameter-name">beats</span>, </span><span class="parameter" id="calculateSignalLossPercent-param-baselineFHRDR"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>&gt;</span></span> <span class="parameter-name">baselineFHRDR</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a>?</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Signal loss %
+  
+
+</dd>
+
+        <dt id="cleanMillisecondsEpoch" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/cleanMillisecondsEpoch.html">cleanMillisecondsEpoch</a></span><span class="signature">(<wbr><span class="parameter" id="cleanMillisecondsEpoch-param-millisecondsEpoch"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span>&gt;</span></span> <span class="parameter-name">millisecondsEpoch</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="convertBaselineEpochToBPMArrayList" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/convertBaselineEpochToBPMArrayList.html">convertBaselineEpochToBPMArrayList</a></span><span class="signature">(<wbr><span class="parameter" id="convertBaselineEpochToBPMArrayList-param-baseline"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span>&gt;</span></span> <span class="parameter-name">baseline</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Converts a list of baseline epochs to a list of beats per minute (BPM).
+  
+
+</dd>
+
+        <dt id="convertBPMArrayArrayList" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/convertBPMArrayArrayList.html">convertBPMArrayArrayList</a></span><span class="signature">(<wbr><span class="parameter" id="convertBPMArrayArrayList-param-baseline"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>&gt;</span></span> <span class="parameter-name">baseline</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Converts a list of baseline epochs to a list of beats per minute (BPM).
+  
+
+</dd>
+
+        <dt id="convertBPMArrayListArray" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/convertBPMArrayListArray.html">convertBPMArrayListArray</a></span><span class="signature">(<wbr><span class="parameter" id="convertBPMArrayListArray-param-beatsBPM"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>&gt;</span></span> <span class="parameter-name">beatsBPM</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Converts a list of beats per minute (BPM) to a list of milliseconds.
+  
+
+</dd>
+
+        <dt id="convertBPMToMilliseconds" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/convertBPMToMilliseconds.html">convertBPMToMilliseconds</a></span><span class="signature">(<wbr><span class="parameter" id="convertBPMToMilliseconds-param-beatsBPM"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>&gt;</span></span> <span class="parameter-name">beatsBPM</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Converts a list of beats per minute (BPM) to a list of milliseconds.
+  
+
+</dd>
+
+        <dt id="convertMillisecondsToEpochArray" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/convertMillisecondsToEpochArray.html">convertMillisecondsToEpochArray</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Converts a list of milliseconds to a list of epoch values.
+  
+
+</dd>
+
+        <dt id="getAccelerationsList" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/getAccelerationsList.html">getAccelerationsList</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../core_model_marker_indices/MarkerIndices-class.html">MarkerIndices</a></span>&gt;</span>?</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="getBasalHeartRate" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/getBasalHeartRate.html">getBasalHeartRate</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="getBaselineB2bVariability" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/getBaselineB2bVariability.html">getBaselineB2bVariability</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="getBaselineFHR" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/getBaselineFHR.html">getBaselineFHR</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a>?</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="getBaseLineFHRArrayList" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/getBaseLineFHRArrayList.html">getBaseLineFHRArrayList</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>&gt;</span>?</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="getBaselineFHRDR" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/getBaselineFHRDR.html">getBaselineFHRDR</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span>&gt;</span>?</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="getDecelerationsList" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/getDecelerationsList.html">getDecelerationsList</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../core_model_marker_indices/MarkerIndices-class.html">MarkerIndices</a></span>&gt;</span>?</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="getGestAge" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/getGestAge.html">getGestAge</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Getter methods
+  
+
+</dd>
+
+        <dt id="getHighFHRVariationBpm" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/getHighFHRVariationBpm.html">getHighFHRVariationBpm</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="getIsBradycardia" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/getIsBradycardia.html">getIsBradycardia</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="getIsTachycardia" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/getIsTachycardia.html">getIsTachycardia</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="getLengthOfHighFHREpisodes" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/getLengthOfHighFHREpisodes.html">getLengthOfHighFHREpisodes</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a>?</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="getLengthOfLowFHREpisodes" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/getLengthOfLowFHREpisodes.html">getLengthOfLowFHREpisodes</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a>?</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="getLowFHRVariationBpm" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/getLowFHRVariationBpm.html">getLowFHRVariationBpm</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="getNAccelerations" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/getNAccelerations.html">getNAccelerations</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="getNDeaccelerations" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/getNDeaccelerations.html">getNDeaccelerations</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="getShortTermVariabilityBpm" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/getShortTermVariabilityBpm.html">getShortTermVariabilityBpm</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a>?</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="getShortTermVariabilityMs" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/getShortTermVariabilityMs.html">getShortTermVariabilityMs</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a>?</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="getSignalLossPercent" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/getSignalLossPercent.html">getSignalLossPercent</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a>?</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="noSuchMethod" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Invocation-class.html">Invocation</a></span> <span class="parameter-name">invocation</span></span>)
+    <span class="returntype parameter">&#8594; dynamic</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Invoked when a nonexistent method or property is accessed.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="setGestAge" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/setGestAge.html">setGestAge</a></span><span class="signature">(<wbr><span class="parameter" id="setGestAge-param-gestAge"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">gestAge</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Methods for interpretation
+  
+
+</dd>
+
+        <dt id="toString" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  A string representation of this object.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor inherited"
+      id="operators">
+    <h2>Operators</h2>
+    <dl class="callables">
+        <dt id="operator ==" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-other"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  The equality operator.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+  <section class="summary offset-anchor" id="static-properties">
+    <h2>Static Properties</h2>
+    <dl class="properties">
+        <dt id="highFHREpisodePercentiles" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/highFHREpisodePercentiles.html">highFHREpisodePercentiles</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="NO_OF_SAMPLES_PER_MINUTE" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/NO_OF_SAMPLES_PER_MINUTE.html">NO_OF_SAMPLES_PER_MINUTE</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="SIXTY_THOUSAND_MS" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/SIXTY_THOUSAND_MS.html">SIXTY_THOUSAND_MS</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="TOTAL_SAMPLES" class="property">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/TOTAL_SAMPLES.html">TOTAL_SAMPLES</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+  <section class="summary offset-anchor" id="static-methods">
+    <h2>Static Methods</h2>
+    <dl class="callables">
+        <dt id="avgLastMin" class="callable">
+  <span class="name"><a href="../core_utils_interpretations/Interpretation/avgLastMin.html">avgLastMin</a></span><span class="signature">(<wbr><span class="parameter" id="avgLastMin-param-input"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span>&gt;</span>?</span> <span class="parameter-name">input</span>, </span><span class="parameter" id="avgLastMin-param-size"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">size</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Calculates the average of the last minute of input data.
+  
+
+</dd>
+
+    </dl>
+  </section>
+    
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../index.html">fetosense_remote_flutter</a></li>
+    <li><a href="../core_utils_interpretations/core_utils_interpretations-library.html">interpretations</a></li>
+    <li class="self-crumb">Interpretation class</li>
+</ol>
+
+    <h5>interpretations library</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div>
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    fetosense_remote_flutter
+      1.0.0+1
+  </span>
+  
+</footer>
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+
