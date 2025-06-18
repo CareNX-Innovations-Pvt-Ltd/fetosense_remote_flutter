@@ -259,12 +259,12 @@ class GraphPainter extends CustomPainter {
     drawAutoMovements(canvas);
     drawTocoLine(canvas);
 
-    // drawInterpretationAreas(
-    //     canvas, interpretations!.getAccelerationsList(), graphSafeZone);
-    // drawInterpretationAreas(
-    //     canvas, interpretations!.getDecelerationsList(), graphUnSafeZone);
-    // drawInterpretationAreas(
-    //     canvas, interpretations!.getNoiseAreaList(), graphNoiseZone);
+    drawInterpretationAreas(
+        canvas, interpretations!.getAccelerationsList(), graphSafeZone);
+    drawInterpretationAreas(
+        canvas, interpretations!.getDecelerationsList(), graphUnSafeZone);
+    drawInterpretationAreas(
+        canvas, interpretations!.getNoiseAreaList(), graphNoiseZone);
 
     // canvas.drawLine(
     //     new Offset(xOrigin + 20,

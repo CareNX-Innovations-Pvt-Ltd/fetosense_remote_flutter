@@ -40,7 +40,7 @@ class SearchViewState extends State<SearchView> {
   Stream<List<Mother>> getMotherStream(String query) {
     final searchQuery = query.isEmpty ? "" : query;
     return Provider.of<CRUDModel>(context, listen: false)
-        .fetchMothersAsStreamSearchMothers(widget.doctor!.organizationId!, searchQuery);
+        .fetchMothersAsStreamSearchMothers(widget.doctor!.organizationId ?? '', searchQuery);
   }
 
   @override

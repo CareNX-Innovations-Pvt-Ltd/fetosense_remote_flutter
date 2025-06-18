@@ -105,7 +105,9 @@ class DetailsViewState extends State<DetailsView>
     } else {
       interpretations = Interpretations2();
     }
-    radioValue = test!.interpretationType;
+    radioValue = test!.interpretationType?.isNotEmpty ?? false
+        ? test!.interpretationType
+        : classifyFromInterpretations(interpretations!);
     int movements =
         test!.movementEntries!.length + test!.autoFetalMovement!.length;
     this.movements = movements < 10 ? "0$movements" : '$movements';
@@ -118,6 +120,28 @@ class DetailsViewState extends State<DetailsView>
     if (test != null && test!.isLive() == true) {
       context.read<TestCRUDModel>().startLiveUpdates(test!.documentId!);
     }
+  }
+
+  String classifyFromInterpretations(Interpretations2 interp) {
+    final int fhr = interp.getBasalHeartRate();
+    final int acc = interp.getnAccelerations() ?? 0;
+    final int dec = interp.getnDecelerations() ?? 0;
+    final double stv = interp.getShortTermVariationBpm();
+    final int ltv = interp.getLongTermVariation();
+
+    // Abnormal cases
+    if (fhr < 110 || fhr > 160) return 'Abnormal';
+    if (dec >= 2) return 'Abnormal';
+    if (stv < 2.0) return 'Abnormal';
+    if (ltv < 6) return 'Abnormal';
+
+    // Atypical cases
+    if ((stv >= 2.0 && stv <= 4.5) || (ltv >= 6 && ltv <= 10) || acc == 0) {
+      return 'Atypical';
+    }
+
+    // Normal case
+    return 'Normal';
   }
 
   @override
@@ -160,7 +184,42 @@ class DetailsViewState extends State<DetailsView>
                       fontSize: 14,
                       color: Colors.black87),
                 ),
-                trailing: CircleAvatar(
+                trailing: test?.isLive() == true ? StreamBuilder<Test>(
+                    stream: context.read<TestCRUDModel>().testStream,
+                    initialData: test,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(
+                          child: CircularProgressIndicator());
+                    }
+                    final liveTest = snapshot.data!;
+                    return CircleAvatar(
+                        radius: 44.w,
+                        backgroundColor: Colors.teal,
+                        child: Center(
+                          child: Text.rich(
+                            TextSpan(
+                                text: '${(liveTest.lengthOfTest! / 60).truncate()}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                    fontSize: 32.sp,
+                                    height: 1),
+                                children: [
+                                  TextSpan(
+                                    text: "\nmin",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.white,
+                                      fontSize: 18.sp,
+                                    ),
+                                  )
+                                ]),
+                            textAlign: TextAlign.center,
+                          ),
+                        ));
+                  }
+                ) : CircleAvatar(
                     radius: 44.w,
                     backgroundColor: Colors.teal,
                     child: Center(
@@ -915,8 +974,8 @@ class DetailsViewState extends State<DetailsView>
 
       _db.updateDocument(
         databaseId: AppConstants.appwriteDatabaseId,
-        collectionId: 'tests',
-        documentId: widget.test.id!,
+        collectionId: AppConstants.testsCollectionId,
+        documentId: widget.test.documentId!,
         data: data,
       );
 

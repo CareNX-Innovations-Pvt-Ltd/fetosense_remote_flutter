@@ -66,15 +66,14 @@ class RecentTestListViewState extends State<RecentTestListView> {
   /// Fetches the pass keys from Firestore.
   Future<void> getPaasKeys() async {
     try {
-      final document = await databases.getDocument(
+      final document = await databases.listDocuments(
           databaseId: AppConstants.appwriteDatabaseId,
           collectionId: AppConstants.configCollectionId,
-          documentId: 'PassKeys',
-          queries: []);
+          queries: [Query.equal('documentId', 'PassKeys')]);
 
       if (mounted) {
         setState(() {
-          passKeys = Map<String, dynamic>.from(document.data);
+          passKeys = Map<String, dynamic>.from(document.documents.first.data);
         });
       }
     } on AppwriteException catch (e) {
@@ -405,8 +404,8 @@ class RecentTestListViewState extends State<RecentTestListView> {
       try {
         String result;
         result = barcodeScanRes;
-        result = result.replaceAll("FETOSENSE:", "");
-        result = result.replaceAll("fetosense:", "");
+        result = result.replaceAll("CMFETO:", "");
+        result = result.replaceAll("cfmeto:", "");
 
         String decoded = utf8.decode(base64.decode(result));
 
@@ -430,19 +429,11 @@ class RecentTestListViewState extends State<RecentTestListView> {
       setState(() {
         isEditOrg = false;
       });
-      return;
-    }
-
-    if (code.contains("CMFETO")) {
-      //cameraScanResult = cameraScanResult.replaceAll("FETOSENSE:", "");
-      //String result = utf8.decode(base64.decode(cameraScanResult));
-      getDevice(code);
-    } else {
-      setState(() {
-        isEditOrg = false;
-      });
       Fluttertoast.showToast(
           msg: 'Invalid code', toastLength: Toast.LENGTH_LONG);
+      return;
+    } else {
+      getDevice(code);
     }
   }
 
@@ -453,7 +444,7 @@ class RecentTestListViewState extends State<RecentTestListView> {
     try {
       final response = await databases.listDocuments(
         databaseId: AppConstants.appwriteDatabaseId,
-        collectionId: AppConstants.deviceCollectionId,
+        collectionId: AppConstants.userCollectionId,
         queries: [
           Query.equal('type', 'device'),
           Query.equal('deviceCode', key),
@@ -545,7 +536,7 @@ class RecentTestListViewState extends State<RecentTestListView> {
                       right: 25,
                     ),
                     child: Text(
-                      hospitalName!,
+                      hospitalName ?? '',
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -748,6 +739,7 @@ class RecentTestListViewState extends State<RecentTestListView> {
                 doc.data,
               ))
           .toList();
+      debugPrint('getOrganization  -  ${devices}');
 
       for (final device in devices) {
         debugPrint('getOrganization  -  ${device.documentId}');
@@ -761,11 +753,11 @@ class RecentTestListViewState extends State<RecentTestListView> {
 
         // Ensure existing associations are preserved
         Map<String, dynamic> updatedAssociations = {};
-        if (device.associations != null) {
+        // if (device.associations != null) {
           updatedAssociations = Map<String, dynamic>.from(device.associations!);
-        }
+        // }
 
-        updatedAssociations[doctor.documentId!] = doctorAssoc;
+        // updatedAssociations[doctor.documentId!] = doctorAssoc;
 
         // Update the device user with merged associations
         await databases.updateDocument(
@@ -773,7 +765,7 @@ class RecentTestListViewState extends State<RecentTestListView> {
           collectionId: AppConstants.userCollectionId,
           documentId: device.documentId!,
           data: {
-            'associations': updatedAssociations,
+            'associations': json.encode(updatedAssociations),
           },
         );
       }
