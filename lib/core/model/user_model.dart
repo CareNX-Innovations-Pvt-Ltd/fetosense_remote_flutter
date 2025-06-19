@@ -38,8 +38,6 @@ class UserModel {
   String? patientId;
   String? platformId;
   String? platformRegAt;
-  String? organizationNameBabyBeat;
-  Map<String, dynamic>? babyBeatAssociation;
 
   UserModel.withData({
     this.name = '',
@@ -79,8 +77,6 @@ class UserModel {
     this.patientId,
     this.platformId,
     this.platformRegAt,
-    this.babyBeatAssociation,
-    this.organizationNameBabyBeat,
   });
 
   UserModel() : delete = false;
@@ -126,10 +122,7 @@ class UserModel {
         patientId = snapshot['patientId'] as String?,
         platformId = snapshot['platformId'] as String?,
         platformRegAt = snapshot['platformRegAt'] as String?,
-        documentId = snapshot['documentId'] as String?,
-        organizationNameBabyBeat =
-        snapshot['organizationNameBabyBeat'] as String?,
-        babyBeatAssociation = _safeMap(snapshot['babyBeatAssociation']);
+        documentId = snapshot['documentId'] as String?;
 
   static Map<String, dynamic>? _safeMap(dynamic data) {
     if (data == null) return null;
@@ -183,9 +176,7 @@ class UserModel {
       'patientId': patientId,
       'platformId': platformId,
       'platformRegAt': platformRegAt,
-      'babyBeatAssociation': babyBeatAssociation,
       'documentId': documentId,
-      'organizationNameBabyBeat': organizationNameBabyBeat,
     };
   }
 
@@ -232,8 +223,6 @@ class UserModel {
       platformId: doc['platformId'] as String?,
       platformRegAt: doc['platformRegAt'] as String?,
       documentId: doc['documentId'] as String?,
-      organizationNameBabyBeat: doc['organizationNameBabyBeat'] as String?,
-      babyBeatAssociation: _safeMap(doc['babyBeatAssociation']),
     );
   }
 }

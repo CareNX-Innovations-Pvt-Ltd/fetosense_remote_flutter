@@ -8,7 +8,6 @@ import 'package:fetosense_remote_flutter/core/services/authentication.dart';
 import 'package:fetosense_remote_flutter/core/utils/app_constants.dart';
 import 'package:fetosense_remote_flutter/core/utils/preferences.dart';
 import 'package:fetosense_remote_flutter/locater.dart';
-import 'package:fetosense_remote_flutter/ui/views/recent_test_list_view_baby_beat.dart';
 import 'package:fetosense_remote_flutter/ui/views/search_view.dart';
 import 'package:fetosense_remote_flutter/ui/views/profile_view.dart';
 import 'package:fetosense_remote_flutter/ui/views/recent_test_list_view.dart';
@@ -46,7 +45,7 @@ class HomeState extends State<Home> {
   BaseAuth auth = locator<BaseAuth>();
   Doctor? doctor;
   static const AndroidNotificationChannel channel = AndroidNotificationChannel(
-    'com.carenx.fetosense.channel', // id
+    'com.carenx.fetosense.channel',
     'Fetosense', // title
     importance: Importance.high,
     enableVibration: true,
@@ -65,10 +64,6 @@ class HomeState extends State<Home> {
             Image.asset(
               "assets/feto_icon.png",
               width: 35,
-            ),
-            Image.asset(
-              "assets/bb_icon.png",
-              width: 25,
             ),
             const Icon(Icons.search, size: 30, color: Colors.white),
             const Icon(Icons.perm_identity, size: 30, color: Colors.white),
@@ -108,11 +103,8 @@ class HomeState extends State<Home> {
       case 0:
         return RecentTestListView(doctor: doctor, organization: organization);
       case 1:
-        return RecentTestListViewBabyBeat(
-            doctor: doctor, organization: organizationBabyBeat);
-      case 2:
         return SearchView(doctor: doctor, organization: organization);
-      case 3:
+      case 2:
         return ProfileView(
           doctor: doctor!,
           organization: organization,
@@ -138,9 +130,6 @@ class HomeState extends State<Home> {
     if (!kIsWeb) getPermission();
     if (doctor?.organizationId?.isNotEmpty == true) {
       getOrganization();
-    }
-    if (doctor?.organizationNameBabyBeat?.isNotEmpty == true) {
-      getOrganizationBabyBeat();
     }
     super.initState();
   }
@@ -173,25 +162,6 @@ class HomeState extends State<Home> {
       });
     } catch (e) {
       debugPrint('Error fetching organization: $e');
-    }
-  }
-
-  /// Retrieves the BabyBeat organization details.
-  void getOrganizationBabyBeat() async {
-    try {
-      final document = await databases.getDocument(
-        databaseId: AppConstants.appwriteDatabaseId,
-        collectionId: AppConstants.userCollectionId,
-        documentId: doctor!.organizationNameBabyBeat!,
-      );
-
-      debugPrint(document.$id);
-      setState(() {
-        organizationBabyBeat =
-            Organization.fromMap(document.data, );
-      });
-    } catch (e) {
-      debugPrint('Error fetching organizationBabyBeat: $e');
     }
   }
 

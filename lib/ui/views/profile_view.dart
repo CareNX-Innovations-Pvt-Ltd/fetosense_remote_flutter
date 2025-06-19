@@ -75,7 +75,7 @@ class ProfileViewState extends State<ProfileView> {
                   ],
                 ),
                 title: Text(
-                  widget.doctor.name!,
+                  widget.doctor.name ?? '',
                   style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 18,

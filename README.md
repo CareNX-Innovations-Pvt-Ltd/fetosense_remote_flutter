@@ -4,6 +4,8 @@
 
 A Flutter application for remote fetal monitoring, developed by CareNX Innovations Pvt. Ltd.
 
+> 🛠️ This app is to be used with **[Fetosense Device Flutter](https://github.com/CareNX-Innovations-Pvt-Ltd/fetosense_device_flutter) and [Fetosense Remote App](https://github.com/CareNX-Innovations-Pvt-Ltd/fetosense_remote_flutter)**.
+
 ## Overview
 
 FetosenseRemote is a mobile application that works with the Fetosense device to provide remote fetal monitoring capabilities for healthcare providers and expectant mothers. The app facilitates telemedicine for maternal healthcare by enabling real-time monitoring, data collection, and analysis of fetal health parameters.

@@ -5,8 +5,8 @@ import 'package:fetosense_remote_flutter/core/model/marker_indices.dart';
 import '../model/test_model.dart';
 
 class Interpretations2 {
-  static final int SIXTY_THOUSAND_MS = 60000;
-  static final int NO_OF_SAMPLES_PER_MINUTE =
+  static const SIXTY_THOUSAND_MS = 60000;
+  static const int NO_OF_SAMPLES_PER_MINUTE =
   15; // 16 datapoints (3.75 ms for 1 sample) per minute
   static final List highFHREpisodePercentiles = [
     //criteria for confirming high FHR episodes
@@ -29,7 +29,7 @@ class Interpretations2 {
     [41, 12.75, 14.75]
   ];
 
-  static final int FACTOR = 4;
+  static const int FACTOR = 4;
   List<int>? bpmList;
   List<int>? bpmListSmooth;
   late int gestAge;
@@ -98,7 +98,7 @@ class Interpretations2 {
   }
 
   Interpretations2.withData(List<int> bpm, int gAge) {
-    // print("Interpretations2 :: withData ${bpm.length} && age $gAge");
+    print("Interpretations2 :: withData ${bpm.length} && age $gAge");
     gestAge = gAge > 41 ? 41 : gAge;
     bpmList = List.from(bpm); //[]..addAll(bpm);//bpm.clone();
     bpmCorrectedIndices = getNoiseAreas(List.from(bpm));
@@ -659,15 +659,15 @@ class Interpretations2 {
   }
 
   /*convert epoch to bpm*/
-  List<int> convertBaselineArrayToBpmList(List<int?> baselineArray) {
-    List<int> baselineBpmList = [];
-    for (int i = 0; i < baselineArray.length - 1; i++) {
+  List<int> convertBaselineArrayToBpmList(List<int?> _baselineArray) {
+    List<int> _baselineBpmList = [];
+    for (int i = 0; i < _baselineArray.length - 1; i++) {
       for (int j = (i * FACTOR); j < ((i + 1) * FACTOR); j++) {
-        if (baselineArray[i] == 0) {
-          baselineBpmList.add(0);
+        if (_baselineArray[i] == 0) {
+          _baselineBpmList.add(0);
         } else {
-          baselineBpmList
-              .add((SIXTY_THOUSAND_MS / baselineArray[i]!).truncate());
+          _baselineBpmList
+              .add((SIXTY_THOUSAND_MS / _baselineArray[i]!).truncate());
         }
       }
     }
@@ -678,7 +678,7 @@ class Interpretations2 {
             _baselineBpmList.set(i, getWindowAvreage(_baselineBpmList, i, window));
         }*/
 
-    return baselineBpmList;
+    return _baselineBpmList;
   }
 
   /*convert epoch to bpm*/
@@ -786,7 +786,6 @@ class Interpretations2 {
   /// An acceleration is defined as an increase in FHR above the baseline
   /// that lasts for longer than 15 seconds and has a maximum excursion
   /// above the baseline of greater than 10 beats/min
-  ///
   int calculateAccelerations() {
     List<MarkerIndices> accelerations = [];
     int size = millisecondsEpoch.length;
@@ -938,8 +937,7 @@ class Interpretations2 {
     maxExcursion = 0;
 
     */
-  /// second criteria
-  /*
+  /** second criteria **//*
 
     */
 /*for (int i = 0; i < size; i++) {
@@ -1006,7 +1004,7 @@ class Interpretations2 {
         }
       } else {
         if (maxExcursion >= 10) {
-          // print("maxExcursion dec 1: $counter1 - $maxExcursion - ${(i * 4) / 60}");
+          print("maxExcursion dec 1: $counter1 - $maxExcursion - ${(i * 4) / 60}");
 
           if (counter1 >= 14 && maxExcursion >= 10) {
             deceleration = MarkerIndices()
@@ -1079,7 +1077,7 @@ class Interpretations2 {
         (finalMinutesToRemove.length * NO_OF_SAMPLES_PER_MINUTE);
     cleanMillisecondsEpoch = List.filled(newLength, null, growable: false);
     cleanMillisecondsEpochBpm =
-    List.filled(newLength, null, growable: false);
+        List.filled(newLength, null, growable: false);
     cleanBaselineEpoch = List.filled(newLength, null, growable: false);
     cleanBaselineEpochBpm = List.filled(newLength, null, growable: false);
 
@@ -1179,7 +1177,7 @@ class Interpretations2 {
     // todo: consider low variations
 
     int sum = 0;
-    int basalHeartRate = 0;
+    int _basalHeartRate = 0;
     int errorCount = 0;
     try {
       for (int i = 0; i < list.length; i++) {
@@ -1190,20 +1188,20 @@ class Interpretations2 {
         sum += list[i]!;
         //Log.i("clean bpm",cleanBaselineEpochBpm[i]+"");
       }
-      basalHeartRate = (sum / (list.length - errorCount)).truncate();
+      _basalHeartRate = (sum / (list.length - errorCount)).truncate();
 
       // rounding of to nearest multiple of 5
-      if (basalHeartRate % 5 >= 3) {
-        basalHeartRate = basalHeartRate - (basalHeartRate % 5);
-        basalHeartRate += 5;
+      if (_basalHeartRate % 5 >= 3) {
+        _basalHeartRate = _basalHeartRate - (_basalHeartRate % 5);
+        _basalHeartRate += 5;
       } else {
-        basalHeartRate = basalHeartRate - (basalHeartRate % 5);
+        _basalHeartRate = _basalHeartRate - (_basalHeartRate % 5);
       }
       // rounding off ends
-    } catch (ex) {
+    } catch (ex, trace) {
       print(ex.toString());
     }
-    return basalHeartRate;
+    return _basalHeartRate;
   }
 
   void calculateShortTermVariability() {
