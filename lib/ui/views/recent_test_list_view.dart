@@ -66,14 +66,15 @@ class RecentTestListViewState extends State<RecentTestListView> {
   /// Fetches the pass keys from Firestore.
   Future<void> getPaasKeys() async {
     try {
-      final document = await databases.listDocuments(
+      final document = await databases.getDocument(
           databaseId: AppConstants.appwriteDatabaseId,
           collectionId: AppConstants.configCollectionId,
-          queries: [Query.equal('documentId', 'PassKeys')]);
+          documentId: '68500666001e90c5d414',
+          queries: []);
 
       if (mounted) {
         setState(() {
-          passKeys = Map<String, dynamic>.from(document.documents.first.data);
+          passKeys = Map<String, dynamic>.from(document.data);
         });
       }
     } on AppwriteException catch (e) {

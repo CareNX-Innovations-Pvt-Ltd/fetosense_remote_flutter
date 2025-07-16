@@ -254,8 +254,9 @@ class InitialProfileUpdate2State extends State<InitialProfileUpdate2> {
     if (barcodeScanRes != "-1" && barcodeScanRes.isNotEmpty) {
       String result;
       result = barcodeScanRes;
-      result = result.replaceAll("FETOSENSE:", "");
-      result = result.replaceAll("fetosense:", "");
+      result = result.replaceAll("CMFETO:", "");
+      result = result.replaceAll("cmfeto:", "");
+      print(result);
 
       String decoded = utf8.decode(base64.decode(result));
 
@@ -273,16 +274,7 @@ class InitialProfileUpdate2State extends State<InitialProfileUpdate2> {
       });
       return;
     }
-
-    if (code.contains("CMFETO")) {
-      getDevice(code);
-    } else {
-      setState(() {
-        isEditOrg = false;
-      });
-      Fluttertoast.showToast(
-          msg: 'Invalid code', toastLength: Toast.LENGTH_LONG);
-    }
+    getDevice(code);
   }
 
   /// Retrieves the device details from the database using the scanned code.

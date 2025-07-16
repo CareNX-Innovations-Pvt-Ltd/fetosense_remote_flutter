@@ -286,7 +286,7 @@ class DetailsViewState extends State<DetailsView>
                               width: 7,
                             ),
                             const Text(
-                              "Live test. Updates every 30 seconds.",
+                              "Live test.",
                               style: TextStyle(
                                   color: Colors.red,
                                   fontSize: 18,

@@ -56,9 +56,6 @@ class DoctorDetailsState extends State<DoctorDetails> {
 
   final TextEditingController _passkeyController = TextEditingController();
 
-  final TextEditingController _passkeyBabyBeatController =
-      TextEditingController();
-
   final databases = Databases(locator<AppwriteService>().client);
   final users = Account(locator<AppwriteService>().client);
 
@@ -81,14 +78,15 @@ class DoctorDetailsState extends State<DoctorDetails> {
   /// Returns a [Future] that resolves to the pass keys.
   Future<void> getPaasKeys() async {
     try {
-      final document = await databases.listDocuments(
+      final document = await databases.getDocument(
           databaseId: AppConstants.appwriteDatabaseId,
           collectionId: AppConstants.configCollectionId,
-          queries: [Query.equal('documentId', 'PassKeys')]);
+          documentId: '68500666001e90c5d414',
+          queries: []);
 
       if (mounted) {
         setState(() {
-          passKeys = Map<String, dynamic>.from(document.documents.first.data);
+          passKeys = Map<String, dynamic>.from(document.data);
         });
       }
     } on AppwriteException catch (e) {
@@ -407,6 +405,101 @@ class DoctorDetailsState extends State<DoctorDetails> {
           ),
         ),
       ),
+    );
+  }
+
+  /// Shows the delete confirmation dialog.
+  /// [context] is the build context.
+  /// [documentId] is the ID of the document to be deleted.
+  void showDeleteAlertDialog(BuildContext context, String? documentId) {
+    Widget cancelButton = TextButton(
+      child: const Text("Cancel"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+
+    Widget continueButton = TextButton(
+      child: const Text("Confirm"),
+      onPressed: () async {
+        try {
+          final docId = widget.doctor!.documentId!;
+          final doctorDoc = await databases.getDocument(
+            databaseId: AppConstants.appwriteDatabaseId,
+            collectionId: AppConstants.userCollectionId,
+            documentId: docId,
+          );
+          final doctorData = Map<String, dynamic>.from(doctorDoc.data);
+          final associations = Map<String, dynamic>.from(doctorData['babyBeatAssociation'] ?? {});
+          associations.remove(documentId);
+
+          await databases.updateDocument(
+            databaseId: AppConstants.appwriteDatabaseId,
+            collectionId: AppConstants.userCollectionId,
+            documentId: docId,
+            data: {'babyBeatAssociation': associations},
+          );
+
+          final hospitalDoc = await databases.getDocument(
+            databaseId: AppConstants.appwriteDatabaseId,
+            collectionId: AppConstants.userCollectionId,
+            documentId: documentId!,
+          );
+          final hospitalData = Map<String, dynamic>.from(hospitalDoc.data);
+          final reverseAssoc = Map<String, dynamic>.from(hospitalData['babyBeatAssociation'] ?? {});
+          reverseAssoc.remove(docId);
+
+          await databases.updateDocument(
+            databaseId: AppConstants.appwriteDatabaseId,
+            collectionId: AppConstants.userCollectionId,
+            documentId: documentId,
+            data: {'babyBeatAssociation': reverseAssoc},
+          );
+
+          // Clear selectedOrg if needed
+          if (documentId == PrefService.getString('selectedOrg')) {
+            PrefService.setString('selectedOrg', null);
+          }
+
+          // setState(() {
+          //   widget.doctor?.babyBeatAssociation!.remove(documentId);
+          // });
+
+          Navigator.pop(context);
+        } catch (e) {
+          debugPrint("Deletion error: $e");
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(
+            content: Text('Something went wrong!'),
+            behavior: SnackBarBehavior.floating,
+            duration: Duration(milliseconds: 3000),
+          ));
+        }
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: const Text(
+        "Confirmation",
+        style: TextStyle(
+          fontSize: 18,
+          fontStyle: FontStyle.normal,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      content: const Text("Are you sure you want to disassociate this hospital?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 
