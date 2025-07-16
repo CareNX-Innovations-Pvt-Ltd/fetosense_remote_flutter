@@ -44,13 +44,6 @@ class HomeState extends State<Home> {
   final databases = Databases(locator<AppwriteService>().client);
   BaseAuth auth = locator<BaseAuth>();
   Doctor? doctor;
-  static const AndroidNotificationChannel channel = AndroidNotificationChannel(
-    'com.carenx.fetosense.channel',
-    'Fetosense', // title
-    importance: Importance.high,
-    enableVibration: true,
-    playSound: true,
-  );
   final prefs = locator<PreferenceHelper>();
 
   @override
