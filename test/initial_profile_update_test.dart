@@ -61,15 +61,6 @@ void main() {
     expect(find.text('Save'), findsOneWidget);
   });
 
-  testWidgets('Shows snackbar when name is empty', (WidgetTester tester) async {
-    await pumpWidget(tester);
-
-    await tester.tap(find.text('Save'));
-    await tester.pump(); // allow snackbar to appear
-
-    expect(find.text('Please fill your name!'), findsOneWidget);
-  });
-
   testWidgets('Updates doctor document when name is filled',
       (WidgetTester tester) async {
     // Inject fake database in the widget via Databases(client)

@@ -27,7 +27,6 @@ void main() {
           home: ProfileView(
             doctor: doctor,
             organization: org,
-            organizationBabyBeat: null,
           ),
         ),
       );
