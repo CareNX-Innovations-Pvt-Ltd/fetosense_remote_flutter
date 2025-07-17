@@ -101,7 +101,6 @@ class HomeState extends State<Home> {
         return ProfileView(
           doctor: doctor!,
           organization: organization,
-          organizationBabyBeat: organizationBabyBeat,
         );
       default:
         return RecentTestListView(doctor: doctor, organization: organization);

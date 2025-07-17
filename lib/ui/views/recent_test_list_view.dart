@@ -29,14 +29,19 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 /// This widget shows a list of recent tests associated with the doctor's organization.
 class RecentTestListView extends StatefulWidget {
   final Doctor? doctor;
-
   final Function(Organization?)? orgCallback;
   final Organization? organization;
+  final Databases? databases; // <-- Add for DI
 
   /// [doctor] is the doctor model containing the details to be displayed.
   /// [organization] is the organization model.
-  const RecentTestListView(
-      {super.key, this.doctor, this.organization, this.orgCallback});
+  const RecentTestListView({
+    super.key,
+    this.doctor,
+    this.organization,
+    this.orgCallback,
+    this.databases,
+  });
 
   @override
   RecentTestListViewState createState() => RecentTestListViewState();
@@ -50,15 +55,15 @@ class RecentTestListViewState extends State<RecentTestListView> {
   Organization? organization;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String? code;
-  final databases = Databases(locator<AppwriteService>().client);
+  late final Databases databases;
   Doctor doctor = Doctor();
   Map<String, dynamic>? passKeys = {};
-
   final TextEditingController _passkeyController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    databases = widget.databases ?? Databases(locator<AppwriteService>().client); // <-- Use injected or default
     getPaasKeys();
     doctor = widget.doctor ?? Doctor();
   }
@@ -291,7 +296,7 @@ class RecentTestListViewState extends State<RecentTestListView> {
                                 ]),
                             child: Column(
                               children: [
-                                FeedsYoutube("QuiCSDtXoIc"),
+                                // FeedsYoutube("QuiCSDtXoIc"),
                                 Padding(
                                   padding: const EdgeInsets.all(12.0),
                                   child: Row(

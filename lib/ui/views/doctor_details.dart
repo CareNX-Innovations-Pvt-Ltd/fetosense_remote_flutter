@@ -21,14 +21,11 @@ class DoctorDetails extends StatefulWidget {
   /// The organization associated with the doctor.
   final Organization? org;
 
-  /// The BabyBeat organization associated with the doctor.
-  final Organization? orgBabyBeat;
 
   const DoctorDetails(
       {super.key,
       required this.doctor,
       this.org,
-      this.orgBabyBeat,
       });
 
   @override
