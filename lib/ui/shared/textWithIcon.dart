@@ -7,7 +7,7 @@ class TextWithIcon extends StatelessWidget {
   String text;
   double? size = 14;
 
-  TextWithIcon({super.key, required this.icon, required this.text, this.size});
+  TextWithIcon({super.key, required this.icon, required this.text, this.size = 14});
 
   @override
   Widget build(BuildContext context) {
