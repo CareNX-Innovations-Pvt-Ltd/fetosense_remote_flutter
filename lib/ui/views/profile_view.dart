@@ -18,7 +18,6 @@ class ProfileView extends StatefulWidget {
   final Doctor doctor;
 
   final Organization? organization;
-  final Organization? organizationBabyBeat;
 
   /// [doctor] is the doctor model containing the details to be displayed.
   /// [organization] is the organization model.
@@ -29,7 +28,6 @@ class ProfileView extends StatefulWidget {
     super.key,
     required this.doctor,
     required this.organization,
-    required this.organizationBabyBeat,
   });
 
   @override
@@ -89,7 +87,6 @@ class ProfileViewState extends State<ProfileView> {
                       builder: (_) => DoctorDetails(
                         doctor: widget.doctor,
                         org: widget.organization,
-                        orgBabyBeat: widget.organizationBabyBeat,
                         // setOrg: setOrganization,
                         // setOrgBabyBeat: setOrganizationBabyBeat,
                         // isMobileVerified: isMobileVerified,
@@ -120,7 +117,6 @@ class ProfileViewState extends State<ProfileView> {
                       builder: (_) => DoctorDetails(
                         doctor: widget.doctor,
                         org: widget.organization,
-                        orgBabyBeat: widget.organizationBabyBeat,
                         // setOrg: setOrganization,
                         // setOrgBabyBeat: setOrganizationBabyBeat,
                         // isMobileVerified: isMobileVerified,

@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceHelper {
   static final PreferenceHelper _instance = PreferenceHelper._internal();
-  static SharedPreferences? _prefs;
+  static SharedPreferences? prefs;
 
   PreferenceHelper._internal();
 
@@ -14,7 +14,7 @@ class PreferenceHelper {
   }
 
   static Future<void> init() async {
-    _prefs = await SharedPreferences.getInstance();
+    prefs = await SharedPreferences.getInstance();
   }
 
   static const String autoLogin = "IsAutoLogin";
@@ -25,10 +25,10 @@ class PreferenceHelper {
   static const String _IS_FIRST_TIME = "FirstTime";
 
   SharedPreferences get _prefsInstance {
-    if (_prefs == null) {
+    if (prefs == null) {
       throw Exception("PreferenceHelper not initialized. Call PreferenceHelper.init() first.");
     }
-    return _prefs!;
+    return prefs!;
   }
 
   void setAutoLogin(bool isAutoLogin) => _prefsInstance.setBool(autoLogin, isAutoLogin);

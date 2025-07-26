@@ -6,25 +6,21 @@ class InternetCheck {
   ///
   /// Returns a [Future] that completes with `true` if the device is connected to the internet via mobile or WiFi, `false` otherwise.
   Future<bool> check() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.mobile) {
-      return true;
-    } else if (connectivityResult == ConnectivityResult.wifi) {
+    final connectivityResults = await Connectivity().checkConnectivity();
+
+    // If using List<ConnectivityResult>
+    if (connectivityResults.contains(ConnectivityResult.mobile) ||
+        connectivityResults.contains(ConnectivityResult.wifi)) {
       return true;
     }
+
     return false;
   }
 
   /// Checks the internet connectivity and executes the provided [func] with the result.
-  ///
-  /// [func] - The function to execute with the connectivity result. It receives a boolean indicating the connectivity status.
-  dynamic checkInternet(Function func) {
+  dynamic checkInternet(Function(bool) func) {
     check().then((internet) {
-      if (internet) {
-        func(true);
-      } else {
-        func(false);
-      }
+      func(internet);
     });
   }
 }
