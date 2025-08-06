@@ -8,7 +8,9 @@ class InAppWebView extends StatefulWidget  {
   String? _title;
 
 
-  InAppWebView(String? title, String? url, {super.key});
+  InAppWebView(String? title, String? url, {super.key}) {
+    _title = title;
+  }
 
   @override
   InAppWebViewState createState() => InAppWebViewState();

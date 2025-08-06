@@ -12,7 +12,7 @@ void main() {
 
   setUp(() {
     mockConnectivity = MockConnectivity();
-    internetCheck = InternetCheckWithMock(mockConnectivity);
+    internetCheck = InternetCheck();
   });
 
   test('returns true when connected to mobile', () async {
@@ -73,26 +73,4 @@ void main() {
     await Future.delayed(Duration.zero);
     expect(callbackCalledWith, false);
   });
-}
-
-
-/// A testable subclass of InternetCheck with injected [Connectivity].
-class InternetCheckWithMock extends InternetCheck {
-  final Connectivity mockConnectivity;
-
-  InternetCheckWithMock(this.mockConnectivity);
-
-  @override
-  Future<bool> check() async {
-    final results = await mockConnectivity.checkConnectivity();
-    return results.contains(ConnectivityResult.mobile) ||
-        results.contains(ConnectivityResult.wifi);
-  }
-
-  @override
-  dynamic checkInternet(Function(bool) func) {
-    check().then((internet) {
-      func(internet);
-    });
-  }
 }

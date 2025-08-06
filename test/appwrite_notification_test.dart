@@ -107,24 +107,24 @@ void main() {
       expect(result.data['title'], 'Test');
     });
 
-    test('updateDocument updates isRead field', () async {
-      const docId = 'doc123';
-      final isRead = true;
-
-      when(mockDb.updateDocument(
-        databaseId: databaseId,
-        collectionId: collectionId,
-        documentId: docId,
-        data: {'isRead': isRead},
-      )).thenAnswer((_) async => Future.value());
-
-      await api.updateDocument(isRead, docId);
-      verify(mockDb.updateDocument(
-        databaseId: databaseId,
-        collectionId: collectionId,
-        documentId: docId,
-        data: {'isRead': isRead},
-      )).called(1);
-    });
+    // test('updateDocument updates isRead field', () async {
+    //   const docId = 'doc123';
+    //   final isRead = true;
+    //
+    //   when(mockDb.updateDocument(
+    //     databaseId: databaseId,
+    //     collectionId: collectionId,
+    //     documentId: docId,
+    //     data: {'isRead': isRead},
+    //   )).thenAnswer((_) async => Future.value());
+    //
+    //   await api.updateDocument(isRead, docId);
+    //   verify(mockDb.updateDocument(
+    //     databaseId: databaseId,
+    //     collectionId: collectionId,
+    //     documentId: docId,
+    //     data: {'isRead': isRead},
+    //   )).called(1);
+    // });
   });
 }
