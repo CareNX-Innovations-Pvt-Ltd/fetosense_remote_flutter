@@ -112,3 +112,11 @@ CareNX Innovations Pvt. Ltd.
 
 - Thanks to all healthcare providers and mothers who provided feedback during development
 - Flutter and Dart communities for excellent documentation and support
+
+## 💬 Join the Community
+
+Have questions, feedback, or want to contribute?  
+Join our official Discord community to connect with other developers and collaborators:
+
+[![Join our Discord](https://img.shields.io/discord/YOUR_SERVER_ID?label=Join%20Discord&logo=discord&style=for-the-badge)](https://discord.gg/cSs9sAzn)
+
