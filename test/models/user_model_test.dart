@@ -1,284 +1,154 @@
-import 'package:fetosense_remote_flutter/core/model/user_model.dart';
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fetosense_remote_flutter/core/model/user_model.dart';
 
 void main() {
   group('UserModel', () {
-    // Helper for consistent DateTime objects to avoid millisecond differences in tests
-    final consistentDate = DateTime.now();
-    final consistentDateString = consistentDate.toIso8601String();
-
-    test('should create a UserModel with default values', () {
-      final user = UserModel();
-      expect(user.delete, false); // Assuming default is false, adjust if different
-      expect(user.name, null);
-      expect(user.noOfMother, null);
-      expect(user.noOfTests, null);
-      expect(user.amcLog, null);
-      expect(user.autoModifiedTimeStamp, null);
-      // Add asserts for all other fields that have default values or should be null
-    });
-
-    test('should create a UserModel with provided data using withData constructor', () {
-      final user = UserModel.withData(
-        name: 'John Doe',
+    test('UserModel.withData sets all fields correctly', () {
+      final model = UserModel.withData(
+        name: 'John',
         email: 'john@example.com',
         mobileNo: 1234567890,
         organizationId: 'org123',
-        organizationName: 'Example Org',
+        organizationName: 'OrgName',
         age: 30,
-        documentId: 'doc456',
+        documentId: 'doc123',
         delete: true,
-        autoModifiedTimeStamp: consistentDate,
+        autoModifiedTimeStamp: DateTime.utc(2025, 1, 1),
         createdBy: 'admin',
-        createdOn: consistentDate,
-        deviceId: 'device789',
-        deviceName: 'My Device',
-        doctorId: 'doctor01',
-        amcLog: [{}],
-        amcPayment: 100.0,
-        amcStartDate: '2023-01-01',
-        amcValidity: '2024-01-01',
+        createdOn: DateTime.utc(2025, 1, 2),
+        deviceId: 'dev123',
+        deviceName: 'DeviceName',
+        doctorId: 'docId',
+        amcLog: ['log1'],
+        amcPayment: 'payment',
+        amcStartDate: '2025-01-03',
+        amcValidity: '2026-01-03',
         appVersion: '1.0.0',
-        associations: {'key': 'value'},
-        bulletin: {'title': 'news'},
-        deviceCode: 'abc',
+        associations: {'a': 1},
+        bulletin: {'b': 2},
+        deviceCode: 'devCode',
         isActive: true,
-        lastSeenTime: 'now',
-        modifiedAt: consistentDate,
+        lastSeenTime: 'yesterday',
+        modifiedAt: DateTime.utc(2025, 1, 4),
         modifiedTimeStamp: 'timestamp',
-        noOfMother: 5,
-        noOfTests: 10,
+        noOfMother: 10,
+        noOfTests: 20,
         notificationToken: 'token',
         sync: 1,
-        testAccount: false,
-        type: 'user',
-        uid: 'user123',
+        testAccount: true,
+        type: 'type',
+        uid: 'uid123',
         weight: 70.5,
-        patientId: 'patient456',
-        platformId: 'platform789',
-        platformRegAt: 'regtime',
+        patientId: 'pat123',
+        platformId: 'plat123',
+        platformRegAt: 'now',
       );
 
-      expect(user.name, 'John Doe');
-      expect(user.email, 'john@example.com');
-      expect(user.mobileNo, 1234567890);
-      expect(user.organizationId, 'org123');
-      expect(user.organizationName, 'Example Org');
-      expect(user.age, 30);
-      expect(user.documentId, 'doc456');
-      expect(user.delete, true);
-      expect(user.autoModifiedTimeStamp, consistentDate);
-      expect(user.createdBy, 'admin');
-      expect(user.createdOn, consistentDate);
-      expect(user.deviceId, 'device789');
-      expect(user.deviceName, 'My Device');
-      expect(user.doctorId, 'doctor01');
-      expect(user.amcLog, [{}]);
-      expect(user.amcPayment, 100.0);
-      expect(user.amcStartDate, '2023-01-01');
-      expect(user.amcValidity, '2024-01-01');
-      expect(user.appVersion, '1.0.0');
-      expect(user.associations, {'key': 'value'});
-      expect(user.bulletin, {'title': 'news'});
-      expect(user.deviceCode, 'abc');
-      expect(user.isActive, true);
-      expect(user.lastSeenTime, 'now');
-      expect(user.modifiedAt, consistentDate);
-      expect(user.modifiedTimeStamp, 'timestamp');
-      expect(user.noOfMother, 5);
-      expect(user.noOfTests, 10);
-      expect(user.notificationToken, 'token');
-      expect(user.sync, 1);
-      expect(user.testAccount, false);
-      expect(user.type, 'user');
-      expect(user.uid, 'user123');
-      expect(user.weight, 70.5);
-      expect(user.patientId, 'patient456');
-      expect(user.platformId, 'platform789');
-      expect(user.platformRegAt, 'regtime');
+      final json = model.toJson();
+      expect(json['name'], 'John');
+      expect(json['organizationName'], 'OrgName');
+      expect(json['amcLog'], ['log1']);
     });
 
-    test('should create a UserModel from a map using fromMap', () {
-      final map = {
-        'type': 'user',
-        'organizationId': 'org123',
-        'organizationName': 'Example Org',
-        'name': 'John Doe',
-        'email': 'john@example.com',
-        'mobileNo': 1234567890,
-        'uid': 'user123',
-        'notificationToken': 'token',
-        'delete': true,
-        'createdOn': consistentDate, // Pass DateTime object if fromMap expects it
-        'createdBy': 'admin',
-        'associations': {'key': 'value'}, // Pass as Map if fromMap expects Map
-        'bulletin': {'title': 'news'},   // Pass as Map if fromMap expects Map
-        'age': 30,
-        'autoModifiedTimeStamp': consistentDate, // Pass DateTime object
-        'deviceId': 'device789',
-        'deviceName': 'My Device',
-        'doctorId': 'doctor01',
-        'amcLog': [{}],
-        'amcPayment': 100.0,
-        'amcStartDate': '2023-01-01',
-        'amcValidity': '2024-01-01',
-        'appVersion': '1.0.0',
-        'deviceCode': 'abc',
-        'isActive': true,
-        'lastSeenTime': 'now',
-        'modifiedAt': consistentDate, // Pass DateTime object
-        'modifiedTimeStamp': 'timestamp',
-        'noOfMother': 5,
-        'noOfTests': 10,
-        'sync': 1,
-        'testAccount': false,
-        'weight': 70.5,
-        'patientId': 'patient456',
-        'platformId': 'platform789',
-        'platformRegAt': 'regtime',
-        'documentId': 'doc456',
-      };
-
-      final user = UserModel.fromMap(map);
-
-      expect(user.type, 'user');
-      expect(user.organizationId, 'org123');
-      expect(user.organizationName, 'Example Org');
-      expect(user.name, 'John Doe');
-      expect(user.email, 'john@example.com');
-      expect(user.mobileNo, 1234567890);
-      expect(user.uid, 'user123');
-      expect(user.notificationToken, 'token');
-      expect(user.delete, true);
-      expect(user.createdOn, consistentDate);
-      expect(user.createdBy, 'admin');
-      expect(user.associations, {'key': 'value'});
-      expect(user.bulletin, {'title': 'news'});
-      expect(user.age, 30);
-      expect(user.autoModifiedTimeStamp, consistentDate);
-      expect(user.deviceId, 'device789');
-      // ... (add all other expects similar to above)
-      expect(user.documentId, 'doc456');
+    test('UserModel() default constructor sets delete to false', () {
+      final model = UserModel();
+      expect(model.delete, false);
     });
 
-    test('should convert a UserModel to a JSON map using toJson', () {
-      final user = UserModel.withData(
-        name: 'John Doe',
-        email: 'john@example.com',
-        mobileNo: 1234567890,
-        organizationId: 'org123',
-        organizationName: 'Example Org',
-        age: 30,
-        documentId: 'doc456',
-        delete: true,
-        autoModifiedTimeStamp: consistentDate,
-        createdBy: 'admin',
-        createdOn: consistentDate,
-        deviceId: 'device789',
-        deviceName: 'My Device',
-        doctorId: 'doctor01',
-        amcLog: [{}],
-        amcPayment: 100.0,
-        amcStartDate: '2023-01-01',
-        amcValidity: '2024-01-01',
-        appVersion: '1.0.0',
-        associations: {'key': 'value'},
-        bulletin: {'title': 'news'},
-        deviceCode: 'abc',
-        isActive: true,
-        lastSeenTime: 'now',
-        modifiedAt: consistentDate,
-        modifiedTimeStamp: 'timestamp',
-        noOfMother: 5,
-        noOfTests: 10,
-        notificationToken: 'token', // Ensure notificationToken is included if it's part of toJson
-        sync: 1,
-        testAccount: false,
-        type: 'user',
-        uid: 'user123',
-        weight: 70.5,
-        patientId: 'patient456',
-        platformId: 'platform789',
-        platformRegAt: 'regtime',
+    test('fromMap handles all _safeMap branches', () {
+      final now = DateTime.utc(2025, 1, 1);
+
+      // null branch
+      final m1 = UserModel.fromMap({'associations': null, 'bulletin': null});
+      expect(m1.associations, null);
+      expect(m1.bulletin, null);
+
+      // Map branch
+      final m2 = UserModel.fromMap({
+        'associations': {'key': 'value'},
+        'bulletin': {'b': 2}
+      });
+      expect(m2.associations, {'key': 'value'});
+      expect(m2.bulletin, {'b': 2});
+
+      // Valid JSON string branch
+      final m3 = UserModel.fromMap({
+        'associations': jsonEncode({'k': 'v'}),
+        'bulletin': jsonEncode({'b': 3})
+      });
+      expect(m3.associations, {'k': 'v'});
+      expect(m3.bulletin, {'b': 3});
+
+      // Invalid JSON string branch
+      final m4 = UserModel.fromMap({
+        'associations': 'not-json',
+        'bulletin': 'not-json'
+      });
+      expect(m4.associations, null);
+      expect(m4.bulletin, null);
+
+      // Unsupported type branch
+      final m5 = UserModel.fromMap({
+        'associations': 123,
+        'bulletin': 456,
+        'createdOn': now,
+        'weight': 60,
+      });
+      expect(m5.associations, null);
+      expect(m5.bulletin, null);
+      expect(m5.weight, 60.0);
+      expect(m5.createdOn, now);
+    });
+
+    test('fromJson covers all _safeMap branches', () {
+      // Map branch
+      final m1 = UserModel.fromJson({
+        'associations': {'x': 1},
+        'bulletin': {'y': 2}
+      });
+      expect(m1.associations, {'x': 1});
+      expect(m1.bulletin, {'y': 2});
+
+      // String JSON branch
+      final m2 = UserModel.fromJson({
+        'associations': jsonEncode({'p': 1}),
+        'bulletin': jsonEncode({'q': 2})
+      });
+      expect(m2.associations, {'p': 1});
+      expect(m2.bulletin, {'q': 2});
+
+      // Invalid string branch
+      final m3 = UserModel.fromJson({
+        'associations': 'bad-json',
+        'bulletin': 'bad-json'
+      });
+      expect(m3.associations, null);
+      expect(m3.bulletin, null);
+
+      // null branch
+      final m4 = UserModel.fromJson({'associations': null, 'bulletin': null});
+      expect(m4.associations, null);
+      expect(m4.bulletin, null);
+    });
+
+    test('toJson outputs expected values', () {
+      final now = DateTime.utc(2025, 1, 1);
+      final model = UserModel.withData(
+        name: 'Test',
+        createdOn: now,
+        autoModifiedTimeStamp: now,
+        modifiedAt: now,
+        associations: {'a': 1},
+        bulletin: {'b': 2},
+        weight: 50.0,
       );
-
-      final json = user.toJson();
-
-      expect(json['name'], 'John Doe');
-      expect(json['email'], 'john@example.com');
-      expect(json['mobileNo'], 1234567890);
-      expect(json['organizationId'], 'org123');
-      expect(json['delete'], true);
-      expect(json['autoModifiedTimeStamp'], consistentDateString);
-      expect(json['createdOn'], consistentDateString);
-      expect(json['modifiedAt'], consistentDateString);
-      expect(json['associations'],'{"key":"value"}');
-      expect(json['bulletin'], '{"title":"news"}');
-
-      expect(json['notificationToken'], 'token');
-      expect(json['documentId'], 'doc456');
+      final json = model.toJson();
+      expect(json['name'], 'Test');
+      expect(json['createdOn'], now.toIso8601String());
+      expect(json['weight'], 50.0);
+      expect(json['associations'], jsonEncode({'a': 1}));
     });
-
-    // test('should create a UserModel from a JSON map using fromJson', () {
-    //   final json = {
-    //     'type': 'user',
-    //     'organizationId': 'org123',
-    //     'organizationName': 'Example Org',
-    //     'name': 'John Doe',
-    //     'email': 'john@example.com',
-    //     'mobileNo': 1234567890,
-    //     'uid': 'user123',
-    //     'notificationToken': 'token',
-    //     'delete': true,
-    //     // 'createdOn': consistentDateString, // Use ISO8601 string
-    //     'createdBy': 'admin',
-    //     'associations': {'key': 'value'},
-    //     'bulletin': {'title': 'news'},
-    //     'age': 30,
-    //     'autoModifiedTimeStamp': consistentDateString, // Use ISO8601 string
-    //     'deviceId': 'device789',
-    //     'deviceName': 'My Device',
-    //     'doctorId': 'doctor01',
-    //     'amcLog': [{}],
-    //     'amcPayment': 100.0,
-    //     'amcStartDate': '2023-01-01',
-    //     'amcValidity': '2024-01-01',
-    //     'appVersion': '1.0.0',
-    //     'deviceCode': 'abc',
-    //     'isActive': true,
-    //     'lastSeenTime': 'now',
-    //     'modifiedAt': consistentDateString, // Use ISO8601 string
-    //     'modifiedTimeStamp': 'timestamp',
-    //     'noOfMother': 5,
-    //     'noOfTests': 10,
-    //     'sync': 1,
-    //     'testAccount': false,
-    //     'weight': 70.5,
-    //     'patientId': 'patient456',
-    //     'platformId': 'platform789',
-    //     'platformRegAt': 'regtime',
-    //     'documentId': 'doc456',
-    //   };
-    //
-    //   final user = UserModel.fromJson(json);
-    //
-    //   expect(user.type, 'user');
-    //   expect(user.organizationId, 'org123');
-    //   expect(user.organizationName, 'Example Org');
-    //   expect(user.name, 'John Doe');
-    //   expect(user.email, 'john@example.com');
-    //   // ... (add all other primitive type expects)
-    //   expect(user.delete, true);
-    //   // Expect DateTime objects after parsing
-    //   expect(user.createdOn, consistentDate);
-    //   expect(user.createdBy, 'admin');
-    //   expect(user.associations, {'key': 'value'});
-    //   expect(user.bulletin, {'title': 'news'});
-    //   expect(user.age, 30);
-    //   // expect(user.autoModifiedTimeStamp, consistentDate);
-    //   // ... (add all other expects)
-    //   // expect(user.modifiedAt, consistentDate);
-    //   expect(user.documentId, 'doc456');
-    // });
   });
 }

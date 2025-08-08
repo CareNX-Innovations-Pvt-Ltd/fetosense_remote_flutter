@@ -1,6 +1,9 @@
 # FetosenseRemote Flutter App
 
-[![Flutter](https://img.shields.io/badge/Flutter-2.x-blue)](https://flutter.dev/)
+[![Discord](https://img.shields.io/discord/1403264387069775945?label=Join%20our%20Discord&logo=discord&style=flat)](https://discord.gg/aTBs7mCWgK)
+[![License](https://img.shields.io/github/license/CareNX-Innovations-Pvt-Ltd/fetosense_device_flutter)](LICENSE)
+[![Last Commit](https://img.shields.io/github/last-commit/CareNX-Innovations-Pvt-Ltd/fetosense_remote_flutter)](https://github.com/CareNX-Innovations-Pvt-Ltd/fetosense_remote_flutter/commits/main/)
+[![Issues](https://img.shields.io/github/issues/CareNX-Innovations-Pvt-Ltd/fetosense_device_flutter)](https://github.com/CareNX-Innovations-Pvt-Ltd/fetosense_device_flutter/issues)
 
 A Flutter application for remote fetal monitoring, developed by CareNX Innovations Pvt. Ltd.
 
@@ -112,3 +115,12 @@ CareNX Innovations Pvt. Ltd.
 
 - Thanks to all healthcare providers and mothers who provided feedback during development
 - Flutter and Dart communities for excellent documentation and support
+
+## 💬 Join Our Discord Community
+
+Have questions, feedback, or want to contribute?  
+Join our official **Discord server** to connect with developers, collaborators, and contributors:
+
+[![Discord](https://img.shields.io/discord/1403264387069775945?label=Join%20us%20on%20Discord&logo=discord&color=7289da&style=flat)](https://discord.gg/aTBs7mCWgK)
+
+> 💡 Whether you're here to report bugs, suggest features, or just say hi — we’d love to have you!

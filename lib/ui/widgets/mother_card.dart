@@ -33,26 +33,29 @@ class MotherCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                gestAge?.toString() ?? "-",
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                  fontSize: 20.sp,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  gestAge?.toString() ?? "-",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    fontSize: 20.sp,
+                  ),
                 ),
-              ),
-              Text(
-                "weeks",
-                style: TextStyle(
-                  fontWeight: FontWeight.w300,
-                  color: Colors.white,
-                  fontSize: 10.sp,
+                Text(
+                  "weeks",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w300,
+                    color: Colors.white,
+                    fontSize: 10.sp,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

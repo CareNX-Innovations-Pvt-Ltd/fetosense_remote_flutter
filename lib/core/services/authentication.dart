@@ -17,14 +17,17 @@ abstract class BaseAuth {
 class Auth extends BaseAuth {
   // 🔁 Singleton instance
   static final Auth _instance = Auth._internal();
+  final Account _account;
 
   // 🔐 Private constructor
-  Auth._internal();
+  Auth._internal() : _account = Account(GetIt.I<AppwriteService>().client);
 
   // 🧩 Factory constructor returns the same instance
   factory Auth() => _instance;
 
-  final Account _account = Account(GetIt.I<AppwriteService>().client);
+   // Account _account = Account(GetIt.I<AppwriteService>().client);
+
+  Auth.internalTest(this._account);
 
   @override
   Future<String> signIn(String email, String password) async {

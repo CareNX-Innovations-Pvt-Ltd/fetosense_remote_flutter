@@ -13,10 +13,10 @@ class ScanWidget extends StatefulWidget {
   const ScanWidget({super.key});
 
   @override
-  _ScanWidgetState createState() => _ScanWidgetState();
+  ScanWidgetState createState() => ScanWidgetState();
 }
 
-class _ScanWidgetState extends State<ScanWidget> {
+class ScanWidgetState extends State<ScanWidget> {
 
   /// The platform version.
   String _platformVersion = 'Unknown';
@@ -26,6 +26,13 @@ class _ScanWidgetState extends State<ScanWidget> {
 
   /// The scanned QR code data.
   String qrcode = 'Unknown';
+
+  void onCapture(String data) {
+    setState(() {
+      qrcode = data;
+    });
+    Navigator.pop(context, qrcode);
+  }
 
   @override
   void initState() {

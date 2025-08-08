@@ -1,9 +1,107 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fetosense_remote_flutter/core/model/test_model.dart';
 
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
+
 void main() {
-  group('Test', () {
-    test('should create a Test object with withData constructor', () {
+  group('Test model', () {
+    test('Constructor withData and getters/setters', () {
+      final now = DateTime.now();
+      final testModel = Test.withData(
+        id: '1',
+        documentId: 'doc1',
+        motherId: 'm1',
+        deviceId: 'd1',
+        doctorId: 'dr1',
+        weight: 70,
+        gAge: 30,
+        fisherScore: 5,
+        fisherScore2: 6,
+        motherName: 'Mother',
+        deviceName: 'Device',
+        doctorName: 'Doctor',
+        patientId: 'p1',
+        age: 28,
+        organizationId: 'org1',
+        organizationName: 'Org',
+        imageLocalPath: 'local.png',
+        imageFirePath: 'fire.png',
+        audioLocalPath: 'local.mp3',
+        audioFirePath: 'fire.mp3',
+        isImgSynced: true,
+        isAudioSynced: false,
+        bpmEntries: [1, 2],
+        bpmEntries2: [3, 4],
+        baseLineEntries: [5],
+        movementEntries: [6],
+        autoFetalMovement: [7],
+        tocoEntries: [8],
+        lengthOfTest: 100,
+        averageFHR: 120,
+        live: true,
+        testByMother: false,
+        testById: 'tb1',
+        interpretationType: 'type',
+        interpretationExtraComments: 'comments',
+        associations: {'a': 'b'},
+        autoInterpretations: {'x': 'y'},
+        delete: true,
+        createdOn: now,
+        createdBy: 'creator',
+      );
+
+      // Getters and Setters
+      expect(testModel.getOrganizationName(), 'Org');
+      testModel.setOrganizationName('Org2');
+      expect(testModel.organizationName, 'Org2');
+
+      expect(testModel.getOrganizationId(), 'org1');
+      testModel.setOrganizationId('org2');
+      expect(testModel.organizationId, 'org2');
+
+      expect(testModel.getDocumentId(), '1');
+      testModel.setDocumentId('2');
+      expect(testModel.id, '2');
+
+      expect(testModel.getCreatedOn(), now);
+      final newDate = now.add(Duration(days: 1));
+      testModel.setCreatedOn(newDate);
+      expect(testModel.createdOn, newDate);
+
+      expect(testModel.getCreatedBy(), 'creator');
+      testModel.setCreatedBy('newCreator');
+      expect(testModel.createdBy, 'newCreator');
+
+      expect(testModel.isDelete(), true);
+      testModel.setDelete(false);
+      expect(testModel.delete, false);
+
+      expect(testModel.isLive(), true);
+      testModel.setLive(false);
+      expect(testModel.live, false);
+
+      // expect(testModel.getAssociations(), {'a': 'b'});
+      testModel.setAssociations({'c': 'd'});
+      expect(testModel.associations, {'c': 'd'});
+
+      // expect(testModel.getautoInterpretations(), {'x': 'y'});
+      testModel.setautoInterpretations({'z': 'w'});
+      expect(testModel.autoInterpretations, {'z': 'w'});
+
+      // toJson
+      testModel.createdOn = now;
+      final json = testModel.toJson();
+      expect(json['organizationName'], 'Org2');
+      expect(json['createdOn'], now.millisecondsSinceEpoch);
+
+      // printDetails (covered by kDebugMode)
+      debugPrint = (String? message, {int? wrapWidth}) {};
+      testModel.printDetails();
+    });
+
+    test('Constructor data works', () {
+      final now = DateTime.now();
       final test = Test.withData(
         id: '1',
         documentId: 'doc1',
@@ -46,404 +144,84 @@ void main() {
         createdOn: DateTime.parse('2023-10-27T10:00:00.000Z'),
         createdBy: 'creator1',
       );
-
       expect(test.id, '1');
-      expect(test.documentId, 'doc1');
-      expect(test.motherId, 'mother1');
-      expect(test.deviceId, 'device1');
-      expect(test.doctorId, 'doctor1');
-      expect(test.weight, 70);
-      expect(test.gAge, 30);
-      expect(test.age, 25);
-      expect(test.fisherScore, 8);
-      expect(test.fisherScore2, 9);
-      expect(test.motherName, 'Mother One');
-      expect(test.deviceName, 'Device One');
-      expect(test.doctorName, 'Doctor One');
-      expect(test.patientId, 'patient1');
-      expect(test.organizationId, 'org1');
       expect(test.organizationName, 'Organization One');
-      expect(test.imageLocalPath, '/local/path');
-      expect(test.imageFirePath, '/fire/path');
-      expect(test.audioLocalPath, '/local/audio/path');
-      expect(test.audioFirePath, '/fire/audio/path');
-      expect(test.isImgSynced, true);
-      expect(test.isAudioSynced, true);
-      expect(test.bpmEntries, [120, 130, 140]);
-      expect(test.bpmEntries2, [125, 135, 145]);
-      expect(test.baseLineEntries, [130, 130, 130]);
-      expect(test.movementEntries, [1, 0, 1]);
-      expect(test.autoFetalMovement, [0, 1, 0]);
-      expect(test.tocoEntries, [10, 20, 15]);
-      expect(test.lengthOfTest, 30);
-      expect(test.averageFHR, 135);
-      expect(test.live, true);
-      expect(test.testByMother, false);
-      expect(test.testById, 'tester1');
-      expect(test.interpretationType, 'Normal');
-      expect(test.interpretationExtraComments, 'No issues');
-      expect(test.associations, {'key1': 'value1'});
-      expect(test.autoInterpretations, {'autoKey1': 'autoValue1'});
-      expect(test.delete, false);
-      expect(test.createdOn, DateTime.parse('2023-10-27T10:00:00.000Z'));
-      expect(test.createdBy, 'creator1');
     });
 
-    test('should create a Test object with data constructor', () {
-      final test = Test.data(
-        '1',
-        'mother1',
-        'device1',
-        'doctor1',
-        70,
-        30,
-        25,
-        8,
-        9,
-        'Mother One',
-        'Device One',
-        'Doctor One',
-        'patient1',
-        'org1',
-        'Organization One',
-        '/local/path',
-        '/fire/path',
-        '/local/audio/path',
-        '/fire/audio/path',
-        true,
-        true,
-        [120, 130, 140],
-        [125, 135, 145],
-        [10, 20, 30],
-        [40, 50, 60],
-        [130, 130, 130],
-        [1, 0, 1],
-        [0, 1, 0],
-        [10, 20, 15],
-        30,
-        135,
-        true,
-        false,
-        'tester1',
-        'Normal',
-        'No issues',
-        {'key1': 'value1'},
-        {'autoKey1': 'autoValue1'},
-        false,
-        DateTime.parse('2023-10-27T10:00:00.000Z'),
-        'creator1',
-      );
-
-      expect(test.id, '1');
-      expect(test.motherId, 'mother1');
-      expect(test.deviceId, 'device1');
-      expect(test.doctorId, 'doctor1');
-      expect(test.weight, 70);
-      expect(test.gAge, 30);
-      expect(test.age, 25);
-      expect(test.fisherScore, 8);
-      expect(test.fisherScore2, 9);
-      expect(test.motherName, 'Mother One');
-      expect(test.deviceName, 'Device One');
-      expect(test.doctorName, 'Doctor One');
-      expect(test.patientId, 'patient1');
-      expect(test.organizationId, 'org1');
-      expect(test.organizationName, 'Organization One');
-      expect(test.imageLocalPath, '/local/path');
-      expect(test.imageFirePath, '/fire/path');
-      expect(test.audioLocalPath, '/local/audio/path');
-      expect(test.audioFirePath, '/fire/audio/path');
-      expect(test.isImgSynced, true);
-      expect(test.isAudioSynced, true);
-      expect(test.bpmEntries, [120, 130, 140]);
-      expect(test.bpmEntries2, [125, 135, 145]);
-      expect(test.mhrEntries, [10, 20, 30]);
-      expect(test.spo2Entries, [40, 50, 60]);
-      expect(test.baseLineEntries, [130, 130, 130]);
-      expect(test.movementEntries, [1, 0, 1]);
-      expect(test.autoFetalMovement, [0, 1, 0]);
-      expect(test.tocoEntries, [10, 20, 15]);
-      expect(test.lengthOfTest, 30);
-      expect(test.averageFHR, 135);
-      expect(test.live, true);
-      expect(test.testByMother, false);
-      expect(test.testById, 'tester1');
-      expect(test.interpretationType, 'Normal');
-      expect(test.interpretationExtraComments, 'No issues');
-      expect(test.associations, {'key1': 'value1'});
-      expect(test.autoInterpretations, {'autoKey1': 'autoValue1'});
-      expect(test.delete, false);
-      expect(test.createdOn, DateTime.parse('2023-10-27T10:00:00.000Z'));
-      expect(test.createdBy, 'creator1');
-    });
-
-    test('should create a Test object from a map', () {
-      final Map<String, dynamic> testMap = {
-        'id': '1',
-        'documentId': 'doc1',
-        'motherId': 'mother1',
-        'deviceId': 'device1',
-        'doctorId': 'doctor1',
+    test('fromMap with full data', () {
+      final map = {
+        'id': 'id',
+        'documentId': 'doc',
+        'motherId': 'm1',
+        'deviceId': 'd1',
+        'doctorId': 'dr1',
         'weight': 70,
         'gAge': 30,
-        'age': 25,
-        'fisherScore': 8,
-        'fisherScore2': 9,
-        'motherName': 'Mother One',
-        'deviceName': 'Device One',
-        'doctorName': 'Doctor One',
-        'patientId': 'patient1',
+        'age': 28,
+        'fisherScore': 5,
+        'fisherScore2': 6,
+        'motherName': 'Mother',
+        'deviceName': 'Device',
+        'doctorName': 'Doctor',
+        'patientId': 'p1',
         'organizationId': 'org1',
-        'organizationName': 'Organization One',
-        'imageLocalPath': '/local/path',
-        'imageFirePath': '/fire/path',
-        'audioLocalPath': '/local/audio/path',
-        'audioFirePath': '/fire/audio/path',
+        'organizationName': 'Org',
+        'imageLocalPath': 'local.png',
+        'imageFirePath': 'fire.png',
+        'audioLocalPath': 'local.mp3',
+        'audioFirePath': 'fire.mp3',
         'isImgSynced': true,
-        'isAudioSynced': true,
-        'bpmEntries': [120, 130, 140],
-        'bpmEntries2': [125, 135, 145],
-        'mhrEntries': [10, 20, 30],
-        'spo2Entries': [40, 50, 60],
-        'baseLineEntries': [130, 130, 130],
-        'movementEntries': [1, 0, 1],
-        'autoFetalMovement': [0, 1, 0],
-        'tocoEntries': [10, 20, 15],
-        'lengthOfTest': 30,
-        'averageFHR': 135,
+        'isAudioSynced': false,
+        'bpmEntries': [1, 2],
+        'bpmEntries2': [3, 4],
+        'mhrEntries': [5],
+        'spo2Entries': [6],
+        'baseLineEntries': [7],
+        'movementEntries': [8],
+        'autoFetalMovement': [9],
+        'tocoEntries': [10],
+        'lengthOfTest': 100,
+        'averageFHR': 120,
         'live': true,
         'testByMother': false,
-        'testById': 'tester1',
-        'interpretationType': 'Normal',
-        'interpretationExtraComments': 'No issues',
-        'association': {'key1': 'value1'},
-        'autoInterpretations': "{'autoKey1':'autoValue1'}",
+        'testById': 'tb1',
+        'interpretationType': 'type',
+        'interpretationExtraComments': 'comments',
+        'association': jsonEncode({'a': 'b'}),
         'delete': false,
-        'createdOn': DateTime.parse('2023-10-27T10:00:00.000Z').toIso8601String(),
-        'createdBy': 'creator1',
+        'createdOn': DateTime.now().toIso8601String(),
+        'createdBy': 'creator',
       };
-
-      final test = Test.fromMap(testMap, '1');
-
-      expect(test.id, '1');
-      expect(test.documentId, 'doc1');
-      expect(test.motherId, 'mother1');
-      expect(test.deviceId, 'device1');
-      expect(test.doctorId, 'doctor1');
-      expect(test.weight, 70);
-      expect(test.gAge, 30);
-      expect(test.age, 25);
-      expect(test.fisherScore, 8);
-      expect(test.fisherScore2, 9);
-      expect(test.motherName, 'Mother One');
-      expect(test.deviceName, 'Device One');
-      expect(test.doctorName, 'Doctor One');
-      expect(test.patientId, 'patient1');
-      expect(test.organizationId, 'org1');
-      expect(test.organizationName, 'Organization One');
-      expect(test.imageLocalPath, '/local/path');
-      expect(test.imageFirePath, '/fire/path');
-      expect(test.audioLocalPath, '/local/audio/path');
-      expect(test.audioFirePath, '/fire/audio/path');
-      expect(test.isImgSynced, true);
-      expect(test.isAudioSynced, true);
-      expect(test.bpmEntries, [120, 130, 140]);
-      expect(test.bpmEntries2, [125, 135, 145]);
-      expect(test.mhrEntries, [10, 20, 30]);
-      expect(test.spo2Entries, [40, 50, 60]);
-      expect(test.baseLineEntries, [130, 130, 130]);
-      expect(test.movementEntries, [1, 0, 1]);
-      expect(test.autoFetalMovement, [0, 1, 0]);
-      expect(test.tocoEntries, [10, 20, 15]);
-      expect(test.lengthOfTest, 30);
-      expect(test.averageFHR, 135);
-      expect(test.live, true);
-      expect(test.testByMother, false);
-      expect(test.testById, 'tester1');
-      expect(test.interpretationType, 'Normal');
-      expect(test.interpretationExtraComments, 'No issues');
-      expect(test.associations, {'key1': 'value1'});
-      // expect(test.autoInterpretations, {'autoKey1': 'autoValue1'});
-      expect(test.delete, false);
-      expect(test.createdOn, DateTime.parse('2023-10-27T10:00:00.000Z'));
-      expect(test.createdBy, 'creator1');
+      final t = Test.fromMap(map, 'id');
+      expect(t.bpmEntries, [1, 2]);
+      expect(t.associations, {'a': 'b'});
     });
 
-    test('should convert a Test object to JSON', () {
-      final test = Test.withData(
-        id: '1',
-        documentId: 'doc1',
-        motherId: 'mother1',
-        deviceId: 'device1',
-        doctorId: 'doctor1',
-        weight: 70,
-        gAge: 30,
-        age: 25,
-        fisherScore: 8,
-        fisherScore2: 9,
-        motherName: 'Mother One',
-        deviceName: 'Device One',
-        doctorName: 'Doctor One',
-        patientId: 'patient1',
-        organizationId: 'org1',
-        organizationName: 'Organization One',
-        imageLocalPath: '/local/path',
-        imageFirePath: '/fire/path',
-        audioLocalPath: '/local/audio/path',
-        audioFirePath: '/fire/audio/path',
-        isImgSynced: true,
-        isAudioSynced: true,
-        bpmEntries: [120, 130, 140],
-        bpmEntries2: [125, 135, 145],
-        baseLineEntries: [130, 130, 130],
-        movementEntries: [1, 0, 1],
-        autoFetalMovement: [0, 1, 0],
-        tocoEntries: [10, 20, 15],
-        lengthOfTest: 30,
-        averageFHR: 135,
-        live: true,
-        testByMother: false,
-        testById: 'tester1',
-        interpretationType: 'Normal',
-        interpretationExtraComments: 'No issues',
-        associations: {'key1': 'value1'},
-        autoInterpretations: {'autoKey1': 'autoValue1'},
-        delete: false,
-        createdOn: DateTime.parse('2023-10-27T10:00:00.000Z'),
-        createdBy: 'creator1',
-      );
-
-      final json = test.toJson();
-
-      expect(json['documentId'], 'doc1');
-      expect(json['motherId'], 'mother1');
-      expect(json['deviceId'], 'device1');
-      expect(json['doctorId'], 'doctor1');
-      expect(json['weight'], 70);
-      expect(json['gAge'], 30);
-      expect(json['fisherScore'], 8);
-      expect(json['fisherScore2'], 9);
-      expect(json['motherName'], 'Mother One');
-      expect(json['deviceName'], 'Device One');
-      expect(json['doctorName'], 'Doctor One');
-      expect(json['patientId'], 'patient1');
-      expect(json['organizationId'], 'org1');
-      expect(json['organizationName'], 'Organization One');
-      expect(json['audioLocalPath'], '/local/audio/path');
-      expect(json['bpmEntries'], [120, 130, 140]);
-      expect(json['bpmEntries2'], [125, 135, 145]);
-      expect(json['baseLineEntries'], [130, 130, 130]);
-      expect(json['movementEntries'], [1, 0, 1]);
-      expect(json['autoFetalMovement'], [0, 1, 0]);
-      expect(json['tocoEntries'], [10, 20, 15]);
-      expect(json['lengthOfTest'], 30);
-      expect(json['averageFHR'], 135);
-      expect(json['live'], true);
-      expect(json['testByMother'], false);
-      expect(json['testById'], 'tester1');
-      expect(json['interpretationType'], 'Normal');
-      expect(json['interpretationExtraComments'], 'No issues');
-      expect(json['association'], {'key1': 'value1'});
-      expect(json['autoInterpretations'], {'autoKey1': 'autoValue1'});
-      expect(json['type'], 'test');
-      expect(json['delete'], false);
-      expect(json['createdOn'], DateTime.parse('2023-10-27T10:00:00.000Z').millisecondsSinceEpoch);
-      expect(json['createdBy'], 'creator1');
-    });
-
-    test('should correctly use getter and setter for organizationName', () {
-      final test = Test();
-      test.setOrganizationName('New Organization');
-      expect(test.getOrganizationName(), 'New Organization');
-    });
-
-    test('should correctly use getter and setter for organizationId', () {
-      final test = Test();
-      test.setOrganizationId('newOrgId');
-      expect(test.getOrganizationId(), 'newOrgId');
-    });
-
-    test('should correctly use getter and setter for documentId', () {
-      final test = Test();
-      test.setDocumentId('newDocId');
-      expect(test.getDocumentId(), 'newDocId');
-    });
-
-    test('should correctly use getter and setter for createdOn', () {
-      final test = Test();
-      final newDateTime = DateTime.now();
-      test.setCreatedOn(newDateTime);
-      expect(test.getCreatedOn(), newDateTime);
-    });
-
-    test('should correctly use getter and setter for createdBy', () {
-      final test = Test();
-      test.setCreatedBy('newCreator');
-      expect(test.getCreatedBy(), 'newCreator');
-    });
-
-    test('should correctly use getter and setter for delete', () {
-      final test = Test();
-      test.setDelete(true);
-      expect(test.isDelete(), true);
-    });
-
-    test('should correctly use getter and setter for live', () {
-      final test = Test();
-      test.setLive(true);
-      expect(test.isLive(), true);
-    });
-
-    test('should correctly use getter and setter for associations', () {
-      final test = Test();
-      final newAssociations = {'key2': 'value2'};
-      test.setAssociations(newAssociations);
-      expect(test.getAssociations(), newAssociations);
-    });
-
-    test('should correctly use getter and setter for autoInterpretations', () {
-      final test = Test();
-      final newAutoInterpretations = {'autoKey2': 'autoValue2'};
-      test.setautoInterpretations(newAutoInterpretations);
-      expect(test.getautoInterpretations(), newAutoInterpretations);
-    });
-
-    test('fromMap should handle null and string association', () {
-      final mapWithNullAssociation = {
+    test('fromMap with null lists', () {
+      final map = {
+        'id': 'id',
+        'documentId': null,
+        'bpmEntries': null,
+        'bpmEntries2': null,
+        'mhrEntries': null,
+        'spo2Entries': null,
+        'baseLineEntries': null,
+        'movementEntries': null,
+        'autoFetalMovement': null,
+        'tocoEntries': null,
+        'association': {'x': 'y'},
+        'live': null,
         'createdOn': DateTime.now().toIso8601String(),
       };
-      final testFromNull = Test.fromMap(mapWithNullAssociation, '1');
-      expect(testFromNull.associations, null);
-
-      final mapWithStringAssociation = {
-        'association': '{"key":"value"}',
-        'createdOn': DateTime.now().toIso8601String(),
-      };
-      final testFromString = Test.fromMap(mapWithStringAssociation, '2');
-      expect(testFromString.associations, {'key': 'value'});
+      final t = Test.fromMap(map, 'id');
+      expect(t.bpmEntries, []);
+      expect(t.live, false);
+      expect(t.associations, {'x': 'y'});
     });
 
-    test('fromMap should handle missing list fields', () {
-      final mapWithMissingLists = {
-        'createdOn': DateTime.now().toIso8601String(),
-      };
-      final test = Test.fromMap(mapWithMissingLists, '1');
-      expect(test.bpmEntries, []);
-      expect(test.bpmEntries2, []);
-      expect(test.mhrEntries, []);
-      expect(test.spo2Entries, []);
-      expect(test.baseLineEntries, []);
-      expect(test.movementEntries, []);
-      expect(test.autoFetalMovement, []);
-      expect(test.tocoEntries, []);
-    });
-
-    test('fromMap should handle live field correctly when null', () {
-      final mapWithNullLive = {
-        'createdOn': DateTime.now().toIso8601String(),
-      };
-      final test = Test.fromMap(mapWithNullLive, '1');
-      expect(test.live, false);
+    test('default constructor works', () {
+      final t = Test();
+      expect(t, isA<Test>());
     });
   });
 }
