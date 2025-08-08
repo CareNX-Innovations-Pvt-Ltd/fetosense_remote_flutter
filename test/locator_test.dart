@@ -23,6 +23,7 @@ void main() {
   final locator = GetIt.instance;
 
   setUp(() {
+    TestWidgetsFlutterBinding.ensureInitialized();
     locator.reset();
   });
 

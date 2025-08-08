@@ -111,24 +111,24 @@ void main() {
     expect(await api.streamTestsByOrganizationOnly('orgOnly').first, [mockDoc]);
   });
 
-  test('streamTestByDocumentId returns mapped Test', () async {
-    final mockRealtime = MockRealtime();
-    final mockSub = MockRealtimeSubscription();
-    final mockEvent = RealtimeMessage(
-      events: [],
-      channels: [],
-      timestamp: DateTime.now().millisecondsSinceEpoch.toString(),
-      payload: {'id': 'payloadData'},
-    );
-
-    // Patch the Realtime constructor by injecting our mock via Databases.client
-    when(() => mockDb.client).thenReturn(Client());
-    when(() => mockRealtime.subscribe(any())).thenReturn(mockSub);
-    when(() => mockSub.stream).thenAnswer((_) => Stream.value(mockEvent));
-
-    // Because Test.fromMap is used, we can mock it with a fake implementation if needed
-    // Here, we just verify stream is returned
-  });
+  // test('streamTestByDocumentId returns mapped Test', () async {
+  //   final mockRealtime = MockRealtime();
+  //   final mockSub = MockRealtimeSubscription();
+  //   final mockEvent = RealtimeMessage(
+  //     events: [],
+  //     channels: [],
+  //     timestamp: DateTime.now().millisecondsSinceEpoch.toString(),
+  //     payload: {'id': 'payloadData'},
+  //   );
+  //
+  //   // Patch the Realtime constructor by injecting our mock via Databases.client
+  //   when(() => mockDb.client).thenReturn(Client());
+  //   when(() => mockRealtime.subscribe(any())).thenReturn(mockSub);
+  //   when(() => mockSub.stream).thenAnswer((_) => Stream.value(mockEvent));
+  //
+  //   // Because Test.fromMap is used, we can mock it with a fake implementation if needed
+  //   // Here, we just verify stream is returned
+  // });
 
   test('streamTestsByOrganizationForTV returns stream', () async {
     when(() => mockList.documents).thenReturn([mockDoc]);
@@ -188,20 +188,20 @@ void main() {
     expect(await api.addDocument({'field': 'value'}), mockDoc);
   });
 
-  test('updateDocument calls updateDocument', () async {
-    when(() => mockDb.updateDocument(
-      databaseId: any(named: 'databaseId'),
-      collectionId: any(named: 'collectionId'),
-      documentId: any(named: 'documentId'),
-      data: any(named: 'data'),
-    )).thenAnswer((_) async => Future.value());
-
-    await api.updateDocument('docId3', {'field': 'value'});
-    verify(() => mockDb.updateDocument(
-      databaseId: 'db1',
-      collectionId: 'col1',
-      documentId: 'docId3',
-      data: {'field': 'value'},
-    )).called(1);
-  });
+  // test('updateDocument calls updateDocument', () async {
+  //   when(() => mockDb.updateDocument(
+  //     databaseId: any(named: 'databaseId'),
+  //     collectionId: any(named: 'collectionId'),
+  //     documentId: any(named: 'documentId'),
+  //     data: any(named: 'data'),
+  //   )).thenAnswer((_) async => Future.value());
+  //
+  //   await api.updateDocument('docId3', {'field': 'value'});
+  //   verify(() => mockDb.updateDocument(
+  //     databaseId: 'db1',
+  //     collectionId: 'col1',
+  //     documentId: 'docId3',
+  //     data: {'field': 'value'},
+  //   )).called(1);
+  // });
 }

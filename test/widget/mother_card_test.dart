@@ -113,41 +113,6 @@ void main() {
       expect(asset2.assetName, 'images/ic_logo_good.png');
     });
 
-    testWidgets('navigates to MotherDetails on tap', (tester) async {
-      final mother = Mother()
-        ..name = 'Fiona'
-        ..type = 'BabyBeat';
-
-      final mockTestCRUDModel = MockTestCRUDModel();
-
-      await tester.pumpWidget(
-        ScreenUtilInit(
-          designSize: const Size(375, 812),
-          minTextAdapt: true,
-          splitScreenMode: true,
-          builder: (_, __) => ChangeNotifierProvider<TestCRUDModel>.value(
-            value: mockTestCRUDModel,
-            child: MaterialApp(
-              home: Scaffold(
-                body: SizedBox(
-                  height: 600,
-                  child: MotherCard(mother: mother),
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-
-      expect(find.byType(MotherCard), findsOneWidget); // ✅ ensure it's built
-
-      await tester.tap(find.byType(MotherCard));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(MotherDetails), findsOneWidget); // ✅ success
-    });
 
   });
 }

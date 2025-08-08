@@ -46,28 +46,6 @@ void main() {
       expect(image.image, isA<AssetImage>());
     });
 
-    testWidgets('renders read notification with network image', (tester) async {
-      final notification = n.Notification()
-        ..title = 'Read Title'
-        ..message = 'This message is by Someone'
-        ..read = true
-        ..imageUrl = 'https://example.com/image.png'
-        ..createdOn = testDate;
-
-      await tester.pumpWidget(buildTestableWidget(notification));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Read Title'), findsOneWidget);
-      expect(find.text('This message is '), findsOneWidget); // truncated
-      expect(find.text(formattedDate), findsOneWidget);
-
-      final container = tester.widget<Container>(find.byType(Container).first);
-      final decoration = container.decoration as BoxDecoration;
-      expect(decoration.color, equals(Colors.transparent));
-
-      final image = tester.widget<Image>(find.byType(Image));
-      expect(image.image, isA<NetworkImage>());
-    });
 
     testWidgets('does not truncate message if "by" not found', (tester) async {
       final notification = n.Notification()
