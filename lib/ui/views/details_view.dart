@@ -23,6 +23,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:permission_handler/permission_handler.dart' as permission;
 import 'package:provider/provider.dart';
+import '../../core/services/prediction_service.dart';
 import 'graph/fhr_pdf_view2.dart';
 import 'graph/pdf_base_page.dart';
 
@@ -83,6 +84,17 @@ class DetailsViewState extends State<DetailsView>
 
   static const printChannel = MethodChannel('com.carenx.fetosense/print');
 
+  final service = BirthPredictionService();
+
+  void serviceCall() async{
+    await service.init();
+    final predictions = await service.predict(test!, interpretations!);
+    print("✅ Prediction worked!");
+    print("Birth Outcome: ${predictions.birthOutcome}");
+    print("Delivery Type: ${predictions.deliveryType}");
+    print("CTG Interpretation: ${predictions.ctgInterpretation}");
+  }
+
   @override
   void initState() {
     _animationController =
@@ -120,6 +132,8 @@ class DetailsViewState extends State<DetailsView>
     if (test != null && test!.isLive() == true) {
       context.read<TestCRUDModel>().startLiveUpdates(test!.documentId!);
     }
+    test!.printDetails();
+    serviceCall();
   }
 
   String classifyFromInterpretations(Interpretations2 interp) {
@@ -147,7 +161,7 @@ class DetailsViewState extends State<DetailsView>
   @override
   void dispose() {
     _animationController.dispose();
-    context.read<TestCRUDModel>().stopLiveUpdates();
+    // context.read<TestCRUDModel>().stopLiveUpdates();
     super.dispose();
   }
 

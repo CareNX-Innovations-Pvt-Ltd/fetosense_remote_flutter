@@ -1,0 +1,21 @@
+{
+  "encoders": {
+    "CTG Interpretation by doctor": {
+      "0": "Borderline-reactive",
+      "1": "Moderately-reactive",
+      "2": "Non-reactive",
+      "3": "Reactive"
+    },
+    "Delivery type": {
+      "0": "C-section",
+      "1": "Normal"
+    },
+    "Birth Outcome": {
+      "0": "Healthy",
+      "1": "IUD",
+      "2": "Other",
+      "3": "Preterm",
+      "4": "Complicated"
+    }
+  }
+}

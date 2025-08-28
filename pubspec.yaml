@@ -48,6 +48,9 @@ dependencies:
   flutter_lints: ^5.0.0
   go_router: ^15.0.0
   http:
+  onnxruntime: ^1.4.0
+  tflite_flutter: ^0.11.0
+#  tflite_flutter_helper_plus: ^0.0.2
 
   shared_preferences: any
 dev_dependencies:

@@ -387,49 +387,12 @@ class Test {
 
   void printDetails() {
     if (kDebugMode) {
-      print('Test Details:');
-      print('ID: $id');
-      print('Document ID: $documentId');
-      print('Mother ID: $motherId');
-      print('Device ID: $deviceId');
-      print('Doctor ID: $doctorId');
-      print('Weight: $weight');
-      print('Gestational Age: $gAge');
-      print('Age: $age');
-      print('Fisher Score 1: $fisherScore');
-      print('Fisher Score 2: $fisherScore2');
-      print('Mother Name: $motherName');
-      print('Device Name: $deviceName');
-      print('Doctor Name: $doctorName');
-      print('Patient ID: $patientId');
-      print('Organization ID: $organizationId');
-      print('Organization Name: $organizationName');
-      print('Image Local Path: $imageLocalPath');
-      print('Image Fire Path: $imageFirePath');
-      print('Audio Local Path: $audioLocalPath');
-      print('Audio Fire Path: $audioFirePath');
-      print('Is Image Synced: $isImgSynced');
-      print('Is Audio Synced: $isAudioSynced');
-      print('BPM Entries: $bpmEntries');
-      print('BPM Entries 2: $bpmEntries2');
-      print('MHR Entries: $mhrEntries');
-      print('SPO2 Entries: $spo2Entries');
-      print('Baseline Entries: $baseLineEntries');
-      print('Movement Entries: $movementEntries');
-      print('Auto Fetal Movement: $autoFetalMovement');
-      print('TOCO Entries: $tocoEntries');
-      print('Length of Test: $lengthOfTest');
-      print('Average FHR: $averageFHR');
-      print('Live: $live');
-      print('Test By Mother: $testByMother');
-      print('Test By ID: $testById');
-      print('Interpretation Type: $interpretationType');
-      print('Interpretation Extra Comments: $interpretationExtraComments');
-      print('Associations: $associations');
-      print('Auto Interpretations: $autoInterpretations');
-      print('Deleted: $delete');
-      print('Created On: $createdOn');
-      print('Created By: $createdBy');
+      final jsonStr = jsonEncode(toJson());
+      const chunkSize = 800;
+      for (var i = 0; i < jsonStr.length; i += chunkSize) {
+        debugPrint(jsonStr.substring(i, i + chunkSize > jsonStr.length ? jsonStr.length : i + chunkSize));
+      }
     }
   }
 }
+
