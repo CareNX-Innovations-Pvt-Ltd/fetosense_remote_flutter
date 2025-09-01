@@ -23,7 +23,7 @@ jobs:
       - name: Generate mocks (if needed)
         run: flutter pub run build_runner build --delete-conflicting-outputs || true
 
-      - name: Run tests with coverage (ignore failures so report still generates)
+      - name: Run tests with coverage
         run: |
           mkdir -p coverage
           flutter test --coverage --reporter compact || true
