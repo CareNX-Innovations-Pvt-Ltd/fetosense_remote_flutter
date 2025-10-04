@@ -1,13 +1,28 @@
 import 'dart:core';
 
 import 'package:fetosense_remote_flutter/core/model/marker_indices.dart';
+import 'package:fetosense_remote_flutter/core/model/test_model.dart';
 
-import '../model/test_model.dart';
+
+/// Provides algorithms and data structures for analyzing fetal heart rate (FHR) test data.
+///
+/// The `Interpretations2` class processes FHR data to extract clinical metrics such as
+/// accelerations, decelerations, baseline heart rate, short- and long-term variability,
+/// and episodes of high/low variation. It supports initialization from raw BPM data,
+/// test models, or empty state, and exposes methods for cleaning, smoothing, and
+/// segmenting the data for further interpretation.
+///
+/// Example usage:
+/// ```dart
+/// final interp = Interpretations2.withData(bpmList, gestationalAge);
+/// int accels = interp.getnAccelerations();
+/// int decels = interp.getnDecelerations();
+/// double stv = interp.getShortTermVariationBpm();
+/// ```
 
 class Interpretations2 {
   static const SIXTY_THOUSAND_MS = 60000;
-  static const int NO_OF_SAMPLES_PER_MINUTE =
-  15; // 16 datapoints (3.75 ms for 1 sample) per minute
+  static const int NO_OF_SAMPLES_PER_MINUTE = 15;
   static final List highFHREpisodePercentiles = [
     //criteria for confirming high FHR episodes
     // gestAge, 3rd percentile, 10th percentile of healthy fetus
@@ -30,39 +45,57 @@ class Interpretations2 {
   ];
 
   static const int FACTOR = 4;
+  /// beats per minute list
   List<int>? bpmList;
   List<int>? bpmListSmooth;
+  /// gestational age in weeks
   late int gestAge;
+  /// list of accelerations
   List<MarkerIndices>? accelerationsList;
+  /// list of decelerations
   List<MarkerIndices>? decelerationsList;
+  /// list of noise areas
   List<MarkerIndices>? noiseList;
+  /// baseline beats per minute list
   List<int>? baselineBpmList;
   late List<int?> baselineEpochBpm;
   late List<int?> millisecondsEpochBpm;
   List<int>? millisecondsEpochBpmSmooth;
   late List<int?> beatsInMilliseconds;
   late List<int?> beatsInMillisecondsSmooth;
+  /// raw milliseconds epoch
   late List<int?> millisecondsEpoch;
+  /// smoothed milliseconds epoch
   late List<int?> millisecondsEpochSmooth;
+  /// baseline in milliseconds
   late List<int?> baselineEpoch;
+  /// cleaned baseline in milliseconds
   List<int?>? cleanMillisecondsEpoch;
+  /// cleaned baseline in bpm
   late List<int?> cleanMillisecondsEpochBpm;
+  /// cleaned baseline in milliseconds
   late List<int?> cleanBaselineEpoch;
+  /// cleaned baseline in bpm
   late List<int?> cleanBaselineEpochBpm;
+  /// number of accelerations
   int? nAccelerations;
+  /// number of decelerations
   int? nDecelerations;
-
   int? correctionCount;
   late List<int> bpmCorrectedIndices;
+  /// basal heart rate
   int basalHeartRate = 0;
+  /// long term variation in bpm
   int longTermVariation = 0;
-
+  /// short term variation in bpm
   double shortTermVariationBpm = 0;
+  /// short term variation in milliseconds
   int shortTermVariationMilli = 0;
 
   bool isSkipped = false;
-
+  /// Fisher Score
   int fisherScore= 0;
+  /// Fisher Score for second FHR
   int fisherScore2= 0;
 
   Interpretations2() {
@@ -83,24 +116,26 @@ class Interpretations2 {
     isSkipped = true;
   }
 
+  /// initializes the class from a Test model
   Interpretations2.fromMap(Test test){
     accelerationsList = (test.autoInterpretations?["accelerationsList"]??[]).map<MarkerIndices>((e) => MarkerIndices.fromData(e["from"], e["to"])).toList();
-    decelerationsList = (test.autoInterpretations?["accelerationsList"]??[] as List<Map<String,int>>).map<MarkerIndices>((e) => MarkerIndices.fromData(e["from"], e["to"])).toList();
-    noiseList = (test.autoInterpretations?["accelerationsList"]??[] as List<Map<String,int>>).map<MarkerIndices>((e) => MarkerIndices.fromData(e["from"], e["to"])).toList();
+    decelerationsList = (test.autoInterpretations?["accelerationsList"]??[]).map<MarkerIndices>((e) => MarkerIndices.fromData(e["from"], e["to"])).toList();
+    noiseList = (test.autoInterpretations?["accelerationsList"]??[]).map<MarkerIndices>((e) => MarkerIndices.fromData(e["from"], e["to"])).toList();
     fisherScore = test.fisherScore??0;
     fisherScore2 = test.fisherScore2??0;
-    basalHeartRate = int.tryParse(test.autoInterpretations?["basalHeartRate"])??0;
-    nAccelerations = int.tryParse(test.autoInterpretations?["nAccelerations"])??0;
-    nDecelerations = int.tryParse(test.autoInterpretations?["nDecelerations"])??0;
-    longTermVariation = int.tryParse(test.autoInterpretations?["longTermVariation"])??0;
-    shortTermVariationBpm = double.tryParse(test.autoInterpretations?["shortTermVariationBpm"])??0;
-    shortTermVariationMilli = int.tryParse(test.autoInterpretations?["shortTermVariationMilli"])??0;
+    basalHeartRate = int.tryParse(test.autoInterpretations?["basalHeartRate"] ?? '0')??0;
+    nAccelerations = int.tryParse(test.autoInterpretations?["nAccelerations"]?? '0')??0;
+    nDecelerations = int.tryParse(test.autoInterpretations?["nDecelerations"]?? '0')??0;
+    longTermVariation = int.tryParse(test.autoInterpretations?["longTermVariation"]?? '0')??0;
+    shortTermVariationBpm = double.tryParse(test.autoInterpretations?["shortTermVariationBpm"]?? '0')??0;
+    shortTermVariationMilli = int.tryParse(test.autoInterpretations?["shortTermVariationMilli"]?? '0')??0;
   }
 
+  /// initializes the class with BPM data and gestational age
   Interpretations2.withData(List<int> bpm, int gAge) {
     print("Interpretations2 :: withData ${bpm.length} && age $gAge");
     gestAge = gAge > 41 ? 41 : gAge;
-    bpmList = List.from(bpm); //[]..addAll(bpm);//bpm.clone();
+    bpmList = List.from(bpm);
     bpmCorrectedIndices = getNoiseAreas(List.from(bpm));
     cleanBpmList();
     beatsInMilliseconds = convertBpmToMilli(bpmList!);
@@ -162,54 +197,63 @@ class Interpretations2 {
     longTermVariation));*/
   }
 
+  /// gets baseline BPM list
   List<int>? getBaselineBpmList() {
     return baselineBpmList;
   }
 
+  /// gets accelerations in the FHR data
   List<MarkerIndices>? getAccelerationsList() {
     return accelerationsList;
   }
 
+  /// gets decelerations in the FHR data
   List<MarkerIndices>? getDecelerationsList() {
     return decelerationsList;
   }
 
+  /// gets noise areas in the FHR data
   List<MarkerIndices>? getNoiseAreaList() {
     return noiseList;
   }
-
+  /// Calculate number of accelerations in the FHR data
   int? getnAccelerations() {
     return nAccelerations;
   }
-
+  /// Calculate number of decelerations in the FHR data
   int? getnDecelerations() {
     return nDecelerations;
   }
 
+  /// gets number of accelerations as string
   String getnAccelerationsStr() {
     return isSkipped ? "--" : nAccelerations.toString().padLeft(2, '0');
   }
 
+  /// gets number of decelerations as string
   String getnDecelerationsStr() {
     return isSkipped ? "--" : nDecelerations.toString().padLeft(2, '0');
   }
-
+  /// gets basal heart rate from the cleaned baseline bpm data
   int getBasalHeartRate() {
     return basalHeartRate;
   }
-
+  /// gets long term variation in beats per minute
   int getLongTermVariation() {
     return longTermVariation;
   }
 
+  /// gets short term variation in beats per minute
   double getShortTermVariationBpm() {
     return shortTermVariationBpm;
   }
 
+  /// gets short term variation in milliseconds
   int getShortTermVariationMilli() {
     return shortTermVariationMilli;
   }
 
+  /// gets basal heart rate string
   String getBasalHeartRateStr() {
     if (isSkipped) {
       return "--";
@@ -221,24 +265,28 @@ class Interpretations2 {
     }
   }
 
+  ///gets long term variation in beats per minute string
   String getLongTermVariationStr() {
     return longTermVariation == 0
         ? "--"
         : longTermVariation.toString().padLeft(2, '0');
   }
 
+  /// gets short term variation in beats per minute string
   String getShortTermVariationBpmStr() {
     return shortTermVariationBpm == 0
         ? "--"
         : shortTermVariationBpm.toStringAsFixed(1);
   }
 
+  /// gets short term variation in milliseconds string
   String getShortTermVariationMilliStr() {
     return shortTermVariationMilli == 0
         ? "--"
         : shortTermVariationMilli.toString();
   }
 
+  /// clean BPM list by removing noise and artifacts
   void cleanBpmList() {
     removeTrailingZeros(bpmList!);
 
@@ -265,6 +313,7 @@ class Interpretations2 {
         }*/
   }
 
+  /// convert beats per minute to milliseconds
   List<int?> convertBpmToMilli(List<int> list) {
     int size = list.length;
     List<int?> milliseconds = List.filled(size, null, growable: false);
@@ -280,6 +329,7 @@ class Interpretations2 {
     //convertMilliToEpoch();
   }
 
+  /// smooth BPM list by removing noise and artifacts
   void smoothBpm() {
     //bpmCorrectedIndices = new List<>();
     //correctionCount = 0;
@@ -331,6 +381,7 @@ class Interpretations2 {
         }*/
   }
 
+  /// get noise areas in the BPM list
   List<int> getNoiseAreas(List<int> list) {
     //delete traling zeros
     removeTrailingZeros(list);
@@ -372,6 +423,7 @@ class Interpretations2 {
     return bpmCorrected;
   }
 
+  /// remove trailing zeros from the BPM list
   void removeTrailingZeros(List<int> list) {
     bool zero = list[list.length - 1] == 0 ||
         list[list.length - 2] == 0 ||
@@ -388,6 +440,7 @@ class Interpretations2 {
     }
   }
 
+  /// get next non-zero BPM value from the list starting from the given index
   int getNextNonZeroBpm(int index, List<int>? list) {
     int i = index;
     int value = 0;
@@ -399,6 +452,7 @@ class Interpretations2 {
     return value == 0 ? list![index - 1] : value;
   }
 
+  /// get next valid BPM value from the list starting from the given index
   int getNextValidBpm(int index, List<int> list) {
     int i = index;
     int value = 0;
@@ -414,6 +468,7 @@ class Interpretations2 {
     return value;
   }
 
+  /// get average heart rate from the BPM list
   int getWindowAvreage(List<int> list, int index, int window) {
     int start = index - window;
     int stop = index + window;
@@ -435,6 +490,7 @@ class Interpretations2 {
     }
   }
 
+  /// convert raw milliseconds to epoch format
   List<int?> convertMilliToEpoch(List<int?> millisecondBeats) {
     int size = (millisecondBeats.length / FACTOR).truncate();
     List<int?> epoch = List.filled(size, null, growable: false);
@@ -452,6 +508,7 @@ class Interpretations2 {
     return epoch;
   }
 
+  /// calculate epoch BPM from milliseconds epoch
   List<int?> calculateEpochBpm() {
     List<int?> milisecondsEpochBpm =
     List.filled(millisecondsEpoch.length, null, growable: false);
@@ -466,6 +523,7 @@ class Interpretations2 {
     return milisecondsEpochBpm;
   }
 
+  /// calculate baseline heart rate from milliseconds epoch
   List<int?> calculateBaseLine(List<int?> millisecondsEpoch) {
     int size = millisecondsEpoch.length;
     List<int?> baselineArray = List.filled(size, null, growable: false);
@@ -498,7 +556,6 @@ class Interpretations2 {
       }
     }
 
-    int peak = 0;
     /** calculate limiting parameter **/
     for (int i = buckets - 1; i >= 5; i--) {
       if (sumOfValues! > (0.125 * (size - freq[0]!))) {
@@ -510,7 +567,6 @@ class Interpretations2 {
           if (freq[i]! > 0.005 * (size - freq[0]!) ||
               (modeIndex - i).abs() <= 30) {
             selectedPeak = i;
-            peak = i;
             break;
           }
         }
@@ -598,17 +654,7 @@ class Interpretations2 {
           (tiny * avgHR + (1.0 - tiny) * baselineArray[i + 1]!).truncate();
     }
 
-    //int index = 1 * NO_OF_SAMPLES_PER_MINUTE;
-    //window = index;
-
     avgHR = calculateLowVariationAvg(baselineArray, avgHR);
-
-    /*avgHR = calculateLowVariationAvg(_baselineArray,avgHR);
-        Log.i("avgHR",avgHR+"");
-        if(avgHR <=300 || avgHR > 700)
-            avgHR = calculateBasalHeartRate(_baselineArray);
-        Log.i("avgHR",avgHR+"");*/
-
     tiny = 0.25;
     for (int i = start; i < baselineArray.length - 1; i++) {
       baselineArray[i] =
@@ -671,13 +717,6 @@ class Interpretations2 {
         }
       }
     }
-
-    //smoothing the baseline for a cleaner look
-    /*int window = 3;
-        for (int i = window; i < _baselineBpmList.length - window - 1; i++) {
-            _baselineBpmList.set(i, getWindowAvreage(_baselineBpmList, i, window));
-        }*/
-
     return _baselineBpmList;
   }
 
@@ -849,7 +888,7 @@ class Interpretations2 {
                     }*/
         } else if (gestAge >= 32) {
           // change from gestAge > 32 to gestAge >= 32
-          if (maxExcursion >= 10)
+          if (maxExcursion >= 10) {
             //Log.i("maxExcursion", counter2 + " - " + maxExcursion + " - " + ((i * 4) / 60));
 
             if (counter2 >= 4 && maxExcursion >= 14) {
@@ -860,9 +899,10 @@ class Interpretations2 {
               accelerations.add(acceleration);
               n++; //adding acc count
             }
-          counter2 = 0;
-          //isAcceleration = false;
-          maxExcursion = 0;
+            counter2 = 0;
+            //isAcceleration = false;
+            maxExcursion = 0;
+          }
         }
       }
     }
@@ -872,118 +912,8 @@ class Interpretations2 {
 
   bool isDeceleration = false;
 
-  /**
-   * A deceleration is defined as a decrease in FHR below the baseline that lasts for
-   * lasts for longer than 30 seconds and has a maximum excursion below the baseline of greater than 20 beats/min or
-   * lasts for longer than 60 seconds and has a maximum excursion below the baseline of greater than 10 beats/min
-   */
-/*
-  int calculateDecelerations() {
-    List<MarkerIndices> decelerations = [];
-    int size = millisecondsEpoch.length;
-    int counter1 = 0, counter2 = 0, n = 0;
-    int maxExcursion = 0;
 
-    print("Interpretations2 :: calculateDecelerations size - $size");
-    */
-  /** first criteria **//*
-
-    for (int i = 0; i < size; i++) {
-      MarkerIndices deceleration = new MarkerIndices();
-      if (millisecondsEpochBpm[i] == 0) continue;
-      int difference = baselineEpochBpm[i]! - millisecondsEpochBpm[i]!;
-
-
-      //print("Interpretations2 :: loop :: $i difference:$difference");
-      if (difference > 0) {
-        counter1++;
-        if (maxExcursion < difference) maxExcursion = difference;
-
-        */
-/*if (counter1 >= 15 && !isDeceleration) { // 60 seconds = 16 samples
-                    isDeceleration = true;
-                    //n++;
-                }*//*
-
-        if (counter1 >= 4 && !isDeceleration) {
-          isDeceleration = true;
-        }
-      } else {
-        if (maxExcursion >= 10)
-        //Log.i("maxExcursion dec 1", counter1 + " - " + maxExcursion + " - " + ((i * 4) / 60));
-        if (counter1 >= 14 && maxExcursion >= 10) {
-          // change from couter1 >= 15 to couter >= 4
-          deceleration = new MarkerIndices();
-          deceleration.setFrom(((i - counter1) * FACTOR));
-          deceleration.setTo(((i) * FACTOR));
-          decelerations.add(deceleration);
-          n++;
-          print("Interpretations2 :: loop :: $i if");
-
-        } else if (counter1 >= 3 && counter1 < 15 && maxExcursion >= 15) {
-          deceleration = MarkerIndices()
-            ..setFrom((i - counter1).toInt() * FACTOR)
-            ..setTo((i).toInt() * FACTOR);
-          decelerations.add(deceleration);
-          n++;
-          print("Interpretations2 :: loop :: $i else if");
-        }
-        counter1 = 0;
-        isDeceleration = false;
-        maxExcursion = 0;
-      }
-    }
-    //isDeceleration = false;
-    maxExcursion = 0;
-
-    */
-  /** second criteria **//*
-
-    */
-/*for (int i = 0; i < size; i++) {
-      int difference = baselineEpochBpm[i]! - millisecondsEpochBpm[i]!;
-
-      if (difference > 1) {
-        counter2++;
-
-        if (maxExcursion < difference) maxExcursion = difference;
-
-        *//*
- */
-/*if (counter2 > 8 && counter2 < 15 && !isDeceleration) {// 60 seconds = 16 samples
-                    isDeceleration = true;
-                    //n++;
-                }*//*
- */
-/*
-      } else {
-        if (maxExcursion >= 10)
-        //Log.i("maxExcursion dec 2", counter2 + " - " + maxExcursion + " - " + ((i * 4) / 60));
-
-        if (counter2 >= 2 && counter2 < 4 && maxExcursion >= 20) {  // change from counter2 >= 8 && counter2 < 15 to counter2 >= 2 && counter2 < 4
-          MarkerIndices deceleration = new MarkerIndices();
-          deceleration.setFrom(((i - counter2) * FACTOR));
-          deceleration.setTo(((i) * FACTOR));
-          decelerations.add(deceleration);
-          n++;
-        }
-        counter2 = 0;
-        //isDeceleration = false;
-        maxExcursion = 0;
-      }
-    }*//*
-
-
-    decelerationsList = decelerations;
-    print("Interpretations2 :: decelerationsList - ${decelerationsList?.length}");
-    print("Interpretations2 :: counter1 - $counter1");
-    print("Interpretations2 :: n - $n");
-    print("Interpretations2 :: isDeceleration - $isDeceleration");
-    print("Interpretations2 :: maxExcursion - $maxExcursion");
-    return n;
-  }
-*/
-
+  /// calculate number of decelerations in the FHR data
   int calculateDecelerations() {
     List<MarkerIndices> decelerations = [];
     int size = millisecondsEpoch.length;
@@ -1030,6 +960,8 @@ class Interpretations2 {
     decelerationsList = decelerations;
     return n;
   }
+
+  /// remove minutes with decelerations from the FHR data
   void removeDecelerationMinutes() {
     int minutes =
     (millisecondsEpoch.length / NO_OF_SAMPLES_PER_MINUTE).truncate();
@@ -1063,16 +995,6 @@ class Interpretations2 {
       }
     }
 
-    //identifying the miutes to remove
-    /*List<int> min = new List<>();
-        min.add(decelerationMinutes[0] / NO_OF_SAMPLES_PER_MINUTE);
-        for (int i = 1; i < decelerationMinutes.length - 1; i++) {
-            if (decelerationMinutes[i - 1] != decelerationMinutes[i]) {
-                min.add(decelerationMinutes[i] / NO_OF_SAMPLES_PER_MINUTE);
-            }
-        }*/
-
-    //removing the minutes with decelerations
     int newLength = (minutes * NO_OF_SAMPLES_PER_MINUTE) -
         (finalMinutesToRemove.length * NO_OF_SAMPLES_PER_MINUTE);
     cleanMillisecondsEpoch = List.filled(newLength, null, growable: false);
@@ -1096,11 +1018,8 @@ class Interpretations2 {
     }
   }
 
+  /// calculate low variation average heart rate
   int calculateLowVariationAvg(List<int?> list, int avgHR) {
-    /*if(bpmList.length/correctionCount <2){
-            //todo: remove
-        }*/
-
     int minutes = (list.length / NO_OF_SAMPLES_PER_MINUTE).truncate();
     minutes *= 3;
     if (minutes == 0) return minutes;
@@ -1152,9 +1071,8 @@ class Interpretations2 {
     return sum;
   }
 
+  /// calculate average heart rate from the BPM list
   int calculateAvgHeartRate(List<int?> list) {
-    // todo: consider low variations
-
     int sum = 0;
     double basalHeartRate;
     int errorCount = 0;
@@ -1173,9 +1091,8 @@ class Interpretations2 {
         : basalHeartRate.truncate();
   }
 
+  /// calculate basal heart rate from the BPM list
   int calculateBasalHeartRate(List<int?> list) {
-    // todo: consider low variations
-
     int sum = 0;
     int _basalHeartRate = 0;
     int errorCount = 0;
@@ -1204,6 +1121,7 @@ class Interpretations2 {
     return _basalHeartRate;
   }
 
+  /// calculate short term variability in BPM and milliseconds
   void calculateShortTermVariability() {
     if (cleanMillisecondsEpoch == null || cleanMillisecondsEpoch!.isEmpty) {
       return;
@@ -1224,11 +1142,8 @@ class Interpretations2 {
         (avgMilli / cleanMillisecondsEpoch!.length).truncate();
   }
 
+  /// calculate episodes of low and high variation in the BPM list
   void calculateEpisodesOfLowAndHighVariation() {
-    /*if(bpmList.length/correctionCount <2){
-            //todo: remove
-        }*/
-
     try {
       int minutes =
       (cleanBaselineEpoch.length / NO_OF_SAMPLES_PER_MINUTE).truncate();
@@ -1314,5 +1229,13 @@ class Interpretations2 {
     } catch (ex) {
       print(ex.toString());
     }
+  }
+
+  /// classify the FHR data based on the Fisher Score
+  String classify() {
+    if (fisherScore >= 8) return "Normal";
+    if (fisherScore >= 5 && fisherScore <= 7) return "Atypical";
+    if (fisherScore < 5) return "Abnormal";
+    return "Normal";
   }
 }
