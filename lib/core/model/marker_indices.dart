@@ -1,9 +1,6 @@
 class MarkerIndices {
   MarkerIndices();
-  MarkerIndices.fromData(int from, int to) {
-    this.from = from;
-    this.to = to;
-  }
+  MarkerIndices.fromData(int this.from, int this.to);
 
   int? from;
   int? to;

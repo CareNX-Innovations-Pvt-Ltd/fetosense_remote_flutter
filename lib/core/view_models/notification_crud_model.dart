@@ -44,13 +44,4 @@ class NotificationCRUDModel extends ChangeNotifier {
   Future<void> removeTest(String id) async {
     await _api.removeDocument(id);
   }
-
-  // Stream<List<Notification>> fetchTestsAsStream(String doctorId) {
-  //   return _api.streamNotificationsByDoctor(doctorId).map(
-  //         (docs) => docs
-  //             .map((doc) => n.Notification.fromMap(doc.data, doc.$id))
-  //             .whereType<Notification>() // removes any nulls safely
-  //             .toList(),
-  //       );
-  // }
 }

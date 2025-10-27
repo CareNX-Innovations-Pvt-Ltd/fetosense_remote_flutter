@@ -12,7 +12,6 @@ import 'package:fetosense_remote_flutter/locater.dart';
 import 'package:fetosense_remote_flutter/ui/shared/constant.dart';
 import 'package:fetosense_remote_flutter/ui/widgets/all_test_card.dart';
 import 'package:fetosense_remote_flutter/ui/widgets/scan_widget.dart';
-import 'package:fetosense_remote_flutter/ui/widgets/youtube_player_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

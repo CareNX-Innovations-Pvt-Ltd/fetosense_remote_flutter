@@ -1,13 +1,11 @@
 import 'package:fetosense_remote_flutter/core/model/mother_model.dart';
 import 'package:fetosense_remote_flutter/core/view_models/test_crud_model.dart';
-import 'package:fetosense_remote_flutter/ui/views/mothers_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:fetosense_remote_flutter/ui/widgets/mother_card.dart';
 import 'package:mockito/mockito.dart';
-import 'package:provider/provider.dart';
 
 
 class MockTestCRUDModel extends Mock implements TestCRUDModel {}

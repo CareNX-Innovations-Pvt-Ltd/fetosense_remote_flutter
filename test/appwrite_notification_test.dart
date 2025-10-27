@@ -5,7 +5,7 @@ import 'package:mockito/mockito.dart';
 import 'package:appwrite/models.dart';
 import 'package:appwrite/appwrite.dart';
 
-import 'initial_profile_update_test.mocks.dart';
+import 'appwrite_notification_test.mocks.dart';
 
 @GenerateMocks([Databases])
 void main() {

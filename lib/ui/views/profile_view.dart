@@ -300,7 +300,7 @@ class ProfileViewState extends State<ProfileView> {
                         color: Colors.black87,
                         fontSize: 16),
                   ),
-                  onTap: _launchPrivacy,
+                  onTap: launchPrivacy,
                 )),
             Padding(
               padding: const EdgeInsets.fromLTRB(8, 0, 0, 8),
@@ -316,7 +316,7 @@ class ProfileViewState extends State<ProfileView> {
                       color: Colors.black87,
                       fontSize: 16),
                 ),
-                onTap: _launchPrivacy,
+                onTap: launchPrivacy,
               ),
             ),
           ],
@@ -336,7 +336,7 @@ class ProfileViewState extends State<ProfileView> {
   // setOrganizationBabyBeat(Organization org) => widget.orgCallbackBabyBeat(org);
 
   /// Launches the privacy policy URL.
-  _launchPrivacy() async {
+  launchPrivacy() async {
     const url = 'https://ios-fetosense.firebaseapp.com/privacy-policy';
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url));

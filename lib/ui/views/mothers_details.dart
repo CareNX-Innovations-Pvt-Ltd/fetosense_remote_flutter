@@ -5,38 +5,20 @@ import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
-class MotherDetails extends StatelessWidget {
+class MotherDetails extends StatefulWidget {
   /// [mother] is the mother model containing the details to be displayed.
   final Mother mother;
 
   const MotherDetails({super.key, required this.mother});
 
-  /// Calculates the gestational age of the mother in weeks.
-  int getGestAge() {
-    if (mother.edd != null) {
-      final eddDate = mother.edd;
-      if (eddDate != null) {
-        final now = DateTime.now();
-        final remainingDays = eddDate.difference(now).inDays;
-        final gestAge = (280 - remainingDays) ~/ 7;
-        return gestAge.clamp(0, 42); // safe range
-      }
-    }
-    return 0;
-  }
+  @override
+  State<MotherDetails> createState() => MotherDetailsState();
+}
 
-  /// Returns the abbreviated month name for the given month number.
-  String getMonthName(int m) {
-    const monthNames = [
-      "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
-      "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"
-    ];
-    return (m >= 1 && m <= 12) ? monthNames[m - 1] : "DEC";
-  }
-
+class MotherDetailsState extends State<MotherDetails> {
   @override
   Widget build(BuildContext context) {
-    final edd = mother.edd;
+    final edd = widget.mother.edd;
 
     return Scaffold(
       body: SafeArea(
@@ -56,7 +38,7 @@ class MotherDetails extends StatelessWidget {
                   onPressed: () => Navigator.pop(context),
                 ),
                 title: Text(
-                  mother.name ?? "Unknown",
+                  widget.mother.name ?? "Unknown",
                   style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
                 ),
                 subtitle: Text(
@@ -67,8 +49,8 @@ class MotherDetails extends StatelessWidget {
                 ),
                 trailing: Container(
                   padding: const EdgeInsets.all(3.0),
-                  width: 55.sp,
-                  height: 55.sp,
+                  width: 55,
+                  height: 55,
                   decoration: const BoxDecoration(
                     color: Colors.teal,
                     borderRadius: BorderRadius.all(Radius.circular(30.0)),
@@ -79,20 +61,18 @@ class MotherDetails extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            getGestAge().toString(),
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                              fontSize: 20.sp,
-                            ),
+                            MotherUtils.getGestAge(widget.mother.edd).toString(),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                                fontSize: 20),
                           ),
-                          Text(
+                          const Text(
                             "weeks",
                             style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white,
-                              fontSize: 12.sp,
-                            ),
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white,
+                                fontSize: 12),
                           ),
                         ],
                       ),
@@ -101,10 +81,34 @@ class MotherDetails extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(child: MotherTestListView(mother: mother)),
+            Expanded(child: MotherTestListView(mother: widget.mother)),
           ],
         ),
       ),
     );
   }
 }
+
+
+class MotherUtils {
+  /// Calculates the gestational age of the mother in weeks.
+  static int getGestAge(DateTime? edd) {
+    if (edd != null) {
+      final now = DateTime.now();
+      final remainingDays = edd.difference(now).inDays;
+      final gestAge = (280 - remainingDays) ~/ 7;
+      return gestAge.clamp(0, 42); // safe range
+    }
+    return 0;
+  }
+
+  /// Returns abbreviated month name for a given month number.
+  static String getMonthName(int m) {
+    const monthNames = [
+      "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+      "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"
+    ];
+    return (m >= 1 && m <= 12) ? monthNames[m - 1] : "DEC";
+  }
+}
+

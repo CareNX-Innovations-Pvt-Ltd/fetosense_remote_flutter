@@ -35,38 +35,36 @@ void main() {
       expect(find.text('test@doc.com'), findsOneWidget);
     });
 
-    // testWidgets('Edit Profile button works', (WidgetTester tester) async {
-    //   await tester.pumpWidget(
-    //     MaterialApp(
-    //       home: ProfileView(
-    //         doctor: doctor,
-    //         organization: org,
-    //         organizationBabyBeat: null,
-    //       ),
-    //     ),
-    //   );
-    //
-    //   final editProfile = find.text('Edit Profile');
-    //   expect(editProfile, findsOneWidget);
-    //
-    //   await tester.tap(editProfile);
-    //   await tester.pumpAndSettle();
-    //
-    //   // Should navigate to DoctorDetails (could check for a widget from that page)
-    // });
-    //
-    // testWidgets('Logout button exists', (WidgetTester tester) async {
-    //   await tester.pumpWidget(
-    //     MaterialApp(
-    //       home: ProfileView(
-    //         doctor: doctor,
-    //         organization: org,
-    //         organizationBabyBeat: null,
-    //       ),
-    //     ),
-    //   );
-    //
-    //   expect(find.text('Logout'), findsOneWidget);
-    // });
+    testWidgets('Edit Profile button works', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ProfileView(
+            doctor: doctor,
+            organization: org,
+          ),
+        ),
+      );
+
+      final editProfile = find.text('Edit Profile');
+      expect(editProfile, findsOneWidget);
+
+      await tester.tap(editProfile);
+      await tester.pumpAndSettle();
+
+      // Should navigate to DoctorDetails (could check for a widget from that page)
+    });
+
+    testWidgets('Logout button exists', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ProfileView(
+            doctor: doctor,
+            organization: org,
+          ),
+        ),
+      );
+
+      expect(find.text('Logout'), findsOneWidget);
+    });
   });
 }

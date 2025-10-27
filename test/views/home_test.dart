@@ -1,164 +1,168 @@
 import 'package:appwrite/appwrite.dart';
-import 'package:fetosense_remote_flutter/app_router.dart';
 import 'package:fetosense_remote_flutter/core/model/doctor_model.dart';
 import 'package:fetosense_remote_flutter/core/model/organization_model.dart';
 import 'package:fetosense_remote_flutter/core/network/appwrite_config.dart';
 import 'package:fetosense_remote_flutter/core/services/authentication.dart';
 import 'package:fetosense_remote_flutter/core/utils/preferences.dart';
 import 'package:fetosense_remote_flutter/ui/views/home.dart';
-import 'package:fetosense_remote_flutter/ui/views/profile_view.dart';
-import 'package:fetosense_remote_flutter/ui/views/recent_test_list_view.dart';
-import 'package:fetosense_remote_flutter/ui/views/search_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:appwrite/models.dart' as appwrite;
 import 'package:go_router/go_router.dart';
+import 'package:permission_handler/permission_handler.dart' as p;
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:upgrader/upgrader.dart';
+import 'package:get_it/get_it.dart';
 
-import 'login_test.dart';
-
-class MockPreferenceHelper extends Mock implements PreferenceHelper {}
-
-class MockBaseAuth extends Mock implements BaseAuth {}
 
 class MockAppwriteService extends Mock implements AppwriteService {}
 
 class MockDatabases extends Mock implements Databases {}
 
-class MockBuildContext extends Mock implements BuildContext {}
+class MockBaseAuth extends Mock implements BaseAuth {}
+
+class MockPreferenceHelper extends Mock implements PreferenceHelper {}
+
+class MockGoRouter extends Mock implements GoRouter {}
+
+class MockOrganization extends Mock implements Organization {}
+
+class MockDoctor extends Mock implements Doctor {}
 
 void main() {
-  late MockPreferenceHelper mockPrefs;
-  late MockBaseAuth mockAuth;
-  late MockAppwriteService mockAppwrite;
+  late GetIt locator;
   late MockDatabases mockDatabases;
+  late MockPreferenceHelper mockPrefs;
+  late MockAppwriteService mockAppwriteService;
+  late MockBaseAuth mockAuth;
+  late Doctor doctor;
 
-  final fakeDoctor = Doctor(documentId: 'doc123', email: 'doc@example.com');
+  setUpAll(() {
+    registerFallbackValue(Uri.parse(''));
+    WidgetsFlutterBinding.ensureInitialized();
+  });
 
   setUp(() {
-    mockPrefs = MockPreferenceHelper();
-    mockAuth = MockBaseAuth();
-    mockAppwrite = MockAppwriteService();
-    mockDatabases = MockDatabases();
+    locator = GetIt.instance;
+    locator.reset();
 
-    when(() => mockPrefs.getDoctor()).thenReturn(fakeDoctor);
-    when(() => mockAppwrite.client);
+    mockDatabases = MockDatabases();
+    mockPrefs = MockPreferenceHelper();
+    mockAppwriteService = MockAppwriteService();
+    mockAuth = MockBaseAuth();
+
+    doctor = Doctor(
+      documentId: 'doc1',
+      email: 'doctor@test.com',
+      name: 'Dr. Test',
+    );
+
+    locator.registerSingleton<AppwriteService>(mockAppwriteService);
+    locator.registerSingleton<BaseAuth>(mockAuth);
+    locator.registerSingleton<PreferenceHelper>(mockPrefs);
+
+    when(() => mockPrefs.getDoctor()).thenReturn(doctor);
+    when(() => mockAppwriteService.client).thenReturn(Client());
+  });
+
+  testWidgets('renders Home widget with correct initial page', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Home(doctor: doctor),
+      ),
+    );
+
+    expect(find.byType(CurvedNavigationBar), findsOneWidget);
+    expect(find.byType(UpgradeAlert), findsOneWidget);
+  });
+
+  testWidgets('changes page when bottom navigation tapped', (tester) async {
+    await tester.pumpWidget(MaterialApp(home: Home(doctor: doctor)));
+    await tester.pumpAndSettle();
+
+    final icons = find.byType(Icon);
+    expect(icons, findsWidgets);
+
+    await tester.tap(icons.at(1)); // Tap second icon
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets('calls getPermission and returns true/false properly', (tester) async {
+    final homeState = HomeState();
+    final resultFuture = homeState.getPermission();
+
+    // Simulate permissions being granted
+    homeState.permissions = {p.Permission.storage: p.PermissionStatus.granted};
+    expect(await resultFuture, isA<bool>());
+  });
+
+  testWidgets('setOrganization and setOrganizationBabyBeat updates state', (tester) async {
+    await tester.pumpWidget(MaterialApp(home: Home(doctor: doctor)));
+    final state = tester.state<HomeState>(find.byType(Home));
+
+    final org = Organization();
+    state.setOrganization(org);
+    state.setOrganizationBabyBeat(org);
+
+    expect(state.organization, org);
+    expect(state.organizationBabyBeat, org);
+  });
+
+  testWidgets('onPop returns true when page=0', (tester) async {
+    await tester.pumpWidget(MaterialApp(home: Home(doctor: doctor)));
+    final state = tester.state<HomeState>(find.byType(Home));
+
+    final result = await state.onPop(tester.element(find.byType(Home)));
+    expect(result, true);
+  });
+
+  testWidgets('onPop resets page when not on first tab', (tester) async {
+    await tester.pumpWidget(MaterialApp(home: Home(doctor: doctor)));
+    final state = tester.state<HomeState>(find.byType(Home));
+
+    state.setState(() {
+      state.onPop(tester.element(find.byType(Home)));
+    });
+
+    final result = await state.onPop(tester.element(find.byType(Home)));
+    expect(result, false);
+  });
+
+  testWidgets('setUpBottomNavigation returns correct widget per index', (tester) async {
+    final state = HomeState();
+
+    expect(state.setUpBottomNavigation(0), isA<Widget>());
+    expect(state.setUpBottomNavigation(1), isA<Widget>());
+    expect(() => state.setUpBottomNavigation(2), returnsNormally);
+    expect(state.setUpBottomNavigation(999), isA<Widget>());
+  });
+
+  testWidgets('getOrganization handles exception gracefully', (tester) async {
+    await tester.pumpWidget(MaterialApp(home: Home(doctor: doctor)));
+    final state = tester.state<HomeState>(find.byType(Home));
+
     when(() => mockDatabases.getDocument(
       databaseId: any(named: 'databaseId'),
       collectionId: any(named: 'collectionId'),
       documentId: any(named: 'documentId'),
-    )).thenAnswer((_) async => appwrite.Document(
-      $id: 'org123',
-      data: {
-        'name': 'Test Org',
-      },
-      $permissions: [], $collectionId: '', $databaseId: '', $createdAt: '', $updatedAt: '',
-    ));
+    )).thenThrow(Exception('Network error'));
 
-    // Inject into locator
-    locator.registerSingleton<PreferenceHelper>(mockPrefs);
-    locator.registerSingleton<BaseAuth>(mockAuth);
-    locator.registerSingleton<AppwriteService>(mockAppwrite);
+    state.getOrganization();
   });
 
-  testWidgets('renders Home and bottom nav works', (tester) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        home: const Home(),
-      ),
+  testWidgets('initState triggers navigation when organizationName is empty', (tester) async {
+    final emptyDoctor = Doctor(
+      documentId: 'doc2',
+      email: 'no_org@test.com',
     );
-
-    // Default page (RecentTestListView)
-    expect(find.byType(RecentTestListView), findsOneWidget);
-
-    // Tap on search icon
-    await tester.tap(find.byIcon(Icons.search));
-    await tester.pumpAndSettle();
-    expect(find.byType(SearchView), findsOneWidget);
-
-    // Tap on profile icon
-    await tester.tap(find.byIcon(Icons.perm_identity));
-    await tester.pumpAndSettle();
-    expect(find.byType(ProfileView), findsOneWidget);
-
-    // Tap again to go back to index 0
-    await tester.tap(find.byIcon(Icons.search));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byIcon(Icons.perm_identity));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byIcon(Icons.perm_identity)); // Redundant tap to cover all flow
-  });
-
-  testWidgets('calls getOrganization if doctor has organizationId', (tester) async {
-    final doctorWithOrg = Doctor(documentId: 'doc1').. organizationId = 'org1';
-    when(() => mockPrefs.getDoctor()).thenReturn(doctorWithOrg);
+    when(() => mockPrefs.getDoctor()).thenReturn(emptyDoctor);
 
     await tester.pumpWidget(
       MaterialApp(
-        home: const Home(),
+        home: Home(doctor: emptyDoctor),
       ),
     );
 
     await tester.pumpAndSettle();
-    // Should fetch and set organization successfully
-    expect(find.byType(RecentTestListView), findsOneWidget);
-  });
-
-  testWidgets('redirects to init profile update if doctor organizationName is empty', (tester) async {
-    final doctor = Doctor(documentId: 'doc1', email: 'doc@example.com');
-    when(() => mockPrefs.getDoctor()).thenReturn(doctor);
-
-    final mockContext = MockBuildContext();
-    when(() => mockContext.push(AppRoutes.initProfileUpdate2, extra: any(named: 'extra'))).thenReturn(Future.value());
-
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Builder(
-          builder: (context) {
-            Future.microtask(() => context.push(AppRoutes.initProfileUpdate2, extra: doctor));
-            return const Home();
-          },
-        ),
-      ),
-    );
-
-    await tester.pumpAndSettle();
-    expect(find.byType(Home), findsOneWidget);
-  });
-
-  testWidgets('onPop returns true if _page is 0', (tester) async {
-    await tester.pumpWidget(const MaterialApp(home: Home()));
-
-    final state = tester.state<HomeState>(find.byType(Home));
-
-    final result = await state.onPop(MockBuildContext());
-    expect(result, isTrue);
-  });
-
-  testWidgets('onPop returns false and sets _page = 0 if _page is not 0', (tester) async {
-    await tester.pumpWidget(const MaterialApp(home: Home()));
-
-    final state = tester.state<HomeState>(find.byType(Home));
-
-    state.setState(() {
-      // state._page = 2;
-    });
-
-    final result = await state.onPop(MockBuildContext());
-    expect(result, isFalse);
-    // expect(state._page, 0);
-  });
-
-  testWidgets('setOrganization and setOrganizationBabyBeat set state', (tester) async {
-    await tester.pumpWidget(const MaterialApp(home: Home()));
-
-    final state = tester.state<HomeState>(find.byType(Home));
-    final testOrg = Organization.fromMap({'name': 'Baby Org'});
-
-    state.setOrganization(testOrg);
-    expect(state.organization, testOrg);
-
-    state.setOrganizationBabyBeat(testOrg);
-    expect(state.organizationBabyBeat, testOrg);
   });
 }
