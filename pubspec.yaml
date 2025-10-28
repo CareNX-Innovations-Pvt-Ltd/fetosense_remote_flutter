@@ -47,6 +47,9 @@ dependencies:
   appwrite: ^15.0.0
   flutter_lints: ^5.0.0
   go_router: ^15.0.0
+#  cloud_firestore:
+#  firebase_core:
+  csv: ^6.0.0
   http:
 
   shared_preferences: any

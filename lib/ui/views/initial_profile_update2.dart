@@ -7,7 +7,6 @@ import 'package:fetosense_remote_flutter/core/network/appwrite_config.dart';
 import 'package:fetosense_remote_flutter/core/utils/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:go_router/go_router.dart';

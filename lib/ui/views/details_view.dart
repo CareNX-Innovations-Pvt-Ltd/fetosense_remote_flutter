@@ -115,7 +115,7 @@ class DetailsViewState extends State<DetailsView>
       int timDiff = DateTime.now().millisecondsSinceEpoch -
           test!.createdOn!.millisecondsSinceEpoch;
       timDiff = (timDiff / 1000).truncate();
-      if (timDiff > (test!.lengthOfTest! + 60)) _updateLiveFlag();
+      if (timDiff > (test!.lengthOfTest! + 60)) updateLiveFlag();
     }
     if (test != null && test!.isLive() == true) {
       context.read<TestCRUDModel>().startLiveUpdates(test!.documentId!);
@@ -264,7 +264,7 @@ class DetailsViewState extends State<DetailsView>
                       enableAll: test!.interpretationType == null ||
                           test!.interpretationType!.trim().isEmpty,
                       defaultValue: radioValue,
-                      radioButtonValue: (value) => _handleRadioClick(value),
+                      radioButtonValue: (value) => handleRadioClick(value),
                       selectedColor: Colors.blue,
                     )
                   : Container(
@@ -878,7 +878,7 @@ class DetailsViewState extends State<DetailsView>
                                 isLoadingShare = true;
                                 action = Action.SHARE;
                               });
-                              _print();
+                              print();
                             }
                           },
                         )
@@ -900,7 +900,7 @@ class DetailsViewState extends State<DetailsView>
                                 isLoadingPrint = true;
                                 action = Action.PRINT;
                               });
-                              _print();
+                              print();
                             }
                           },
                         )
@@ -931,8 +931,8 @@ class DetailsViewState extends State<DetailsView>
 
   Widget buildGraph(Test graphTest) {
     return GestureDetector(
-      onHorizontalDragStart: (start) => _onDragStart(context, start),
-      onHorizontalDragUpdate: (update) => _onDragUpdate(context, update),
+      onHorizontalDragStart: (start) => onDragStart(context, start),
+      onHorizontalDragUpdate: (update) => onDragUpdate(context, update),
       child: Container(
         color: Colors.white,
         width: MediaQuery.of(context).size.width,
@@ -961,7 +961,7 @@ class DetailsViewState extends State<DetailsView>
     );
   }
 
-  void _handleRadioClick(String value) {
+  void handleRadioClick(String value) {
     showInterpretationDialog(value);
   }
 
@@ -997,14 +997,14 @@ class DetailsViewState extends State<DetailsView>
     });
   }
 
-  _onDragStart(BuildContext context, DragStartDetails start) {
+  onDragStart(BuildContext context, DragStartDetails start) {
     debugPrint(start.globalPosition.toString());
     RenderBox getBox = context.findRenderObject() as RenderBox;
     mTouchStart = getBox.globalToLocal(start.globalPosition).dx;
     //print(mTouchStart.dx.toString() + "|" + mTouchStart.dy.toString());
   }
 
-  _onDragUpdate(BuildContext context, DragUpdateDetails update) {
+  onDragUpdate(BuildContext context, DragUpdateDetails update) {
     //print(update.globalPosition.toString());
     RenderBox getBox = context.findRenderObject() as RenderBox;
     var local = getBox.globalToLocal(update.globalPosition);
@@ -1069,7 +1069,7 @@ class DetailsViewState extends State<DetailsView>
     }
   }
 
-  Future<void> _updateLiveFlag() async {
+  Future<void> updateLiveFlag() async {
     Map<String, dynamic> data = {'live': false};
     await _db.updateDocument(
       databaseId: AppConstants.appwriteDatabaseId,
@@ -1079,10 +1079,10 @@ class DetailsViewState extends State<DetailsView>
     );
   }
 
-  Future<void> _print() async {
+  Future<void> print() async {
     switch (printStatus) {
       case PrintStatus.PRE_PROCESSING:
-        pdfDoc = await _generatePdf(PdfPageFormat.a4.landscape, widget.test);
+        pdfDoc = await generatePdf(PdfPageFormat.a4.landscape, widget.test);
 
         if (action == Action.PRINT) {
           await Printing.layoutPdf(
@@ -1123,7 +1123,7 @@ class DetailsViewState extends State<DetailsView>
     });
   }
 
-  Future<pdf.Document> _generatePdf(PdfPageFormat format, Test test) async {
+  Future<pdf.Document> generatePdf(PdfPageFormat format, Test test) async {
     final pdf1 = pdf.Document();
     int index = 1;
     Interpretations2 interpretations = test.autoInterpretations != null

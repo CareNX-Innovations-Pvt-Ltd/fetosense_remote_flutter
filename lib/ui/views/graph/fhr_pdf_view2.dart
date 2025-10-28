@@ -68,7 +68,7 @@ class FhrPdfView2 {
   late double yTocoEnd;
   late double yTocoDiv;
 
-  Interpretations2? _interpretations;
+  Interpretations2? interpretations;
 
   int? scale;
 
@@ -94,7 +94,7 @@ class FhrPdfView2 {
       timeScaleFactor = 6;
     }
 
-    _interpretations = interpretation;
+    interpretations = interpretation;
 
     pointsPerPage = (10 * timeScaleFactor * XDIV);
     pointsPerDiv = timeScaleFactor * 10;
@@ -129,15 +129,15 @@ class FhrPdfView2 {
     //return bitmaps;
     debugPrint("highlight : $highlight $auto");
 
-    if (_interpretations != null && auto && highlight) {
+    if (interpretations != null && auto && highlight) {
       debugPrint("highlight in : $highlight $auto");
 
       drawInterpretationAreas(
-          _interpretations!.accelerationsList, pages, graphSafeZone);
+          interpretations!.accelerationsList, pages, graphSafeZone);
       drawInterpretationAreas(
-          _interpretations!.decelerationsList, pages, graphUnSafeZone);
+          interpretations!.decelerationsList, pages, graphUnSafeZone);
       drawInterpretationAreas(
-          _interpretations!.noiseList, pages, graphNoiseZone);
+          interpretations!.noiseList, pages, graphNoiseZone);
     }
 
     for (int i = 0; i < pages; i++) {
@@ -599,7 +599,7 @@ class FhrPdfView2 {
 
     canvas[pageNumber].drawParagraph(
         getParagraphInfo(
-            "Basal HR : ${auto ? _interpretations!.getBasalHeartRateStr() : ' _______'}"),
+            "Basal HR : ${auto ? interpretations!.getBasalHeartRateStr() : ' _______'}"),
         Offset(0, rowPos));
     rowPos += rowHeight;
 
@@ -612,23 +612,23 @@ class FhrPdfView2 {
 
     canvas[pageNumber].drawParagraph(
         getParagraphInfo(
-            "Accelerations : ${auto ? _interpretations!.getnAccelerationsStr() : ' _______'}"), //+mData.getWeight(),
+            "Accelerations : ${auto ? interpretations!.getnAccelerationsStr() : ' _______'}"), //+mData.getWeight(),
         Offset(0, rowPos));
     rowPos += rowHeight;
 
     canvas[pageNumber].drawParagraph(
         getParagraphInfo(
-            "Decelerations : ${auto ? _interpretations!.getnDecelerationsStr() : ' _______'}"),
+            "Decelerations : ${auto ? interpretations!.getnDecelerationsStr() : ' _______'}"),
         Offset(0, rowPos));
     rowPos += rowHeight;
     canvas[pageNumber].drawParagraph(
         getParagraphInfo(
-            "STV : ${auto ? '${_interpretations!.getShortTermVariationBpmStr() ?? "--"} bpm / ${_interpretations!.getShortTermVariationMilliStr() ?? "--"} milli' : ' _______'}"),
+            "STV : ${auto ? '${interpretations!.getShortTermVariationBpmStr() ?? "--"} bpm / ${interpretations!.getShortTermVariationMilliStr() ?? "--"} milli' : ' _______'}"),
         Offset(0, rowPos));
     rowPos += rowHeight;
     canvas[pageNumber].drawParagraph(
         getParagraphInfo(
-            "LTV : ${auto ? '${_interpretations!.getLongTermVariationStr() ?? "--"} bpm' : ' _______'}"),
+            "LTV : ${auto ? '${interpretations!.getLongTermVariationStr() ?? "--"} bpm' : ' _______'}"),
         Offset(0, rowPos));
     rowPos += rowHeight;
 
