@@ -4,6 +4,7 @@
 [![License](https://img.shields.io/github/license/CareNX-Innovations-Pvt-Ltd/fetosense_device_flutter)](LICENSE)
 [![Last Commit](https://img.shields.io/github/last-commit/CareNX-Innovations-Pvt-Ltd/fetosense_remote_flutter)](https://github.com/CareNX-Innovations-Pvt-Ltd/fetosense_remote_flutter/commits/main/)
 [![Issues](https://img.shields.io/github/issues/CareNX-Innovations-Pvt-Ltd/fetosense_device_flutter)](https://github.com/CareNX-Innovations-Pvt-Ltd/fetosense_device_flutter/issues)
+[![codecov](https://codecov.io/gh/CareNX-Innovations-Pvt-Ltd/fetosense_remote_flutter/branch/main/graph/badge.svg)](https://codecov.io/gh/CareNX-Innovations-Pvt-Ltd/fetosense_remote_flutter)
 
 A Flutter application for remote fetal monitoring, developed by CareNX Innovations Pvt. Ltd.
 
@@ -100,10 +101,6 @@ lib/
 ## Developer Documentation
 
 You can find the complete developer documentation [here](https://carenx-innovations-pvt-ltd.github.io/fetosense_remote_flutter/).
-
-## Test Coverage
-![App Logo](assets/remote.png)
-
 
 ## About CareNX Innovations
 
