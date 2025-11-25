@@ -60,17 +60,23 @@ class _LoginViewState extends State<LoginView> {
           userId = await Auth().signIn(_email, _password);
           debugPrint('Signed in: $userId');
           if (userId.isNotEmpty) {
-            var doctor = await getDoctor();
-            debugPrint('Signed in:  $doctor');
-              debugPrint('doctor -> ${doctor.email}');
-              debugPrint('doctor -> ${doctor.documentId}');
+            Doctor? doctor = await getDoctor();
+            if (mounted && doctor != null) {
               prefs.setAutoLogin(true);
               prefs.saveDoctor(doctor);
-              if (mounted) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  context.pushReplacement(AppRoutes.home, extra: doctor);
-                });
-              }
+              debugPrint('Signed in:  $doctor');
+              debugPrint('doctor -> ${doctor.email}');
+              debugPrint('doctor -> ${doctor.documentId}');
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                context.pushReplacement(AppRoutes.home, extra: doctor);
+              });
+            } else {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                context.pushReplacement(AppRoutes.initProfileUpdate,
+                    extra: Doctor(
+                        documentId: '684fab610007182960c2', email: _email));
+              });
+            }
           }
         } else {
           userId = await auth.signUp(_email, _confirm);
@@ -380,7 +386,7 @@ class _LoginViewState extends State<LoginView> {
     }
   }
 
-  Future<Doctor> getDoctor() async {
+  Future<Doctor?> getDoctor() async {
     try {
       final result = await databases.listDocuments(
           databaseId: AppConstants.appwriteDatabaseId,
@@ -389,13 +395,14 @@ class _LoginViewState extends State<LoginView> {
             Query.equal('type', 'doctor'),
             Query.equal('email', _email)
           ]);
-      // if (result.total > 0) {
-      final doc = result.documents.map((docs) => Doctor.fromMap(
-            docs.data,
-          ));
-      debugPrint('data is here ---> ${doc.first}');
-      return doc.first;
-      // }
+      if (result.total > 0) {
+        final doc = result.documents.map((docs) => Doctor.fromMap(
+              docs.data,
+            ));
+        debugPrint('data is here ---> ${doc.first}');
+        return doc.first;
+      }
+      return null;
     } on AppwriteException catch (e) {
       debugPrint("Appwrite Error - getDoctor: ${e.message}");
       rethrow;

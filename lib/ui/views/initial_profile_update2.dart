@@ -5,90 +5,66 @@ import 'package:fetosense_remote_flutter/core/model/doctor_model.dart';
 import 'package:fetosense_remote_flutter/core/model/organization_model.dart';
 import 'package:fetosense_remote_flutter/core/network/appwrite_config.dart';
 import 'package:fetosense_remote_flutter/core/utils/app_constants.dart';
+import 'package:fetosense_remote_flutter/locater.dart';
+import 'package:fetosense_remote_flutter/ui/widgets/scan_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../locater.dart';
 
 /// A StatefulWidget that handles the initial profile update for a doctor.
 class InitialProfileUpdate2 extends StatefulWidget {
-  /// [doctor] is the doctor model.
   final Doctor? doctor;
 
-  const InitialProfileUpdate2(
-      {super.key, this.doctor,});
+  const InitialProfileUpdate2({super.key, this.doctor});
 
   @override
   InitialProfileUpdate2State createState() => InitialProfileUpdate2State();
 }
 
 class InitialProfileUpdate2State extends State<InitialProfileUpdate2> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final databases = Databases(locator<AppwriteService>().client);
   bool isMobileVerified = false;
   bool isEditOrg = false;
-  Organization? organization;
-  final databases = Databases(locator<AppwriteService>().client);
+  Doctor? doctor;
   String? code;
-  Doctor doctor = Doctor();
+  Organization? organization;
 
   @override
   void initState() {
     super.initState();
-    debugPrint('doctor -> ${widget.doctor?.email}');
-    debugPrint('doctor -> ${widget.doctor?.documentId}');
-    doctor = widget.doctor!;
+
+    if (widget.doctor == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.goNamed(AppRoutes.login);
+      });
+      return;
+    }
+
+    doctor = widget.doctor;
   }
 
   @override
   Widget build(BuildContext context) {
+    if (doctor == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
     return Scaffold(
       key: _scaffoldKey,
-      body: Center(
-        child: Stack(
-          children: <Widget>[
-            _showForm(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// Displays the form for updating the profile.
-  Widget _showForm() {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: ListView(
-          shrinkWrap: true,
-          children: <Widget>[
+          children: [
             showLogo(),
-            const SizedBox(
-              height: 30,
+            const SizedBox(height: 30),
+
+            const Text(
+              "Update Organization Details",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
             ),
-            Container(
-              margin: const EdgeInsets.fromLTRB(10, 20, 10, 0),
-              width: MediaQuery.of(context).size.width,
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    "Update Organization Details",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black87,
-                      fontSize: 20,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 16,
-            ),
+            const SizedBox(height: 20),
+
             showPrimaryButton(),
           ],
         ),
@@ -96,239 +72,103 @@ class InitialProfileUpdate2State extends State<InitialProfileUpdate2> {
     );
   }
 
-  /// Displays the logo.
   Widget showLogo() {
     return Hero(
       tag: 'hero',
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-        child: CircleAvatar(
-          backgroundColor: Colors.transparent,
-          radius: 140.0,
-          child: Image.asset('images/ic_banner.png'),
-        ),
+      child: CircleAvatar(
+        radius: 140,
+        backgroundColor: Colors.transparent,
+        child: Image.asset('images/ic_banner.png'),
       ),
     );
   }
 
-  /// Displays the name input field.
-  Widget showNameInput() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(32, 10, 32, 8),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-            child: Row(
-              children: <Widget>[
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(4, 0, 16, 0),
-                  child: Icon(
-                    Icons.account_balance,
-                    color: Colors.grey,
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: Colors.grey),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                      child: Text(
-                        (organization == null ? "" : organization?.name!)!,
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-              child: Row(
-                children: <Widget>[
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(4, 0, 16, 0),
-                    child: Icon(
-                      Icons.enhanced_encryption,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(color: Colors.grey),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                        child: Text(
-                          organization == null ? "" : organization!.documentId!,
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              )),
-          code != null
-              ? Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                  child: Row(
-                    children: <Widget>[
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(4, 0, 16, 0),
-                        child: Icon(
-                          Icons.code,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          decoration: const BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(color: Colors.grey),
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                            child: Text(
-                              code ?? '',
-                              style: const TextStyle(fontSize: 16),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              : const Row(children: <Widget>[])
-        ],
-      ),
-    );
-  }
-
-  /// Displays the primary button.
   Widget showPrimaryButton() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(30.0, 45.0, 30.0, 10.0),
-      child: SizedBox(
-        height: 40.0,
-        child: MaterialButton(
-          elevation: 5.0,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-          color: Colors.teal,
-          child: const Text('Scan QR',
-              style: TextStyle(fontSize: 17.0, color: Colors.white)),
-          onPressed: () async {
-            scanQR();
-          },
-        ),
+    return SizedBox(
+      height: 40,
+      child: MaterialButton(
+        color: Colors.teal,
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        child: const Text("Scan QR", style: TextStyle(color: Colors.white)),
+        onPressed: scanQR,
       ),
     );
   }
 
   /// Scans the QR code.
   Future<void> scanQR() async {
-    String barcodeScanRes;
-    try {
-      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          "#ff6666", "Cancel", false, ScanMode.QR);
-      debugPrint(barcodeScanRes);
-    } on PlatformException {
-      barcodeScanRes = 'Failed to get platform version.';
-    }
-    setState(() {
-      isEditOrg = false;
-    });
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const ScanWidget()),
+    );
+
     if (!mounted) return;
-    debugPrint("Scanned URL $barcodeScanRes");
-    if (barcodeScanRes != "-1" && barcodeScanRes.isNotEmpty) {
-      String result;
-      result = barcodeScanRes;
-      result = result.replaceAll("CMFETO:", "");
-      result = result.replaceAll("cmfeto:", "");
-      print(result);
 
-      String decoded = utf8.decode(base64.decode(result));
+    if (result == null || result == "-1") return;
 
-      debugPrint('decoded id is $decoded');
-      updateOrg(decoded);
-    }
-  }
+    debugPrint("SCAN RESULT: $result");
 
-  /// Updates the organization details based on the scanned QR code.
-  Future<void> updateOrg(String code) async {
-    //String cameraScanResult = code ;//await scanner.scanPhoto();
-    if (code.isEmpty) {
-      setState(() {
-        isEditOrg = false;
-      });
-      return;
-    }
-    getDevice(code);
-  }
-
-  /// Retrieves the device details from the database using the scanned code.
-  Future<void> getDevice(String key) async {
-    debugPrint('device code --> $key');
     try {
-      // 1. Query devices where deviceCode == key
+      String cleaned = result.replaceAll("CMFETO:", "").replaceAll("cmfeto:", "");
+
+      String decoded;
+      try {
+        decoded = utf8.decode(base64.decode(cleaned));
+      } catch (_) {
+        decoded = cleaned; // fallback: use raw scan result
+      }
+
+      updateOrg(decoded);
+    } catch (e) {
+      showSnackbar("Invalid QR Code");
+    }
+  }
+
+  Future<void> updateOrg(String scannedCode) async {
+    if (scannedCode.isEmpty) return;
+
+    getDevice(scannedCode);
+  }
+
+  Future<void> getDevice(String key) async {
+    try {
       final result = await databases.listDocuments(
         databaseId: AppConstants.appwriteDatabaseId,
         collectionId: AppConstants.deviceCollectionId,
-        queries: [
-          Query.equal('deviceCode', key),
-        ],
+        queries: [Query.equal('deviceCode', key)],
       );
 
-      if (result.documents.isNotEmpty) {
-        final deviceDoc = result.documents.first;
-        final deviceData = deviceDoc.data;
+      if (result.documents.isEmpty) {
+        showSnackbar("No device found with this code.");
+        return;
+      }
 
-        debugPrint('getDevice - ${deviceData["deviceCode"]}');
+      final deviceData = result.documents.first.data;
 
-        final Map<String, dynamic> updateData = {
+      await databases.updateDocument(
+        databaseId: AppConstants.appwriteDatabaseId,
+        collectionId: AppConstants.userCollectionId,
+        documentId: doctor!.documentId!,
+        data: {
           "organizationId": deviceData["organizationId"],
           "organizationName": deviceData["hospitalName"],
-        };
+        },
+      );
 
-        // 2. Update user document
-        await databases.updateDocument(
-          databaseId: AppConstants.appwriteDatabaseId,
-          collectionId: AppConstants.userCollectionId,
-          documentId: doctor.documentId!,
-          data: updateData,
-        );
+      doctor!.organizationId = deviceData["organizationId"];
+      doctor!.organizationName = deviceData["hospitalName"];
 
-        context.pushReplacement(AppRoutes.home, extra: widget.doctor!);
-        setState(() {
-          code = deviceData["deviceCode"];
-        });
-      } else {
-        debugPrint("No device found with code: $key");
-        showSnackbar("No device found with this code.");
+      if (mounted) {
+        context.goNamed(AppRoutes.home, extra: doctor);
       }
     } catch (e) {
-      debugPrint("Appwrite error in getDevice: $e");
-      showSnackbar("Something went wrong while fetching the device.");
+      debugPrint("Error: $e");
+      showSnackbar("Unable to update organization.");
     }
   }
 
-  /// Displays a snackbar with the given message.
-  void showSnackbar(message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-      duration: const Duration(milliseconds: 3000),
-    );
-    ScaffoldMessenger.of(_scaffoldKey.currentState!.context)
-        .showSnackBar(snackBar);
+  void showSnackbar(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 }

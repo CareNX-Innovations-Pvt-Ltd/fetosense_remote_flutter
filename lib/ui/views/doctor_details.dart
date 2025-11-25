@@ -564,7 +564,7 @@ class DoctorDetailsState extends State<DoctorDetails> {
 
       if (result.documents.isNotEmpty) {
         final deviceData = result.documents.first.data;
-        _enterMPIDBottomSheet(deviceData['organizationId'], deviceData['hospitalName']);
+        // _enterMPIDBottomSheet(deviceData['organizationId'], deviceData['hospitalName']);
         setState(() {
           code = deviceData['deviceCode'];
         });

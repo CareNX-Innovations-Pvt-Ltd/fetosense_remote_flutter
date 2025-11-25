@@ -15,7 +15,6 @@ import 'package:fetosense_remote_flutter/ui/widgets/scan_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:provider/provider.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
@@ -391,39 +390,37 @@ class RecentTestListViewState extends State<RecentTestListView> {
   /// Scans the QR code and updates the organization.
   ///
   /// [barcodeScanRes] is the result of the QR code scan.
+  /// Process scanned QR value returned from ScanWidget()
   Future<void> scanQR(String barcodeScanRes) async {
-    String barcodeScanRes;
-    try {
-      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          "#ff6666", "Cancel", false, ScanMode.QR);
-      debugPrint(barcodeScanRes);
-    } on PlatformException {
-      barcodeScanRes = 'Failed to get platform version.';
-    }
     setState(() {
       isEditOrg = false;
     });
-    if (!mounted) return;
-    debugPrint("Scanned URL $barcodeScanRes");
-    if (barcodeScanRes != "-1" && barcodeScanRes.isNotEmpty) {
-      try {
-        String result;
-        result = barcodeScanRes;
-        result = result.replaceAll("CMFETO:", "");
-        result = result.replaceAll("cfmeto:", "");
 
-        String decoded = utf8.decode(base64.decode(result));
+    debugPrint("Scanned URL: $barcodeScanRes");
 
-        debugPrint('decoded id is $decoded');
-        updateOrg(decoded);
-      } on FormatException {
-        ScaffoldMessenger.of(_scaffoldKey.currentState!.context)
-            .showSnackBar(const SnackBar(
-          content: Text('Invalid QR CODE'),
-        ));
-      }
+    if (barcodeScanRes.isEmpty || barcodeScanRes == "-1") {
+      return;
+    }
+
+    try {
+      // Remove custom prefixes
+      String cleaned = barcodeScanRes
+          .replaceAll("CMFETO:", "")
+          .replaceAll("cmfeto:", "")
+          .replaceAll("cfmeto:", "");
+
+      // Decode base64
+      String decoded = utf8.decode(base64.decode(cleaned));
+
+      debugPrint("Decoded QR: $decoded");
+
+      updateOrg(decoded);
+    } catch (e) {
+      debugPrint("QR decode error: $e");
+      // showSnackBar("Invalid QR Code");
     }
   }
+
 
   /// Updates the organization based on the scanned code.
   ///

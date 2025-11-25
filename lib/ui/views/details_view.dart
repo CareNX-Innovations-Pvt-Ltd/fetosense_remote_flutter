@@ -144,12 +144,6 @@ class DetailsViewState extends State<DetailsView>
     return 'Normal';
   }
 
-  @override
-  void dispose() {
-    _animationController.dispose();
-    context.read<TestCRUDModel>().stopLiveUpdates();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {

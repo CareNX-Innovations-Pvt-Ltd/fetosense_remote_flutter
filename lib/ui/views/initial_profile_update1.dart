@@ -2,186 +2,132 @@ import 'package:appwrite/appwrite.dart';
 import 'package:fetosense_remote_flutter/app_router.dart';
 import 'package:fetosense_remote_flutter/core/model/doctor_model.dart';
 import 'package:fetosense_remote_flutter/core/network/appwrite_config.dart';
-import 'package:fetosense_remote_flutter/core/services/authentication.dart';
 import 'package:fetosense_remote_flutter/core/utils/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../locater.dart';
 
-/// A StatefulWidget that handles the initial profile update for a doctor.
 class InitialProfileUpdate extends StatefulWidget {
-  /// [doctor] is the doctor model.
-  final Doctor? doctor;
+  final Doctor doctor;
 
-  const InitialProfileUpdate({super.key, this.doctor});
+  const InitialProfileUpdate({
+    super.key,
+    required this.doctor,
+  });
 
   @override
   InitialProfileUpdateState createState() => InitialProfileUpdateState();
 }
 
 class InitialProfileUpdateState extends State<InitialProfileUpdate> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _formKey = GlobalKey<FormState>();
 
-  bool isEmailThere = false;
-  final databases = Databases(locator<AppwriteService>().client);
-  BaseAuth auth = locator<BaseAuth>();
   final nameController = TextEditingController();
+  final databases = Databases(locator<AppwriteService>().client);
+
+  @override
+  void initState() {
+    super.initState();
+    nameController.text = widget.doctor.name ?? "";
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       body: Center(
-        child: Stack(
-          children: <Widget>[
-            _showForm(),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              _buildLogo(),
+              const SizedBox(height: 30),
+              _buildNameField(),
+              const SizedBox(height: 24),
+              _buildSaveButton(),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  /// Displays the form for updating the profile.
-  Widget _showForm() {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-        child: ListView(
-          shrinkWrap: true,
-          children: <Widget>[
-            showLogo(),
-            const SizedBox(
-              height: 30,
-            ),
-            showNameInput(),
-            const SizedBox(
-              height: 16,
-            ),
-            showPrimaryButton(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// Displays the logo.
-  Widget showLogo() {
+  Widget _buildLogo() {
     return Hero(
       tag: 'hero',
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-        child: CircleAvatar(
-          backgroundColor: Colors.transparent,
-          radius: 140.0,
-          child: Image.asset('images/ic_banner.png'),
+      child: CircleAvatar(
+        radius: 140,
+        backgroundColor: Colors.transparent,
+        child: Image.asset('images/ic_banner.png'),
+      ),
+    );
+  }
+
+  Widget _buildNameField() {
+    return TextFormField(
+      controller: nameController,
+      decoration: InputDecoration(
+        labelText: "Name",
+        hintText: "Enter Name",
+        filled: true,
+        fillColor: Colors.teal.withOpacity(0.15),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
+      validator: (value) =>
+      (value == null || value.trim().isEmpty) ? "Please enter a name" : null,
     );
   }
 
-  /// Displays the name input field.
-  Widget showNameInput() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-      child: TextFormField(
-        autofocus: false,
-        maxLines: 1,
-       validator: (value){
-         if (value == null || value.trim().isEmpty) {
-           return 'Please enter a name';
-         }
-         return null;
-       },
-        controller: nameController,
-        decoration: InputDecoration(
-            counterStyle: const TextStyle(
-              height: double.minPositive,
-            ),
-            counterText: "",
-            floatingLabelBehavior: FloatingLabelBehavior.auto,
-            labelStyle: const TextStyle(color: Colors.teal),
-            labelText: "Name",
-            hintText: "Enter Name",
-            fillColor: Colors.teal.withOpacity(0.2),
-            filled: true,
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-            errorText: null,
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: Colors.teal),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: Colors.teal),
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: Colors.teal),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: Colors.teal),
-            )),
-        // style: Utils().smallBlack18M(),
+  Widget _buildSaveButton() {
+    return SizedBox(
+      height: 40,
+      child: MaterialButton(
+        color: Colors.teal,
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        onPressed: _saveProfile,
+        child: const Text('Save', style: TextStyle(color: Colors.white)),
       ),
     );
   }
 
-  /// Displays the primary button for saving the profile.
-  Widget showPrimaryButton() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(30.0, 45.0, 30.0, 10.0),
-      child: SizedBox(
-        height: 40.0,
-        child: MaterialButton(
-            elevation: 5.0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30.0),
-            ),
-            color: Colors.teal,
-            child: const Text(
-              'Save',
-              style: TextStyle(fontSize: 17.0, color: Colors.white),
-            ),
-            onPressed: () async {
-              Map<String, dynamic> data = {};
-              data["name"] = nameController.text.trim();
-              data["email"] = widget.doctor!.email!.trim();
-              debugPrint('name -> ${nameController.text}');
-              debugPrint('name -> ${widget.doctor!.documentId!}');
-              if (nameController.text.isEmpty) {
-                showSnackbar("Please fill your name!");
-              } else {
-                widget.doctor!.email = data["email"];
-                try {
-                  await databases.updateDocument(
-                    databaseId: AppConstants.appwriteDatabaseId,
-                    collectionId: AppConstants.userCollectionId,
-                    documentId: widget.doctor!.documentId!,
-                    data: data,
-                  );
+  Future<void> _saveProfile() async {
+    // if (!_formKey.currentState!.validate()) return;
 
-                  context.pushReplacement(AppRoutes.initProfileUpdate2, extra: widget.doctor!);
-                } catch (e) {
-                  debugPrint("Appwrite error: $e");
-                  showSnackbar("Something went wrong while saving.");
-                }
-              }
-            }),
-      ),
-    );
+    final name = nameController.text.trim();
+
+    try {
+      await databases.updateDocument(
+        databaseId: AppConstants.appwriteDatabaseId,
+        collectionId: AppConstants.userCollectionId,
+        documentId: widget.doctor.documentId!,
+        data: {
+          "name": name,
+          "email": widget.doctor.email,
+          "type": "doctor",
+        },
+      );
+      widget.doctor.name = name;
+      if (mounted) {
+        context.goNamed(
+          AppRoutes.initProfileUpdate2,
+          extra: widget.doctor,
+        );
+      }
+    } catch (e) {
+      debugPrint("Appwrite error: $e");
+      showSnackbar("Something went wrong while saving.");
+    }
   }
 
-  /// Displays a snackbar with the given message.
-  void showSnackbar(message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-      duration: const Duration(milliseconds: 3000),
+  void showSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), duration: const Duration(seconds: 2)),
     );
-    ScaffoldMessenger.of(_scaffoldKey.currentState!.context)
-        .showSnackBar(snackBar);
   }
 }

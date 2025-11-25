@@ -1,25 +1,24 @@
 import 'package:fetosense_remote_flutter/ui/widgets/scan_widget.dart';
 import 'package:mockito/mockito.dart';
-import 'package:scan/scan.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-class MockScan extends Mock implements Scan {}
-
-class MockScanController extends Mock implements ScanController {}
+// class MockScan extends Mock implements Scan {}
+//
+// class MockScanController extends Mock implements ScanController {}
 
 class MockImagePicker extends Mock implements ImagePicker {}
 
 class MockXFile extends Mock implements XFile {}
 
 void main() {
-  late MockScanController mockController;
+  // late MockScanController mockController;
   late MockImagePicker mockPicker;
 
   setUp(() {
-    mockController = MockScanController();
+    // mockController = MockScanController();
     mockPicker = MockImagePicker();
   });
 
@@ -105,7 +104,7 @@ void main() {
 
     // simulate onCapture
     final state = tester.state(find.byType(ScanWidget)) as ScanWidgetState;
-    state.onCapture.call('MOCKED_QR_CODE');
+    // state.onCapture.call('MOCKED_QR_CODE');
     await tester.pumpAndSettle();
 
     expect(result, 'MOCKED_QR_CODE');

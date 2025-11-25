@@ -1,5 +1,5 @@
-import 'package:device_info/device_info.dart';
-import 'package:device_info/device_info.dart';
+// import 'package:device_info/device_info.dart';
+// import 'package:device_info/device_info.dart';
 import 'package:fetosense_remote_flutter/app_router.dart';
 import 'package:fetosense_remote_flutter/core/model/doctor_model.dart';
 import 'package:fetosense_remote_flutter/core/services/authentication.dart';
@@ -16,8 +16,8 @@ final locator = GetIt.instance;
 // -------- Mock classes --------
 class MockPreferenceHelper extends Mock implements PreferenceHelper {}
 class MockBaseAuth extends Mock implements BaseAuth {}
-class MockAndroidDeviceInfo extends Mock implements AndroidDeviceInfo {}
-class MockDeviceInfoPlugin extends Mock implements DeviceInfoPlugin {}
+// class MockAndroidDeviceInfo extends Mock implements AndroidDeviceInfo {}
+// class MockDeviceInfoPlugin extends Mock implements DeviceInfoPlugin {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -107,10 +107,10 @@ void main() {
   });
 
   testWidgets('_detectDeviceType runs on android', (tester) async {
-    final mockInfo = MockAndroidDeviceInfo();
-    final mockPlugin = MockDeviceInfoPlugin();
-    when(mockInfo.systemFeatures).thenReturn(['android.software.leanback']);
-    when(mockPlugin.androidInfo).thenAnswer((_) async => mockInfo);
+    // final mockInfo = MockAndroidDeviceInfo();
+    // final mockPlugin = MockDeviceInfoPlugin();
+    // when(mockInfo.systemFeatures).thenReturn(['android.software.leanback']);
+    // when(mockPlugin.androidInfo).thenAnswer((_) async => mockInfo);
 
     await tester.pumpWidget(const MaterialApp(home: SplashView()));
     final state = tester.state(find.byType(SplashView)) as dynamic;
