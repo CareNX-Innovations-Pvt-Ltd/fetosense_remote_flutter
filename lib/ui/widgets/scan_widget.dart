@@ -19,7 +19,7 @@ class ScanWidgetState extends State<ScanWidget> {
     super.dispose();
   }
 
-  void _return(String value) {
+  void returnMethod(String value) {
     if (!_popped && mounted) {
       _popped = true;
       controller.stop();
@@ -27,10 +27,10 @@ class ScanWidgetState extends State<ScanWidget> {
     }
   }
 
-  void _onDetect(BarcodeCapture capture) {
+  void onDetect(BarcodeCapture capture) {
     final barcode = capture.barcodes.first;
     final value = barcode.rawValue;
-    if (value != null) _return(value);
+    if (value != null) returnMethod(value);
   }
 
   Future<void> pickFromGallery() async {
@@ -40,7 +40,7 @@ class ScanWidgetState extends State<ScanWidget> {
     final result = await controller.analyzeImage(image.path);
     final barcode = result?.barcodes.first.rawValue;
 
-    if (barcode != null) _return(barcode);
+    if (barcode != null) returnMethod(barcode);
   }
 
   @override
@@ -50,7 +50,7 @@ class ScanWidgetState extends State<ScanWidget> {
         children: [
           MobileScanner(
             controller: controller,
-            onDetect: _onDetect,
+            onDetect: onDetect,
           ),
 
           Align(
@@ -83,7 +83,7 @@ class ScanWidgetState extends State<ScanWidget> {
             bottom: 30,
             right: 20,
             child: GestureDetector(
-              onTap: () => _return("-1"),
+              onTap: () => returnMethod("-1"),
               child: const Text("Cancel", style: TextStyle(fontSize: 18)),
             ),
           ),
