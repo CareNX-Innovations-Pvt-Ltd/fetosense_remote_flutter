@@ -8,6 +8,7 @@ import 'package:fetosense_remote_flutter/core/services/authentication.dart';
 import 'package:fetosense_remote_flutter/core/utils/app_constants.dart';
 import 'package:fetosense_remote_flutter/core/utils/preferences.dart';
 import 'package:fetosense_remote_flutter/locater.dart';
+import 'package:fetosense_remote_flutter/ui/views/reports/reports_view.dart';
 import 'package:fetosense_remote_flutter/ui/views/search_view.dart';
 import 'package:fetosense_remote_flutter/ui/views/profile_view.dart';
 import 'package:fetosense_remote_flutter/ui/views/recent_test_list_view.dart';
@@ -18,7 +19,6 @@ import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart' as p;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:upgrader/upgrader.dart';
-
 
 /// A stateful widget that represents the Home view of the application.
 /// This view displays different sections of the app based on the selected tab.
@@ -59,6 +59,7 @@ class HomeState extends State<Home> {
               width: 35,
             ),
             const Icon(Icons.search, size: 30, color: Colors.white),
+            const Icon(Icons.file_present, size: 30, color: Colors.white),
             const Icon(Icons.perm_identity, size: 30, color: Colors.white),
           ],
           color: Colors.teal,
@@ -98,6 +99,8 @@ class HomeState extends State<Home> {
       case 1:
         return SearchView(doctor: doctor, organization: organization);
       case 2:
+        return ReportsView();
+      case 3:
         return ProfileView(
           doctor: doctor!,
           organization: organization,
@@ -109,7 +112,7 @@ class HomeState extends State<Home> {
 
   @override
   void initState() {
-    doctor = (widget.doctor ?? prefs.getDoctor()) ;
+    doctor = (widget.doctor ?? prefs.getDoctor());
     if (doctor?.organizationName?.isEmpty == true) {
       debugPrint('doctor in home ---------> ${doctor?.documentId}');
       debugPrint('doctor in home ---------> ${doctor?.email}');
@@ -150,7 +153,9 @@ class HomeState extends State<Home> {
 
       debugPrint(document.$id);
       setState(() {
-        organization = Organization.fromMap(document.data, );
+        organization = Organization.fromMap(
+          document.data,
+        );
       });
     } catch (e) {
       debugPrint('Error fetching organization: $e');

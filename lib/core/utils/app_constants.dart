@@ -11,7 +11,7 @@ abstract class AppConstants {
   static const String deviceCollectionId = '684c1a0200383bd0527c';
   static const String testsCollectionId = '684c1a13001f5e7a17c5';
   static const String configCollectionId = '6850060d00380d389603';
-  static const String appwriteEndpoint = 'http://20.6.93.31/v1';
+  static const String appwriteEndpoint = 'https://appwrite.fetosense.com/v1';
   static const String appwriteProjectId = '684c18890002a74fff23';
 
   ///app settings keys

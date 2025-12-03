@@ -97,8 +97,6 @@ class InitialProfileUpdateState extends State<InitialProfileUpdate> {
   }
 
   Future<void> _saveProfile() async {
-    // if (!_formKey.currentState!.validate()) return;
-
     final name = nameController.text.trim();
 
     try {

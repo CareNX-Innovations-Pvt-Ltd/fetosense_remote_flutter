@@ -4,7 +4,6 @@ import 'package:fetosense_remote_flutter/core/model/organization_model.dart';
 import 'package:fetosense_remote_flutter/core/network/appwrite_config.dart';
 import 'package:fetosense_remote_flutter/core/utils/app_constants.dart';
 import 'package:fetosense_remote_flutter/locater.dart';
-import 'package:fetosense_remote_flutter/ui/shared/constant.dart';
 import 'package:fetosense_remote_flutter/ui/widgets/scan_widget.dart';
 import 'package:fetosense_remote_flutter/ui/widgets/update_org_dialog.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,12 +20,11 @@ class DoctorDetails extends StatefulWidget {
   /// The organization associated with the doctor.
   final Organization? org;
 
-
-  const DoctorDetails(
-      {super.key,
-      required this.doctor,
-      this.org,
-      });
+  const DoctorDetails({
+    super.key,
+    required this.doctor,
+    this.org,
+  });
 
   @override
   State<StatefulWidget> createState() => DoctorDetailsState();
@@ -50,8 +48,6 @@ class DoctorDetailsState extends State<DoctorDetails> {
   String? code;
 
   Map<String, dynamic>? passKeys = {};
-
-  final TextEditingController _passkeyController = TextEditingController();
 
   final databases = Databases(locator<AppwriteService>().client);
   final users = Account(locator<AppwriteService>().client);
@@ -273,7 +269,7 @@ class DoctorDetailsState extends State<DoctorDetails> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      const Text("Fetosense Organization",
+                      const Text("Organization",
                           style: TextStyle(
                               fontWeight: FontWeight.w400,
                               color: Colors.black87,
@@ -286,15 +282,13 @@ class DoctorDetailsState extends State<DoctorDetails> {
                               onPressed: () async {
                                 setState(() {
                                   isEditOrg = true;
-                                  // scanQR();
                                 });
                                 var result = await Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) => ScanWidget()));
-
-                                // print("Result : " + result.toString());
-
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) => ScanWidget(),
+                                  ),
+                                );
                                 if (result != null && result != 'Unknown') {
                                   scanQR(result);
                                 } else {
@@ -427,7 +421,8 @@ class DoctorDetailsState extends State<DoctorDetails> {
             documentId: docId,
           );
           final doctorData = Map<String, dynamic>.from(doctorDoc.data);
-          final associations = Map<String, dynamic>.from(doctorData['babyBeatAssociation'] ?? {});
+          final associations = Map<String, dynamic>.from(
+              doctorData['babyBeatAssociation'] ?? {});
           associations.remove(documentId);
 
           await databases.updateDocument(
@@ -443,7 +438,8 @@ class DoctorDetailsState extends State<DoctorDetails> {
             documentId: documentId!,
           );
           final hospitalData = Map<String, dynamic>.from(hospitalDoc.data);
-          final reverseAssoc = Map<String, dynamic>.from(hospitalData['babyBeatAssociation'] ?? {});
+          final reverseAssoc = Map<String, dynamic>.from(
+              hospitalData['babyBeatAssociation'] ?? {});
           reverseAssoc.remove(docId);
 
           await databases.updateDocument(
@@ -466,8 +462,7 @@ class DoctorDetailsState extends State<DoctorDetails> {
         } catch (e) {
           debugPrint("Deletion error: $e");
           Navigator.pop(context);
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text('Something went wrong!'),
             behavior: SnackBarBehavior.floating,
             duration: Duration(milliseconds: 3000),
@@ -485,7 +480,8 @@ class DoctorDetailsState extends State<DoctorDetails> {
           fontWeight: FontWeight.bold,
         ),
       ),
-      content: const Text("Are you sure you want to disassociate this hospital?"),
+      content:
+          const Text("Are you sure you want to disassociate this hospital?"),
       actions: [
         cancelButton,
         continueButton,
@@ -558,182 +554,53 @@ class DoctorDetailsState extends State<DoctorDetails> {
     try {
       final result = await databases.listDocuments(
         databaseId: AppConstants.appwriteDatabaseId,
-        collectionId: AppConstants.userCollectionId,
+        collectionId: AppConstants.deviceCollectionId,
         queries: [Query.equal('deviceCode', key)],
       );
 
-      if (result.documents.isNotEmpty) {
-        final deviceData = result.documents.first.data;
-        // _enterMPIDBottomSheet(deviceData['organizationId'], deviceData['hospitalName']);
-        setState(() {
-          code = deviceData['deviceCode'];
-        });
+      if (result.documents.isEmpty) {
+        showSnackbar("No device found with this code.");
+        return;
       }
+
+      final deviceData = result.documents.first.data;
+
+      await databases.updateDocument(
+        databaseId: AppConstants.appwriteDatabaseId,
+        collectionId: AppConstants.userCollectionId,
+        documentId: widget.doctor!.documentId!,
+        data: {
+          "organizationId": deviceData["organizationId"],
+          "organizationName": deviceData["hospitalName"],
+        },
+      );
+
+      widget.doctor!.organizationId = deviceData["organizationId"];
+      widget.doctor!.organizationName = deviceData["hospitalName"];
+
     } catch (e) {
-      debugPrint("getDevice error: $e");
+      debugPrint("Error: $e");
+      showSnackbar("Unable to update organization.");
     }
   }
 
-
-  /// Shows the bottom sheet to enter the pass key for the organization.
-  /// [hospitalid] is the ID of the hospital.
-  /// [hospitalName] is the name of the hospital.
-  void _enterMPIDBottomSheet(String? hospitalid, String? hospitalName) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) =>
-          StatefulBuilder(builder: (context, StateSetter state) {
-            return Wrap(
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.only(top: 12),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(50),
-                      topLeft: Radius.circular(50),
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.13,
-                        child: Divider(
-                          thickness: 2,
-                          color: greyRegular,
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-                        child: const Text(
-                          "Your Hospital name is :",
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      Text(
-                        hospitalName ?? '',
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: MediaQuery.of(context).size.width * 0.10),
-                      const Text(
-                        "Please enter your passkey to continue",
-                        textAlign: TextAlign.left,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          bottom: MediaQuery.of(context).viewInsets.bottom,
-                        ),
-                        child: Container(
-                          margin: const EdgeInsets.fromLTRB(25, 20, 25, 30),
-                          child: TextFormField(
-                            controller: _passkeyController,
-                            keyboardType: TextInputType.text,
-                            autofocus: false,
-                            maxLength: 20,
-                            maxLines: 1,
-                            decoration: InputDecoration(
-                              counterStyle: const TextStyle(height: double.minPositive),
-                              counterText: "",
-                              hintText: "Enter Pass Key",
-                              fillColor: lightTealColor,
-                              filled: true,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 10.0, horizontal: 20.0),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: greenColor),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: greenColor),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          color: themeColor,
-                          child: MaterialButton(
-                            padding: const EdgeInsets.all(20),
-                            color: greenColor,
-                            elevation: 0,
-                            onPressed: () async {
-                              if (_passkeyController.text.trim() ==
-                                  passKeys!['fetosense']) {
-                                try {
-                                  await databases.updateDocument(
-                                    databaseId: AppConstants.appwriteDatabaseId,
-                                    collectionId: AppConstants.userCollectionId,
-                                    documentId: widget.doctor!.documentId!,
-                                    data: {
-                                      'organizationId': hospitalid,
-                                      'name': hospitalName,
-                                    },
-                                  );
-
-                                  setState(() {
-                                    widget.doctor!.organizationName = hospitalName;
-                                  });
-
-                                  getOrganization(hospitalid!);
-                                  Navigator.pop(context);
-                                } catch (e) {
-                                  debugPrint("Appwrite error: $e");
-                                  Navigator.pop(context);
-                                  ScaffoldMessenger.of(
-                                    _scaffoldKey.currentState!.context,
-                                  ).showSnackBar(const SnackBar(
-                                    content: Text('Something went wrong!'),
-                                    behavior: SnackBarBehavior.floating,
-                                    duration: Duration(milliseconds: 3000),
-                                  ));
-                                }
-                              } else {
-                                ScaffoldMessenger.of(
-                                  _scaffoldKey.currentState!.context,
-                                ).showSnackBar(const SnackBar(
-                                  content: Text('Invalid Pass Key!'),
-                                  behavior: SnackBarBehavior.floating,
-                                  duration: Duration(milliseconds: 3000),
-                                ));
-                                Navigator.pop(context);
-                              }
-                            },
-                            child: const Text(
-                              'OK',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            );
-          }),
-    );
+  void showSnackbar(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
   /// Fetches the organization details based on the ID.
   /// [id] is the organization ID.
   Future<void> getOrganization(String id) async {
     try {
-      final doc = await databases.getDocument(
+      final doc = await databases.listDocuments(
         databaseId: AppConstants.appwriteDatabaseId,
         collectionId: AppConstants.userCollectionId,
-        documentId: id,
+       queries: [Query.equal('type', 'organization'), Query.equal('organizationId', id)]
       );
 
-      final data = doc.data;
+      final data = doc.documents.first;
       setState(() {
-        organization = Organization.fromMap(data);
+        organization = Organization.fromMap(data.data);
         organization!.deviceCode = id;
         isEditOrg = false;
       });
@@ -744,7 +611,6 @@ class DoctorDetailsState extends State<DoctorDetails> {
       setState(() => isEditOrg = false);
     }
   }
-
 
   /// Sets the device associations for the doctor.
   /// [orgId] is the organization ID.
@@ -769,7 +635,8 @@ class DoctorDetailsState extends State<DoctorDetails> {
           "id": widget.doctor!.documentId
         };
 
-        final associations = Map<String, dynamic>.from(data['associations'] ?? {});
+        final associations =
+            Map<String, dynamic>.from(data['associations'] ?? {});
         associations[widget.doctor!.documentId!] = associationData;
 
         await databases.updateDocument(
@@ -783,7 +650,6 @@ class DoctorDetailsState extends State<DoctorDetails> {
       debugPrint("setDeviceAssociations error: $e");
     }
   }
-
 
   /// Updates the doctor details in the Appwrite database.
   Future<void> updateDoctorDetails() async {
@@ -807,6 +673,4 @@ class DoctorDetailsState extends State<DoctorDetails> {
       debugPrint("Update doctor error: $e");
     }
   }
-
-
 }
