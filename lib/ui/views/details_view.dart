@@ -127,14 +127,14 @@ class DetailsViewState extends State<DetailsView>
     final int fhr = interp.getBasalHeartRate();
     final int acc = interp.getnAccelerations() ?? 0;
     final int dec = interp.getnDecelerations() ?? 0;
-    final double stv = interp.getShortTermVariationBpm();
+    final double stv = interp.getShortTermVariationMilli().toDouble();
     final int ltv = interp.getLongTermVariation();
 
     // Abnormal cases
     if (fhr < 110 || fhr > 160) return 'Abnormal';
     if (dec >= 2) return 'Abnormal';
-    if (stv < 2.0) return 'Abnormal';
-    if (ltv < 6) return 'Abnormal';
+    if (stv < 3.0) return 'Abnormal';
+    if (ltv < 5) return 'Abnormal';
 
     // Atypical cases
     if ((stv >= 2.0 && stv <= 4.5) || (ltv >= 6 && ltv <= 10) || acc == 0) {

@@ -111,7 +111,7 @@ class AllTestCard extends StatelessWidget {
           ),
         ),
         title: Text(
-          "${testDetails.motherName} ",
+          testDetails.motherName == null ? "Anonymous" : testDetails.motherName!,
           style: TextStyle(
               fontWeight: FontWeight.w400,
               fontSize: 32.sp,
@@ -154,16 +154,39 @@ class AllTestCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                   ),
-                  child: Center(
-                    child: Text(
-                      DateFormat('dd\nMMM').format(testDetails.createdOn!),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w500),
+                  child:
+                  (testDetails.referral ?? false ) ? Padding(
+                    padding: const EdgeInsets.only(right: 6.0),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 2),
+                      width: 54.w,
+                      height: 84.h,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "Referred",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ),
                     ),
+                  ) : Text(
+                    DateFormat('dd\nMMM').format(testDetails.createdOn!),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w500),
                   ),
+
                 ),
               ),
         onTap: () {

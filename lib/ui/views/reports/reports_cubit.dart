@@ -5,6 +5,7 @@ import 'package:fetosense_remote_flutter/core/utils/app_constants.dart';
 import 'package:fetosense_remote_flutter/locater.dart';
 import 'package:fetosense_remote_flutter/ui/widgets/card_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'reports_state.dart';
 
 class ReportsCubit extends Cubit<ReportsState> {
@@ -15,7 +16,6 @@ class ReportsCubit extends Cubit<ReportsState> {
         super(const ReportsState());
 
   Future<void> fetchReports() async {
-    print("FETCH STARTED");
     emit(state.copyWith(status: ReportsStatus.loading));
 
     try {
@@ -24,36 +24,29 @@ class ReportsCubit extends Cubit<ReportsState> {
         collectionId: AppConstants.userCollectionId,
         queries: [Query.equal('type', 'organization')],
       );
-      print("ORG COUNT = ${orgResult.total}");
 
       final deviceResult = await db.listDocuments(
         databaseId: AppConstants.appwriteDatabaseId,
         collectionId: AppConstants.deviceCollectionId,
         queries: [Query.limit(2000)],
       );
-      print("DEVICE COUNT = ${deviceResult.total}");
 
       final mothersResult = await db.listDocuments(
         databaseId: AppConstants.appwriteDatabaseId,
         collectionId: AppConstants.userCollectionId,
         queries: [Query.equal('type', 'mother')],
       );
-      print("MOTHERS COUNT = ${mothersResult.total}");
 
       final referralResult = await db.listDocuments(
         databaseId: AppConstants.appwriteDatabaseId,
         collectionId: AppConstants.testsCollectionId,
         queries: [Query.equal('referral', true)],
       );
-      print("REFERRAL COUNT = ${referralResult.total}");
 
       final testsResult = await db.listDocuments(
         databaseId: AppConstants.appwriteDatabaseId,
         collectionId: AppConstants.testsCollectionId,
       );
-      print("TEST COUNT = ${testsResult.total}");
-
-      print("EMITTING LOADED");
 
       emit(state.copyWith(
         status: ReportsStatus.loaded,
@@ -64,7 +57,6 @@ class ReportsCubit extends Cubit<ReportsState> {
         referrals: referralResult.total,
       ));
     } catch (e) {
-      print("ERROR OCCURRED → $e");
       emit(state.copyWith(
           status: ReportsStatus.error, errorMessage: e.toString()));
     }
@@ -72,27 +64,32 @@ class ReportsCubit extends Cubit<ReportsState> {
 
   List<DashboardStat> get dashboardStats => [
         DashboardStat(
-          icon: Icons.business,
+          icon: Icon(Icons.business, size: 30,),
           title: "Organizations",
           count: state.organizations.toString(),
         ),
         DashboardStat(
-          icon: Icons.devices,
-          title: "Devices",
-          count: state.devices.toString(),
+          icon: FaIcon(FontAwesomeIcons.userDoctor, size: 30,),
+          title: "Doctors",
+          count: '30',
         ),
         DashboardStat(
-          icon: Icons.pregnant_woman,
+          icon: Icon(Icons.pregnant_woman, size: 30,),
           title: "Mothers",
           count: state.mothers.toString(),
         ),
         DashboardStat(
-          icon: Icons.monitor_heart,
+          icon: Icon(Icons.devices, size: 30,),
+          title: "Devices",
+          count: state.devices.toString(),
+        ),
+        DashboardStat(
+          icon: Icon(Icons.monitor_heart, size: 30,),
           title: "Tests",
           count: state.tests.toString(),
         ),
         DashboardStat(
-          icon: Icons.account_circle_outlined,
+          icon: FaIcon(FontAwesomeIcons.arrowsDownToPeople, size: 30,),
           title: "Referrals",
           count: state.referrals.toString(),
         ),

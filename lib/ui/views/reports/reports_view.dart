@@ -41,8 +41,6 @@ class _ReportsBody extends StatelessWidget {
 
                   final stats = context.read<ReportsCubit>().dashboardStats;
 
-                  print("STATS SHOWN → $stats");
-
                   return Padding(
                     padding: const EdgeInsets.all(14),
                     child: GridView.builder(
@@ -50,7 +48,7 @@ class _ReportsBody extends StatelessWidget {
                       physics: const BouncingScrollPhysics(),
                       itemCount: stats.length,
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,           // 2 cards per row (best for mobile)
+                        crossAxisCount: 2,
                         mainAxisSpacing: 16,
                         crossAxisSpacing: 16,
                         childAspectRatio: 1.2,
@@ -82,7 +80,7 @@ class _ReportsBody extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(stat.icon, color: Colors.teal, size: 30),
+          stat.icon,
           const SizedBox(height: 12),
           Text(
             stat.count,

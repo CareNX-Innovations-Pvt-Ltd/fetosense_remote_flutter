@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 /// Each [DashboardStat] contains an [icon], a [title], and a [count] value to display on the dashboard.
 class DashboardStat {
   /// The icon representing the statistic.
-  final IconData icon;
+  final Widget icon;
 
   /// The title or label of the statistic.
   final String title;
@@ -19,7 +19,7 @@ class DashboardStat {
   /// Returns a copy of this [DashboardStat] with optional new values for its fields.
   ///
   /// If a parameter is not provided, the current value is used.
-  DashboardStat copyWith({IconData? icon, String? title, String? count}) {
+  DashboardStat copyWith({Widget? icon, String? title, String? count}) {
     return DashboardStat(
       icon: icon ?? this.icon,
       title: title ?? this.title,
@@ -32,10 +32,10 @@ class DashboardStat {
 ///
 /// Replace with real API data as needed.
 final List<DashboardStat> dashboardStats = [
-  DashboardStat(icon: Icons.business, title: "Organizations", count: "1"),
-  DashboardStat(icon: Icons.devices, title: "Devices", count: "4"),
-  DashboardStat(icon: Icons.pregnant_woman, title: "Mothers", count: "4121"),
-  DashboardStat(icon: Icons.monitor_heart, title: "Tests", count: "5538"),
+  DashboardStat(icon: Icon(Icons.business), title: "Organizations", count: "1"),
+  DashboardStat(icon: Icon(Icons.devices), title: "Devices", count: "4"),
+  DashboardStat(icon: Icon(Icons.pregnant_woman), title: "Mothers", count: "4121"),
+  DashboardStat(icon: Icon(Icons.monitor_heart), title: "Tests", count: "5538"),
 ];
 
 class DashboardStatsWidget extends StatelessWidget {
@@ -94,11 +94,7 @@ class _DashboardStatCard extends StatelessWidget {
                 ),
               ],
             ),
-            child: Icon(
-              item.icon,
-              size: 26,
-              color: Colors.teal,
-            ),
+            child: item.icon
           ),
           const SizedBox(width: 14),
           Text(

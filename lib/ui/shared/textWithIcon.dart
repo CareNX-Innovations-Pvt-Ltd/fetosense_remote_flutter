@@ -22,7 +22,7 @@ class TextWithIcon extends StatelessWidget {
             Text(
               text,
                 style: TextStyle(
-                    fontSize: 26.sp,
+                    fontSize: 14.sp,
                     color: Colors.black87,
                     fontWeight: FontWeight.w600)
             ),

@@ -39,7 +39,7 @@ class MotherCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  gestAge?.toString() ?? "-",
+                  mother.gAge?.toString() ?? "-",
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     color: Colors.white,

@@ -45,8 +45,8 @@ class TestCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-          margin: EdgeInsets.symmetric(horizontal: 10),
+          padding: EdgeInsets.symmetric(vertical: 2, horizontal: 2),
+          margin: EdgeInsets.symmetric(horizontal: 6),
           decoration: BoxDecoration(
             border: Border(bottom: BorderSide(width: 1, color: Colors.grey)),
           ),
@@ -56,70 +56,67 @@ class TestCard extends StatelessWidget {
                 flex: 5,
                 child: Column(
                   children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.all(8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Container(
-                            height: 40,
-                            //margin: EdgeInsets.symmetric(horizontal: 5),
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  width: 0.5,
-                                  color: Colors.grey,
-                                ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Container(
+                          height: 40,
+                          //margin: EdgeInsets.symmetric(horizontal: 5),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                width: 0.5,
+                                color: Colors.grey,
                               ),
-                            ),
-                            child: Row(
-                              children: <Widget>[
-                                TextWithIcon(
-                                    icon: Icons.favorite,
-                                    text:
-                                        interpretation.getBasalHeartRateStr()),
-                                Text(
-                                  "Basal HR",
-                                  style: TextStyle(
-                                    fontSize: 18.sp,
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.w300,
-                                  ),
-                                )
-                              ],
                             ),
                           ),
-                          Container(
-                            height: 40,
-                            //margin: EdgeInsets.symmetric(horizontal: 16),
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  width: 0.5,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ),
-                            child: Row(
-                              children: <Widget>[
-                                TextWithIcon(
-                                  icon: Icons.arrow_upward,
+                          child: Row(
+                            children: <Widget>[
+                              TextWithIcon(
+                                  icon: Icons.favorite,
                                   text:
-                                      ' ${testDetails.movementEntries != null && (testDetails.movementEntries!.length + testDetails.autoFetalMovement!.length) > 0 ? movements : '--'}',
+                                      interpretation.getBasalHeartRateStr()),
+                              Text(
+                                "Basal HR",
+                                style: TextStyle(
+                                  fontSize: 8.sp,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w300,
                                 ),
-                                Text(
-                                  "Movements",
-                                  style: TextStyle(
-                                    fontSize: 18.sp,
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.w300,
-                                  ),
-                                ),
-                              ],
+                              )
+                            ],
+                          ),
+                        ),
+                        Container(
+                          height: 40,
+                          //margin: EdgeInsets.symmetric(horizontal: 16),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                width: 0.5,
+                                color: Colors.grey,
+                              ),
                             ),
                           ),
-                        ],
-                      ),
+                          child: Row(
+                            children: <Widget>[
+                              TextWithIcon(
+                                icon: Icons.arrow_upward,
+                                text:
+                                    ' ${testDetails.movementEntries != null && (testDetails.movementEntries!.length + testDetails.autoFetalMovement!.length) > 0 ? movements : '--'}',
+                              ),
+                              Text(
+                                "Movements",
+                                style: TextStyle(
+                                  fontSize: 8.sp,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                     Padding(
                       padding: EdgeInsets.all(8),
@@ -140,7 +137,7 @@ class TestCard extends StatelessWidget {
                               ),
                             ),
                             child: SizedBox(
-                              height: 30,
+                              // height: 30,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
@@ -148,7 +145,7 @@ class TestCard extends StatelessWidget {
                                     interpretation.getnAccelerationsStr(),
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontSize: 30.sp,
+                                      fontSize: 14.sp,
                                       color: Colors.black87,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -158,7 +155,7 @@ class TestCard extends StatelessWidget {
                                     style: TextStyle(
                                       fontWeight: FontWeight.w300,
                                       color: Colors.black87,
-                                      fontSize: 12.sp,
+                                      fontSize: 8.sp,
                                     ),
                                   ),
                                 ],
@@ -179,7 +176,7 @@ class TestCard extends StatelessWidget {
                               ),
                             ),
                             child: SizedBox(
-                              height: 30,
+                              // height: 30,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
@@ -187,7 +184,7 @@ class TestCard extends StatelessWidget {
                                     interpretation.getnDecelerationsStr(),
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontSize: 30.sp,
+                                      fontSize: 14.sp,
                                       color: Colors.black87,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -197,7 +194,7 @@ class TestCard extends StatelessWidget {
                                     style: TextStyle(
                                       fontWeight: FontWeight.w300,
                                       color: Colors.black87,
-                                      fontSize: 12.sp,
+                                      fontSize: 8.sp,
                                     ),
                                   ),
                                 ],
@@ -218,7 +215,7 @@ class TestCard extends StatelessWidget {
                               ),
                             ),
                             child: SizedBox(
-                              height: 30,
+                              // height: 30,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
@@ -226,7 +223,7 @@ class TestCard extends StatelessWidget {
                                     interpretation.getShortTermVariationBpmStr(),
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontSize: 30.sp,
+                                      fontSize: 14.sp,
                                       color: Colors.black87,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -236,7 +233,7 @@ class TestCard extends StatelessWidget {
                                     style: TextStyle(
                                       fontWeight: FontWeight.w300,
                                       color: Colors.black87,
-                                      fontSize: 12.sp,
+                                      fontSize: 8.sp,
                                     ),
                                   ),
                                 ],
@@ -257,7 +254,7 @@ class TestCard extends StatelessWidget {
                               ),
                             ),
                             child: SizedBox(
-                              height: 30,
+                              // height: 30,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
@@ -265,7 +262,7 @@ class TestCard extends StatelessWidget {
                                     interpretation.getLongTermVariationStr(),
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontSize: 30.sp,
+                                      fontSize: 14.sp,
                                       color: Colors.black87,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -275,7 +272,7 @@ class TestCard extends StatelessWidget {
                                     style: TextStyle(
                                       fontWeight: FontWeight.w300,
                                       color: Colors.black87,
-                                      fontSize: 12.sp,
+                                      fontSize: 8.sp,
                                     ),
                                   ),
                                 ],
@@ -339,7 +336,7 @@ class TestCard extends StatelessWidget {
                             ),
                             child: SizedBox(
                               width: 40,
-                              height: 40,
+                              // height: 40,
                               child: Container(
                                 decoration: BoxDecoration(
                                   borderRadius: const BorderRadius.all(
@@ -351,7 +348,7 @@ class TestCard extends StatelessWidget {
                                     DateFormat('dd\nMMM').format(testDetails.createdOn!),
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontSize: 30.sp,
+                                      fontSize: 14.sp,
                                       color: Colors.black87,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -362,7 +359,7 @@ class TestCard extends StatelessWidget {
                           ),
                     Container(
                       width: 40,
-                      height: 40,
+                      // height: 40,
                       padding: const EdgeInsets.all(3.0),
                       margin: EdgeInsets.only(top: 10, bottom: 5),
                       decoration: BoxDecoration(
@@ -381,7 +378,7 @@ class TestCard extends StatelessWidget {
                               style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 color: Colors.white,
-                                fontSize: 30.sp,
+                                fontSize: 12.sp,
                               ),
                             ),
                             Text(
@@ -389,7 +386,7 @@ class TestCard extends StatelessWidget {
                               style: TextStyle(
                                 fontWeight: FontWeight.w300,
                                 color: Colors.white,
-                                fontSize: 16.sp,
+                                fontSize: 6.sp,
                               ),
                             ),
                           ],

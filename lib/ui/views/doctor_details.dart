@@ -4,6 +4,7 @@ import 'package:fetosense_remote_flutter/core/model/organization_model.dart';
 import 'package:fetosense_remote_flutter/core/network/appwrite_config.dart';
 import 'package:fetosense_remote_flutter/core/utils/app_constants.dart';
 import 'package:fetosense_remote_flutter/locater.dart';
+import 'package:fetosense_remote_flutter/ui/shared/constant.dart';
 import 'package:fetosense_remote_flutter/ui/widgets/scan_widget.dart';
 import 'package:fetosense_remote_flutter/ui/widgets/update_org_dialog.dart';
 import 'package:flutter/cupertino.dart';
@@ -42,6 +43,7 @@ class DoctorDetailsState extends State<DoctorDetails> {
   Organization? organization;
 
   Organization? organizationBabyBeat;
+  final TextEditingController _passkeyController = TextEditingController();
 
   final FocusNode _nameFocus = FocusNode();
 
@@ -552,36 +554,235 @@ class DoctorDetailsState extends State<DoctorDetails> {
   /// [key] is the device key.
   Future<void> getDevice(String key) async {
     try {
-      final result = await databases.listDocuments(
-        databaseId: AppConstants.appwriteDatabaseId,
-        collectionId: AppConstants.deviceCollectionId,
-        queries: [Query.equal('deviceCode', key)],
-      );
-
-      if (result.documents.isEmpty) {
-        showSnackbar("No device found with this code.");
-        return;
-      }
-
-      final deviceData = result.documents.first.data;
-
-      await databases.updateDocument(
+      final response = await databases.listDocuments(
         databaseId: AppConstants.appwriteDatabaseId,
         collectionId: AppConstants.userCollectionId,
-        documentId: widget.doctor!.documentId!,
-        data: {
-          "organizationId": deviceData["organizationId"],
-          "organizationName": deviceData["hospitalName"],
-        },
+        queries: [
+          Query.equal('type', 'device'),
+          Query.equal('deviceCode', key),
+        ],
       );
 
-      widget.doctor!.organizationId = deviceData["organizationId"];
-      widget.doctor!.organizationName = deviceData["hospitalName"];
+      if (response.documents.isNotEmpty) {
+        final deviceDoc = response.documents.first;
+        final data = deviceDoc.data;
 
+        final organizationId = data['organizationId'];
+        final hospitalName = data['organizationName'];
+        final deviceCode = data['deviceCode'];
+
+        debugPrint('getDevice - $deviceCode');
+        getOrganization(organizationId);
+
+        _enterMPIDBottomSheet(organizationId, hospitalName);
+
+        setState(() {
+          code = deviceCode;
+        });
+      } else {
+        debugPrint("No device found for code: $key");
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Device not found."),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
     } catch (e) {
-      debugPrint("Error: $e");
-      showSnackbar("Unable to update organization.");
+      debugPrint("Error fetching device: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Something went wrong while fetching the device."),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
     }
+  }
+
+
+  void _enterMPIDBottomSheet(String? hospitalid, String? hospitalName) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) =>
+          StatefulBuilder(builder: (context, StateSetter state) {
+            return Wrap(
+              children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.only(top: 12),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(50),
+                      topLeft: Radius.circular(50),
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.13,
+                          child: Divider(
+                            thickness: 2,
+                            color: greyRegular,
+                          )),
+                      Container(
+                        margin: const EdgeInsets.only(
+                          top: 20,
+                          left: 25,
+                          right: 25,
+                        ),
+                        child: const Text(
+                          "Your Hospital name is :",
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(
+                          top: 5,
+                          left: 25,
+                          right: 25,
+                        ),
+                        child: Text(
+                          hospitalName ?? '',
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.width * 0.10,
+                      ),
+                      const Text(
+                        "Please enter your passkey to continue",
+                        textAlign: TextAlign.left,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom),
+                        child: Container(
+                          margin: const EdgeInsets.only(
+                              top: 20, left: 25, right: 25, bottom: 30),
+                          child: TextFormField(
+                            controller: _passkeyController,
+                            keyboardType: TextInputType.text,
+                            autofocus: false,
+                            onFieldSubmitted: (text) {
+                              setState(() {
+                                debugPrint("onFieldSubmitted $text");
+                              });
+                            },
+                            onChanged: (txt) {
+                              // setState(() {
+                              //   _isMobileValidationError = false;
+                              //   _isOtpVisible = false;
+                              //   _otpController.text = '';
+                              // });
+                            },
+                            maxLength: 20,
+                            maxLines: 1,
+                            decoration: InputDecoration(
+                              // labelText: 'Phone Number',
+
+                                counterStyle: const TextStyle(
+                                  height: double.minPositive,
+                                ),
+                                counterText: "",
+                                hintText: "Enter Pass Key",
+                                fillColor: lightTealColor,
+                                filled: true,
+                                //  floatingLabelBehavior: FloatingLabelBehavior.always,
+
+                                // errorStyle: TextStyle(
+                                //   color: Colors.transparent,
+                                //   fontSize: 0,
+                                // ),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 10.0, horizontal: 20.0),
+                                errorText: null,
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: greenColor),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: greenColor),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: greenColor),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: greenColor),
+                                )),
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          color: themeColor,
+                          child: MaterialButton(
+                            padding: const EdgeInsets.all(20),
+                            onPressed: () async {
+                              if (_passkeyController.text.trim() ==
+                                  passKeys!['fetosense']) {
+                                try {
+                                  await databases.updateDocument(
+                                    databaseId: AppConstants.appwriteDatabaseId,
+                                    collectionId: AppConstants.userCollectionId,
+                                    documentId: widget.doctor!.documentId!,
+                                    data: {
+                                      'organizationId': hospitalid,
+                                      'organizationName': hospitalName,
+                                    },
+                                  );
+
+                                  debugPrint(
+                                      "Organization assigned to doctor successfully.");
+                                  getOrganization("$hospitalid");
+                                  Navigator.pop(context);
+                                } catch (error) {
+                                  debugPrint("Appwrite error: $error");
+                                  Navigator.pop(context);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Something went wrong!'),
+                                      behavior: SnackBarBehavior.floating,
+                                      duration: Duration(milliseconds: 3000),
+                                    ),
+                                  );
+                                }
+                              } else {
+                                ScaffoldMessenger.of(
+                                    _scaffoldKey.currentState!.context)
+                                    .showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Invalid Pass Key!'),
+                                    behavior: SnackBarBehavior.floating,
+                                    duration: Duration(milliseconds: 3000),
+                                  ),
+                                );
+                                Navigator.pop(context);
+                              }
+                            },
+                            color: greenColor,
+                            elevation: 0,
+                            child: const Text(
+                              'OK',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            );
+          }),
+    );
   }
 
   void showSnackbar(String msg) {
@@ -629,25 +830,36 @@ class DoctorDetailsState extends State<DoctorDetails> {
         final docId = doc.$id;
         final data = Map<String, dynamic>.from(doc.data);
 
-        final Map<String, dynamic> associationData = {
+        Map<String, dynamic> associations = {};
+
+        if (data['associations'] != null &&
+            data['associations'] is String &&
+            (data['associations'] as String).isNotEmpty) {
+          associations =
+          Map<String, dynamic>.from(jsonDecode(data['associations']));
+        }
+
+        associations[widget.doctor!.documentId!] = {
           "name": widget.doctor!.name,
           "type": "doctor",
-          "id": widget.doctor!.documentId
+          "id": widget.doctor!.documentId,
         };
 
-        final associations =
-            Map<String, dynamic>.from(data['associations'] ?? {});
-        associations[widget.doctor!.documentId!] = associationData;
+        final String associationsJson = jsonEncode(associations);
 
         await databases.updateDocument(
           databaseId: AppConstants.appwriteDatabaseId,
           collectionId: AppConstants.userCollectionId,
           documentId: docId,
-          data: {'associations': json.encode(associations)},
+          data: {
+            'associations': associationsJson,
+          },
         );
+        debugPrint('Updated associations for $docId → $associations');
       }
-    } catch (e) {
+    } catch (e, st) {
       debugPrint("setDeviceAssociations error: $e");
+      debugPrintStack(stackTrace: st);
     }
   }
 

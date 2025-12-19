@@ -4,7 +4,6 @@ import 'package:appwrite/appwrite.dart';
 import 'package:fetosense_remote_flutter/core/model/doctor_model.dart';
 import 'package:fetosense_remote_flutter/core/model/organization_model.dart';
 import 'package:fetosense_remote_flutter/core/model/test_model.dart';
-import 'package:fetosense_remote_flutter/core/model/user_model.dart';
 import 'package:fetosense_remote_flutter/core/network/appwrite_config.dart';
 import 'package:fetosense_remote_flutter/core/utils/app_constants.dart';
 import 'package:fetosense_remote_flutter/core/view_models/test_crud_model.dart';
@@ -60,7 +59,9 @@ class RecentTestListViewState extends State<RecentTestListView> {
   @override
   void initState() {
     super.initState();
-    databases = widget.databases ?? Databases(locator<AppwriteService>().client); // <-- Use injected or default
+    databases = widget.databases ??
+        Databases(
+            locator<AppwriteService>().client); // <-- Use injected or default
     getPaasKeys();
     doctor = widget.doctor ?? Doctor();
   }
@@ -420,7 +421,6 @@ class RecentTestListViewState extends State<RecentTestListView> {
     }
   }
 
-
   /// Updates the organization based on the scanned code.
   ///
   /// [code] is the scanned code.
@@ -457,7 +457,7 @@ class RecentTestListViewState extends State<RecentTestListView> {
         final data = deviceDoc.data;
 
         final organizationId = data['organizationId'];
-        final hospitalName = data['hospitalName'];
+        final hospitalName = data['organizationName'];
         final deviceCode = data['deviceCode'];
 
         debugPrint('getDevice - $deviceCode');
@@ -723,10 +723,9 @@ class RecentTestListViewState extends State<RecentTestListView> {
   /// Sets the device associations for the organization.
   ///
   /// [orgId] is the organization ID.
-  Future<void> setDeviceAssociations(String orgId) async {
+  Future<void> setDeviceAssociations(String? orgId) async {
     try {
-      // Fetch all devices for the given organization
-      final response = await databases.listDocuments(
+      final result = await databases.listDocuments(
         databaseId: AppConstants.appwriteDatabaseId,
         collectionId: AppConstants.userCollectionId,
         queries: [
@@ -735,43 +734,40 @@ class RecentTestListViewState extends State<RecentTestListView> {
         ],
       );
 
-      final devices = response.documents
-          .map((doc) => UserModel.fromMap(
-                doc.data,
-              ))
-          .toList();
-      debugPrint('getOrganization  -  ${devices}');
+      for (final doc in result.documents) {
+        final docId = doc.$id;
+        final data = Map<String, dynamic>.from(doc.data);
 
-      for (final device in devices) {
-        debugPrint('getOrganization  -  ${device.documentId}');
+        Map<String, dynamic> associations = {};
 
-        // Create doctor association map
-        final Map<String, String?> doctorAssoc = {
-          "name": doctor.name,
+        if (data['associations'] != null &&
+            data['associations'] is String &&
+            (data['associations'] as String).isNotEmpty) {
+          associations =
+              Map<String, dynamic>.from(jsonDecode(data['associations']));
+        }
+
+        associations[widget.doctor!.documentId!] = {
+          "name": widget.doctor!.name,
           "type": "doctor",
-          "id": doctor.documentId,
+          "id": widget.doctor!.documentId,
         };
 
-        // Ensure existing associations are preserved
-        Map<String, dynamic> updatedAssociations = {};
-        // if (device.associations != null) {
-          updatedAssociations = Map<String, dynamic>.from(device.associations!);
-        // }
+        final String associationsJson = jsonEncode(associations);
 
-        // updatedAssociations[doctor.documentId!] = doctorAssoc;
-
-        // Update the device user with merged associations
         await databases.updateDocument(
           databaseId: AppConstants.appwriteDatabaseId,
           collectionId: AppConstants.userCollectionId,
-          documentId: device.documentId!,
+          documentId: docId,
           data: {
-            'associations': json.encode(updatedAssociations),
+            'associations': associationsJson,
           },
         );
+        debugPrint('Updated associations for $docId → $associations');
       }
-    } catch (e) {
-      debugPrint('Error in setDeviceAssociations: $e');
+    } catch (e, st) {
+      debugPrint("setDeviceAssociations error: $e");
+      debugPrintStack(stackTrace: st);
     }
   }
 }

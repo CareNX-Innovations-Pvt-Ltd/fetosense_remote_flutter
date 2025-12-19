@@ -1,7 +1,12 @@
+import 'package:appwrite/appwrite.dart';
 import 'package:fetosense_remote_flutter/core/model/doctor_model.dart';
 import 'package:fetosense_remote_flutter/core/model/mother_model.dart';
 import 'package:fetosense_remote_flutter/core/model/organization_model.dart';
+import 'package:fetosense_remote_flutter/core/model/test_model.dart';
+import 'package:fetosense_remote_flutter/core/network/appwrite_config.dart';
+import 'package:fetosense_remote_flutter/core/utils/app_constants.dart';
 import 'package:fetosense_remote_flutter/core/view_models/crud_view_model.dart';
+import 'package:fetosense_remote_flutter/locater.dart';
 import 'package:fetosense_remote_flutter/ui/widgets/mother_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -38,10 +43,51 @@ class SearchViewState extends State<SearchView> {
   }
 
   Stream<List<Mother>> getMotherStream(String query) {
-    final searchQuery = query.isEmpty ? "" : query;
-    return Provider.of<CRUDModel>(context, listen: false)
-        .fetchMothersAsStreamSearchMothers(widget.doctor!.organizationId ?? '', searchQuery);
+    final searchQuery = query.trim();
+
+    final databases = Databases(locator<AppwriteService>().client);
+
+    return databases
+        .listDocuments(
+      databaseId: AppConstants.appwriteDatabaseId,
+      collectionId: AppConstants.testsCollectionId,
+      queries: [
+        Query.equal(
+            "organizationId", widget.doctor!.organizationId ?? ''),
+        Query.orderDesc('createdOn'),
+        if (searchQuery.isNotEmpty)
+          Query.startsWith("motherName", searchQuery),
+      ],
+    )
+        .asStream()
+        .map((res) {
+      final Map<String, Mother> latestMotherMap = {};
+
+      for (final doc in res.documents) {
+        final test = Test.fromMap(doc.data, doc.$id);
+
+        final motherId = test.motherId;
+        if (motherId == null) continue;
+
+        // ✅ pick FIRST test only (latest due to orderDesc)
+        if (latestMotherMap.containsKey(motherId)) continue;
+
+        final mother = Mother();
+        mother.documentId =  motherId;
+      mother.name = test!.motherName;
+      mother.age = test.age;
+     mother.organizationId = test.organizationId;
+
+        // 🔥 inject gAge from TEST
+        mother.gAge = test.gAge;
+
+        latestMotherMap[motherId] = mother;
+      }
+
+      return latestMotherMap.values.toList();
+    });
   }
+
 
   @override
   Widget build(BuildContext context) {
