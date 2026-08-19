@@ -1,155 +1,212 @@
 import 'package:fetosense_remote_flutter/ui/widgets/scan_widget.dart';
-import 'package:mockito/mockito.dart';
-import 'package:scan/scan.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
 
-class MockScan extends Mock implements Scan {}
+// ------------------------- MOCKS --------------------------
 
-class MockScanController extends Mock implements ScanController {}
+class MockMobileScannerController extends Mock
+    implements MobileScannerController {}
 
-class MockImagePicker extends Mock implements ImagePicker {}
+class MockNavigatorObserver extends Mock implements NavigatorObserver {}
+
+class MockBarcode extends Mock implements Barcode {}
+
+class MockBarcodeCapture extends Mock implements BarcodeCapture {}
 
 class MockXFile extends Mock implements XFile {}
 
+// ------------------------ TESTS ---------------------------
+
 void main() {
-  late MockScanController mockController;
-  late MockImagePicker mockPicker;
+  late MockMobileScannerController mockController;
+  late MockNavigatorObserver navObserver;
 
   setUp(() {
-    mockController = MockScanController();
-    mockPicker = MockImagePicker();
+    mockController = MockMobileScannerController();
+    navObserver = MockNavigatorObserver();
+
+    registerFallbackValue(
+        (settings: const RouteSettings(name: "/dummy")));
   });
 
-  testWidgets('ScanWidget initializes and shows cancel button', (tester) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        home: const ScanWidget(),
-      ),
+  Widget wrap(Widget widget) {
+    return MaterialApp(
+      home: widget,
+      navigatorObservers: [navObserver],
     );
+  }
 
-    expect(find.text('Cancel'), findsOneWidget);
-    expect(find.text('Upload From Gallery'), findsOneWidget);
+  // --------------------------------------------------------
+  // UI loads
+  // --------------------------------------------------------
+
+  testWidgets("ScanWidget renders correctly", (tester) async {
+    await tester.pumpWidget(wrap(const ScanWidget()));
+    expect(find.byType(MobileScanner), findsOneWidget);
+    expect(find.text("Upload From Gallery"), findsOneWidget);
+    expect(find.text("Cancel"), findsOneWidget);
   });
 
-  testWidgets('Tapping Cancel button pops with no value', (tester) async {
-    String? result;
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Builder(
-          builder: (context) {
-            return ElevatedButton(
-              onPressed: () async {
-                result = await Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const ScanWidget()),
-                );
-              },
-              child: const Text('Open'),
-            );
-          },
-        ),
-      ),
-    );
+  // --------------------------------------------------------
+  // onDetect triggers returnMethod
+  // --------------------------------------------------------
 
-    await tester.tap(find.text('Open'));
+  testWidgets("onDetect pops with barcode value", (tester) async {
+    await tester.pumpWidget(wrap(const ScanWidget()));
+
+    final state =
+    tester.state(find.byType(ScanWidget)) as ScanWidgetState;
+
+    // Create mock barcode
+    final mockBarcode = MockBarcode();
+    when(() => mockBarcode.rawValue).thenReturn("QR123");
+
+    final mockCapture = MockBarcodeCapture();
+    when(() => mockCapture.barcodes).thenReturn([mockBarcode]);
+
+    // Trigger detection
+    state.onDetect(mockCapture);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Cancel'));
-    await tester.pumpAndSettle();
-
-    expect(result, isNull);
+    verify(() => navObserver.didPop(any(), any())).called(1);
   });
 
-  // testWidgets('Tapping Upload From Gallery with null file does nothing',
-  //     (tester) async {
-  //   final picker = MockImagePicker();
-  //   when(picker.pickImage(source: ImageSource.gallery))
-  //       .thenAnswer((_) async => null);
-  //
-  //   await tester.pumpWidget(
-  //     MaterialApp(
-  //       home: const ScanWidget(),
-  //     ),
-  //   );
-  //
-  //   await tester.tap(find.text('Upload From Gallery'));
-  //   await tester.pumpAndSettle();
-  //
-  //   // Since res is null, nothing should happen
-  //   expect(find.text('Cancel'), findsOneWidget);
-  // });
+  // --------------------------------------------------------
+  // onDetect with null value → no pop
+  // --------------------------------------------------------
 
-  testWidgets('onCapture triggers pop with QR code', (tester) async {
-    String? result;
+  testWidgets("onDetect does nothing when rawValue is null", (tester) async {
+    await tester.pumpWidget(wrap(const ScanWidget()));
 
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Builder(builder: (context) {
-          return ElevatedButton(
-            onPressed: () async {
-              result = await Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const ScanWidget()),
-              );
-            },
-            child: const Text('Open'),
-          );
-        }),
-      ),
-    );
+    final state =
+    tester.state(find.byType(ScanWidget)) as ScanWidgetState;
 
-    await tester.tap(find.text('Open'));
+    final mockBarcode = MockBarcode();
+    when(() => mockBarcode.rawValue).thenReturn(null);
+
+    final mockCapture = MockBarcodeCapture();
+    when(() => mockCapture.barcodes).thenReturn([mockBarcode]);
+
+    state.onDetect(mockCapture);
     await tester.pumpAndSettle();
 
-    // simulate onCapture
-    final state = tester.state(find.byType(ScanWidget)) as ScanWidgetState;
-    state.onCapture.call('MOCKED_QR_CODE');
-    await tester.pumpAndSettle();
-
-    expect(result, 'MOCKED_QR_CODE');
+    verifyNever(() => navObserver.didPop(any(), any()));
   });
 
-  // testWidgets('Upload From Gallery with valid image parses and pops',
-  //     (tester) async {
-  //   final mockXFile = MockXFile();
-  //   final picker = MockImagePicker();
-  //
-  //   when(picker.pickImage(source: ImageSource.gallery))
-  //       .thenAnswer((_) async => mockXFile);
-  //   when(mockXFile.path).thenReturn('mocked_path');
-  //   when(Scan.parse('mocked_path')).thenAnswer((_) async => 'PARSED_CODE');
-  //
-  //   String? result;
-  //
-  //   await tester.pumpWidget(
-  //     MaterialApp(
-  //       home: Builder(
-  //         builder: (context) {
-  //           return ElevatedButton(
-  //             onPressed: () async {
-  //               result = await Navigator.push(
-  //                 context,
-  //                 MaterialPageRoute(builder: (_) => const ScanWidget()),
-  //               );
-  //             },
-  //             child: const Text('Open'),
-  //           );
-  //         },
-  //       ),
-  //     ),
-  //   );
-  //
-  //   await tester.tap(find.text('Open'));
-  //   await tester.pumpAndSettle();
-  //
-  //   // simulate picking image
-  //   final state = tester.state(find.byType(ScanWidget)) as ScanWidgetState;
-  //   final galleryButton = find.text('Upload From Gallery');
-  //   await tester.tap(galleryButton);
-  //   await tester.pumpAndSettle();
-  //
-  //   expect(result, isNull); // Only works if you inject mocks properly
-  // });
+  // --------------------------------------------------------
+  // returnMethod pops only once
+  // --------------------------------------------------------
+
+  testWidgets("returnMethod prevents double pop", (tester) async {
+    await tester.pumpWidget(wrap(const ScanWidget()));
+
+    final state =
+    tester.state(find.byType(ScanWidget)) as ScanWidgetState;
+
+    state.returnMethod("A");
+    state.returnMethod("B"); // Should be ignored
+
+    await tester.pumpAndSettle();
+
+    verify(() => navObserver.didPop(any(), any())).called(1);
+  });
+
+  // --------------------------------------------------------
+  // Cancel button calls returnMethod(-1)
+  // --------------------------------------------------------
+
+  testWidgets("Cancel button triggers returnMethod(-1)", (tester) async {
+    await tester.pumpWidget(wrap(const ScanWidget()));
+
+    await tester.tap(find.text("Cancel"));
+    await tester.pumpAndSettle();
+
+    verify(() => navObserver.didPop(any(), any())).called(1);
+  });
+
+  // --------------------------------------------------------
+  // pickFromGallery returns null → no pop
+  // --------------------------------------------------------
+
+  testWidgets("pickFromGallery does nothing when no image selected",
+          (tester) async {
+        // Mock image picker → returns null
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(
+          const MethodChannel('plugins.flutter.io/image_picker'),
+              (methodCall) async => null,
+        );
+
+        await tester.pumpWidget(wrap(const ScanWidget()));
+        final state =
+        tester.state(find.byType(ScanWidget)) as ScanWidgetState;
+
+        await state.pickFromGallery();
+
+        verifyNever(() => navObserver.didPop(any(), any()));
+      });
+
+  // --------------------------------------------------------
+  // pickFromGallery → analyzeImage → pop
+  // --------------------------------------------------------
+
+  testWidgets("pickFromGallery scans image and pops with value",
+          (tester) async {
+        // Provide mock image file
+        const mockPath = "/fake/image.jpeg";
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(
+          const MethodChannel('plugins.flutter.io/image_picker'),
+              (methodCall) async => {"path": mockPath},
+        );
+
+        // Mock analyzeImage
+        final mockBarcode = MockBarcode();
+        when(() => mockBarcode.rawValue).thenReturn("GALLERY_QR");
+
+        final mockResult = MockBarcodeCapture();
+        when(() => mockResult.barcodes).thenReturn([mockBarcode]);
+
+        when(() => mockController.analyzeImage(any()))
+            .thenAnswer((_) async => mockResult);
+
+        // Mount widget
+        await tester.pumpWidget(wrap(const ScanWidget()));
+
+        final state =
+        tester.state(find.byType(ScanWidget)) as ScanWidgetState;
+
+        // Replace internal controller with mock
+        state.controller.stop();
+        state.controller.dispose();
+
+        await state.pickFromGallery();
+        await tester.pumpAndSettle();
+
+        verify(() => navObserver.didPop(any(), any())).called(1);
+      });
+
+  // --------------------------------------------------------
+  // dispose() calls controller.dispose
+  // --------------------------------------------------------
+
+  testWidgets("dispose calls controller.dispose()", (tester) async {
+    await tester.pumpWidget(wrap(const ScanWidget()));
+
+    final state =
+    tester.state(find.byType(ScanWidget)) as ScanWidgetState;
+
+    // Replace with mock controller
+    state.controller.stop();
+    state.controller.dispose();
+
+    await tester.pumpWidget(Container()); // unmount widget
+
+    verify(() => mockController.dispose()).called(1);
+  });
 }

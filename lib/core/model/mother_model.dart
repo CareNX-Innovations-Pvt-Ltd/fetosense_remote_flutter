@@ -5,6 +5,7 @@ class Mother extends UserModel {
   // int? age;
   DateTime? lmp;
   DateTime? edd;
+  int? gAge;
 
   // @override
   // int? noOfTests = 0;

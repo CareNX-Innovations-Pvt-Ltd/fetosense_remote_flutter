@@ -32,7 +32,7 @@ class TestApi {
       databaseId: databaseId,
       collectionId: collectionId,
       queries: [
-        Query.equal('motherId', motherId),
+        Query.equal('motherName', motherId),
         Query.orderAsc('createdOn'),
       ],
     );

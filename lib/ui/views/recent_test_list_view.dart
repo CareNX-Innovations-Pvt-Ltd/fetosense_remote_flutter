@@ -4,7 +4,6 @@ import 'package:appwrite/appwrite.dart';
 import 'package:fetosense_remote_flutter/core/model/doctor_model.dart';
 import 'package:fetosense_remote_flutter/core/model/organization_model.dart';
 import 'package:fetosense_remote_flutter/core/model/test_model.dart';
-import 'package:fetosense_remote_flutter/core/model/user_model.dart';
 import 'package:fetosense_remote_flutter/core/network/appwrite_config.dart';
 import 'package:fetosense_remote_flutter/core/utils/app_constants.dart';
 import 'package:fetosense_remote_flutter/core/view_models/test_crud_model.dart';
@@ -14,8 +13,6 @@ import 'package:fetosense_remote_flutter/ui/widgets/all_test_card.dart';
 import 'package:fetosense_remote_flutter/ui/widgets/scan_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:provider/provider.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
@@ -62,7 +59,9 @@ class RecentTestListViewState extends State<RecentTestListView> {
   @override
   void initState() {
     super.initState();
-    databases = widget.databases ?? Databases(locator<AppwriteService>().client); // <-- Use injected or default
+    databases = widget.databases ??
+        Databases(
+            locator<AppwriteService>().client); // <-- Use injected or default
     getPaasKeys();
     doctor = widget.doctor ?? Doctor();
   }
@@ -391,37 +390,34 @@ class RecentTestListViewState extends State<RecentTestListView> {
   /// Scans the QR code and updates the organization.
   ///
   /// [barcodeScanRes] is the result of the QR code scan.
+  /// Process scanned QR value returned from ScanWidget()
   Future<void> scanQR(String barcodeScanRes) async {
-    String barcodeScanRes;
-    try {
-      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          "#ff6666", "Cancel", false, ScanMode.QR);
-      debugPrint(barcodeScanRes);
-    } on PlatformException {
-      barcodeScanRes = 'Failed to get platform version.';
-    }
     setState(() {
       isEditOrg = false;
     });
-    if (!mounted) return;
-    debugPrint("Scanned URL $barcodeScanRes");
-    if (barcodeScanRes != "-1" && barcodeScanRes.isNotEmpty) {
-      try {
-        String result;
-        result = barcodeScanRes;
-        result = result.replaceAll("CMFETO:", "");
-        result = result.replaceAll("cfmeto:", "");
 
-        String decoded = utf8.decode(base64.decode(result));
+    debugPrint("Scanned URL: $barcodeScanRes");
 
-        debugPrint('decoded id is $decoded');
-        updateOrg(decoded);
-      } on FormatException {
-        ScaffoldMessenger.of(_scaffoldKey.currentState!.context)
-            .showSnackBar(const SnackBar(
-          content: Text('Invalid QR CODE'),
-        ));
-      }
+    if (barcodeScanRes.isEmpty || barcodeScanRes == "-1") {
+      return;
+    }
+
+    try {
+      // Remove custom prefixes
+      String cleaned = barcodeScanRes
+          .replaceAll("CMFETO:", "")
+          .replaceAll("cmfeto:", "")
+          .replaceAll("cfmeto:", "");
+
+      // Decode base64
+      String decoded = utf8.decode(base64.decode(cleaned));
+
+      debugPrint("Decoded QR: $decoded");
+
+      updateOrg(decoded);
+    } catch (e) {
+      debugPrint("QR decode error: $e");
+      // showSnackBar("Invalid QR Code");
     }
   }
 
@@ -461,7 +457,7 @@ class RecentTestListViewState extends State<RecentTestListView> {
         final data = deviceDoc.data;
 
         final organizationId = data['organizationId'];
-        final hospitalName = data['hospitalName'];
+        final hospitalName = data['organizationName'];
         final deviceCode = data['deviceCode'];
 
         debugPrint('getDevice - $deviceCode');
@@ -727,10 +723,9 @@ class RecentTestListViewState extends State<RecentTestListView> {
   /// Sets the device associations for the organization.
   ///
   /// [orgId] is the organization ID.
-  Future<void> setDeviceAssociations(String orgId) async {
+  Future<void> setDeviceAssociations(String? orgId) async {
     try {
-      // Fetch all devices for the given organization
-      final response = await databases.listDocuments(
+      final result = await databases.listDocuments(
         databaseId: AppConstants.appwriteDatabaseId,
         collectionId: AppConstants.userCollectionId,
         queries: [
@@ -739,43 +734,40 @@ class RecentTestListViewState extends State<RecentTestListView> {
         ],
       );
 
-      final devices = response.documents
-          .map((doc) => UserModel.fromMap(
-                doc.data,
-              ))
-          .toList();
-      debugPrint('getOrganization  -  ${devices}');
+      for (final doc in result.documents) {
+        final docId = doc.$id;
+        final data = Map<String, dynamic>.from(doc.data);
 
-      for (final device in devices) {
-        debugPrint('getOrganization  -  ${device.documentId}');
+        Map<String, dynamic> associations = {};
 
-        // Create doctor association map
-        final Map<String, String?> doctorAssoc = {
-          "name": doctor.name,
+        if (data['associations'] != null &&
+            data['associations'] is String &&
+            (data['associations'] as String).isNotEmpty) {
+          associations =
+              Map<String, dynamic>.from(jsonDecode(data['associations']));
+        }
+
+        associations[widget.doctor!.documentId!] = {
+          "name": widget.doctor!.name,
           "type": "doctor",
-          "id": doctor.documentId,
+          "id": widget.doctor!.documentId,
         };
 
-        // Ensure existing associations are preserved
-        Map<String, dynamic> updatedAssociations = {};
-        // if (device.associations != null) {
-          updatedAssociations = Map<String, dynamic>.from(device.associations!);
-        // }
+        final String associationsJson = jsonEncode(associations);
 
-        // updatedAssociations[doctor.documentId!] = doctorAssoc;
-
-        // Update the device user with merged associations
         await databases.updateDocument(
           databaseId: AppConstants.appwriteDatabaseId,
           collectionId: AppConstants.userCollectionId,
-          documentId: device.documentId!,
+          documentId: docId,
           data: {
-            'associations': json.encode(updatedAssociations),
+            'associations': associationsJson,
           },
         );
+        debugPrint('Updated associations for $docId → $associations');
       }
-    } catch (e) {
-      debugPrint('Error in setDeviceAssociations: $e');
+    } catch (e, st) {
+      debugPrint("setDeviceAssociations error: $e");
+      debugPrintStack(stackTrace: st);
     }
   }
 }

@@ -21,12 +21,8 @@ class MotherTestListViewState extends State<MotherTestListView> {
   @override
   Widget build(BuildContext context) {
     final testStream =
-    // widget.mother['type'] == "BabyBeat"
-    //     ? Provider.of<TestCRUDModel>(context)
-    //     .fetchTestsAsStreamBabyBeat(widget.mother['documentId'])
-    //     :
     Provider.of<TestCRUDModel>(context)
-        .fetchTestsAsStream(widget.mother.documentId);
+        .fetchTestsAsStream(widget.mother.name);
 
     return SizedBox(
       child: StreamBuilder<List<Test>>(

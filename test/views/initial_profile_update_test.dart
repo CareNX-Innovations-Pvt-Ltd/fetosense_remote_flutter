@@ -109,19 +109,19 @@ void main() {
     });
 
     testWidgets('shows error when name is empty on save',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(
-        home: InitialProfileUpdate(doctor: testDoctor),
-      ));
+            (WidgetTester tester) async {
+          await tester.pumpWidget(MaterialApp(
+            home: InitialProfileUpdate(doctor: testDoctor),
+          ));
 
-      // Tap the save button without entering a name
-      await tester.tap(find.text('Save'));
-      await tester.pump();
+          // Tap the save button without entering a name
+          await tester.tap(find.text('Save'));
+          await tester.pump();
 
-      // Expect a SnackBar to be shown
-      expect(find.byType(SnackBar), findsOneWidget);
-      expect(find.text('Please fill your name!'), findsOneWidget);
-    });
+          // Expect a SnackBar to be shown
+          expect(find.byType(SnackBar), findsOneWidget);
+          expect(find.text('Please fill your name!'), findsOneWidget);
+        });
 
     // testWidgets('calls updateDocument and navigates on save with valid name',
     //     (WidgetTester tester) async {
@@ -157,31 +157,31 @@ void main() {
     // });
 
     testWidgets('shows snackbar on updateDocument error',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(
-        home: InitialProfileUpdate(doctor: testDoctor),
-      ));
+            (WidgetTester tester) async {
+          await tester.pumpWidget(MaterialApp(
+            home: InitialProfileUpdate(doctor: testDoctor),
+          ));
 
-      // Enter a name
-      await tester.enterText(find.byType(TextFormField), 'Test Name');
+          // Enter a name
+          await tester.enterText(find.byType(TextFormField), 'Test Name');
 
-      // Make updateDocument throw an error
-      when(mockDatabases.updateDocument(
-        databaseId: anyNamed('databaseId'),
-        collectionId: anyNamed('collectionId'),
-        documentId: anyNamed('documentId'),
-        data: anyNamed('data'),
-        permissions: anyNamed('permissions'),
-      )).thenThrow(AppwriteException('Test Error'));
+          // Make updateDocument throw an error
+          when(mockDatabases.updateDocument(
+            databaseId: anyNamed('databaseId'),
+            collectionId: anyNamed('collectionId'),
+            documentId: anyNamed('documentId'),
+            data: anyNamed('data'),
+            permissions: anyNamed('permissions'),
+          )).thenThrow(AppwriteException('Test Error'));
 
-      // Tap the save button
-      await tester.tap(find.text('Save'));
-      await tester.pump();
+          // Tap the save button
+          await tester.tap(find.text('Save'));
+          await tester.pump();
 
-      // Expect a SnackBar to be shown
-      expect(find.byType(SnackBar), findsOneWidget);
-      expect(find.text('Something went wrong while saving.'), findsOneWidget);
-    });
+          // Expect a SnackBar to be shown
+          expect(find.byType(SnackBar), findsOneWidget);
+          expect(find.text('Something went wrong while saving.'), findsOneWidget);
+        });
   });
 }
 

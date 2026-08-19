@@ -120,20 +120,21 @@ class DetailsViewState extends State<DetailsView>
     if (test != null && test!.isLive() == true) {
       context.read<TestCRUDModel>().startLiveUpdates(test!.documentId!);
     }
+    test?.printDetails();
   }
 
   String classifyFromInterpretations(Interpretations2 interp) {
     final int fhr = interp.getBasalHeartRate();
     final int acc = interp.getnAccelerations() ?? 0;
     final int dec = interp.getnDecelerations() ?? 0;
-    final double stv = interp.getShortTermVariationBpm();
+    final double stv = interp.getShortTermVariationMilli().toDouble();
     final int ltv = interp.getLongTermVariation();
 
     // Abnormal cases
     if (fhr < 110 || fhr > 160) return 'Abnormal';
     if (dec >= 2) return 'Abnormal';
-    if (stv < 2.0) return 'Abnormal';
-    if (ltv < 6) return 'Abnormal';
+    if (stv < 3.0) return 'Abnormal';
+    if (ltv < 5) return 'Abnormal';
 
     // Atypical cases
     if ((stv >= 2.0 && stv <= 4.5) || (ltv >= 6 && ltv <= 10) || acc == 0) {
@@ -147,7 +148,6 @@ class DetailsViewState extends State<DetailsView>
   @override
   void dispose() {
     _animationController.dispose();
-    context.read<TestCRUDModel>().stopLiveUpdates();
     super.dispose();
   }
 
@@ -184,22 +184,51 @@ class DetailsViewState extends State<DetailsView>
                       fontSize: 14,
                       color: Colors.black87),
                 ),
-                trailing: test?.isLive() == true ? StreamBuilder<Test>(
-                    stream: context.read<TestCRUDModel>().testStream,
-                    initialData: test,
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return const Center(
-                          child: CircularProgressIndicator());
-                    }
-                    final liveTest = snapshot.data!;
-                    return CircleAvatar(
+                trailing: test?.isLive() == true
+                    ? StreamBuilder<Test>(
+                        stream: context.read<TestCRUDModel>().testStream,
+                        initialData: test,
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+                          final liveTest = snapshot.data!;
+                          return CircleAvatar(
+                              radius: 44.w,
+                              backgroundColor: Colors.teal,
+                              child: Center(
+                                child: Text.rich(
+                                  TextSpan(
+                                      text:
+                                          '${(liveTest.lengthOfTest! / 60).truncate()}',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                          fontSize: 32.sp,
+                                          height: 1),
+                                      children: [
+                                        TextSpan(
+                                          text: "\nmin",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.white,
+                                            fontSize: 18.sp,
+                                          ),
+                                        )
+                                      ]),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ));
+                        })
+                    : CircleAvatar(
                         radius: 44.w,
                         backgroundColor: Colors.teal,
                         child: Center(
                           child: Text.rich(
                             TextSpan(
-                                text: '${(liveTest.lengthOfTest! / 60).truncate()}',
+                                text:
+                                    '${(test!.lengthOfTest! / 60).truncate()}',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white,
@@ -217,33 +246,7 @@ class DetailsViewState extends State<DetailsView>
                                 ]),
                             textAlign: TextAlign.center,
                           ),
-                        ));
-                  }
-                ) : CircleAvatar(
-                    radius: 44.w,
-                    backgroundColor: Colors.teal,
-                    child: Center(
-                      child: Text.rich(
-                        TextSpan(
-                            text: '${(test!.lengthOfTest! / 60).truncate()}',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                                fontSize: 32.sp,
-                                height: 1),
-                            children: [
-                              TextSpan(
-                                text: "\nmin",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.white,
-                                  fontSize: 18.sp,
-                                ),
-                              )
-                            ]),
-                        textAlign: TextAlign.center,
-                      ),
-                    )),
+                        )),
               ),
             ),
             Container(
@@ -556,8 +559,7 @@ class DetailsViewState extends State<DetailsView>
                                                 text: "\nSHORT TERM VARI  ",
                                                 style: TextStyle(
                                                     fontSize: 16.sp,
-                                                    color: Colors.white
-                                                        .withOpacity(0),
+                                                    color: Colors.white,
                                                     fontWeight:
                                                         FontWeight.w500)),
                                           ]),
@@ -805,54 +807,6 @@ class DetailsViewState extends State<DetailsView>
                                 )),
                           ],
                         )),
-                    /*Container(
-                            color: Color.fromARGB(255, 238, 238, 238),
-                              padding: EdgeInsets.all(8),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  Column(
-                                    children: <Widget>[
-                                      TextWithIcon(
-                                          icon: Icons.favorite,
-                                          text:
-                                              '${widget.interpretations.getBasalHeartRateStr()}'),
-                                      Text("Basal Heart Rate",
-                                            style: TextStyle(
-                                                fontSize: FontUtil().setSp(18),
-                                                color: Colors.black87,
-                                                fontWeight: FontWeight.w300),)
-                                    ],
-                                  ),
-                                  Column(
-                                    children: <Widget>[
-                                      TextWithIcon(
-                                          icon: Icons.arrow_upward,
-                                          text:
-                                              ' ${widget.test.movementEntries != null ? widget.test.movementEntries.length : 0}'),
-                                       Text("Fetal Movements",
-                                              style: TextStyle(
-                                              fontSize: FontUtil().setSp(18),
-                                          color: Colors.black87,
-                                          fontWeight: FontWeight.w300),)
-                                    ],
-                                  ),
-                                  Column(
-                                    children: <Widget>[
-                                      TextWithIcon(
-                                          icon: Icons.access_time,
-                                          text:
-                                              ' ${(widget.test.lengthOfTest / 60).truncate()} min'),
-                                      Text("Test Duration",
-                                        style: TextStyle(
-                                          fontSize: FontUtil().setSp(18),
-                                          color: Colors.black87,
-                                          fontWeight: FontWeight.w300),)
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),*/
                   ],
                 ),
               ),
@@ -864,14 +818,19 @@ class DetailsViewState extends State<DetailsView>
                 children: <Widget>[
                   IconButton(
                     iconSize: 35,
-                    icon:
-                        Icon(gridPreMin == 1 ? Icons.zoom_in : Icons.zoom_out),
+                    icon: Icon(
+                      gridPreMin == 1 ? Icons.zoom_in : Icons.zoom_out,
+                      color: Colors.black,
+                    ),
                     onPressed: _handleZoomChange,
                   ),
                   !isLoadingShare
                       ? IconButton(
                           iconSize: 35,
-                          icon: const Icon(Icons.share),
+                          icon: const Icon(
+                            Icons.share,
+                            color: Colors.black,
+                          ),
                           onPressed: () {
                             if (!isLoadingPrint) {
                               setState(() {
@@ -893,7 +852,10 @@ class DetailsViewState extends State<DetailsView>
                   !isLoadingPrint
                       ? IconButton(
                           iconSize: 35,
-                          icon: const Icon(Icons.print),
+                          icon: const Icon(
+                            Icons.print,
+                            color: Colors.black,
+                          ),
                           onPressed: () {
                             if (!isLoadingShare) {
                               setState(() {
@@ -914,18 +876,80 @@ class DetailsViewState extends State<DetailsView>
                         ),
                   IconButton(
                     iconSize: 35,
-                    icon: const Icon(Icons.settings),
+                    icon: const Icon(
+                      Icons.settings,
+                      color: Colors.black,
+                    ),
                     onPressed: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (_) => SettingsView()));
                     },
                   ),
+                  Container(
+                    // padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.withOpacity(0.2), // always highlighted
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: InkWell(
+                      onTap: () {
+                        showDialogBox();
+                      },
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.asset(
+                        'images/img.png',
+                        width: 60,
+                        height: 60,
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  showDialogBox() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Refer this mother?"),
+            content: const Text(
+              "Refer this mother to a higher facility for further review.",
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Cancel"),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  updateReferral();
+                },
+                child: const Text("Refer"),
+              ),
+            ],
+          );
+        });
+  }
+
+  updateReferral(){
+    Map<String, dynamic> data = {
+      'referral': true,
+    };
+
+    _db.updateDocument(
+      databaseId: AppConstants.appwriteDatabaseId,
+      collectionId: AppConstants.testsCollectionId,
+      documentId: widget.test.documentId!,
+      data: data,
     );
   }
 

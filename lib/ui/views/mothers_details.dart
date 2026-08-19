@@ -41,12 +41,12 @@ class MotherDetailsState extends State<MotherDetails> {
                   widget.mother.name ?? "Unknown",
                   style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
                 ),
-                subtitle: Text(
-                  edd != null
-                      ? "EDD - ${DateFormat('dd MMM yyyy').format(edd)}"
-                      : "EDD not available",
-                  style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 14),
-                ),
+                // subtitle: Text(
+                //   edd != null
+                //       ? "EDD - ${DateFormat('dd MMM yyyy').format(edd)}"
+                //       : "EDD not available",
+                //   style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 14),
+                // ),
                 trailing: Container(
                   padding: const EdgeInsets.all(3.0),
                   width: 55,

@@ -64,7 +64,7 @@ class AppwriteApi {
       queries: [
         Query.equal("type", "mother"),
         Query.equal("organizationId", organizationId),
-        Query.orderAsc("name"),
+        Query.orderAsc("\$createdAt"),
         Query.startsWith("name", filter),
       ],
     )
